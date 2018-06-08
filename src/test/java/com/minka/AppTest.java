@@ -3,6 +3,12 @@ package com.minka;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.i2p.crypto.eddsa.KeyPairGenerator;
+import java.security.KeyPair;
+import java.security.Key;
+import java.util.Base64;
+import java.math.BigInteger;
+
 
 /**
  * Unit test for simple App.
@@ -31,8 +37,32 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    public void testApp()
+    public void testKeyPairGenerator()
     {
-        assertTrue( true );
+	System.out.println("KeyPairGenerator");
+        KeyPairGenerator generator = new KeyPairGenerator();
+	
+	
+	KeyPair keyPair = generator.generateKeyPair();
+       
+   Key privateKey = keyPair.getPrivate();
+    Key publicKey = keyPair.getPublic(); 
+        System.out.println( "Private:" + keyPair.getPrivate() );
+
+        System.out.println( "Public:" + keyPair.getPublic().getAlgorithm() );
+  	
+	   Base64.Encoder encoder = Base64.getEncoder();
+    String privateKeyBase64Str = encoder.encodeToString(privateKey.getEncoded());
+    System.out.println("Private key in Base64 format:\n" + privateKeyBase64Str);//it creates 1623 chars or 1620 chars
+    
+    Base64.Decoder decoder = Base64.getDecoder();
+    byte[] privateKeyBytes = decoder.decode(privateKeyBase64Str);
+    System.out.println("The private Key is " + privateKeyBytes.length + " bytes long");
+    String privateKeyHex = String.format("%040x", new BigInteger(1, privateKeyBytes));
+    System.out.println("The private key in hexadecimal digits:\n" + privateKeyHex);
+    
+          
+  
+	assertTrue( true );
     }
 }
