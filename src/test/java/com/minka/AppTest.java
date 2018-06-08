@@ -10,6 +10,20 @@ import java.util.Base64;
 import java.math.BigInteger;
 
 
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.cert.X509Certificate;
+
+import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
+import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
+import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
+import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import net.i2p.crypto.eddsa.EdDSAEngine; 
+
 /**
  * Unit test for simple App.
  */
@@ -37,7 +51,7 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    public void testKeyPairGenerator()
+    public void testKeyPairGenerator()  throws Exception
     {
 	System.out.println("KeyPairGenerator");
         KeyPairGenerator generator = new KeyPairGenerator();
@@ -45,11 +59,11 @@ public class AppTest
 	
 	KeyPair keyPair = generator.generateKeyPair();
        
-   Key privateKey = keyPair.getPrivate();
+      PrivateKey privateKey = keyPair.getPrivate();
     Key publicKey = keyPair.getPublic(); 
         System.out.println( "Private:" + keyPair.getPrivate() );
 
-        System.out.println( "Public:" + keyPair.getPublic().getAlgorithm() );
+        System.out.println( "Algorithm:" + keyPair.getPublic().getAlgorithm() );
   	
 	   Base64.Encoder encoder = Base64.getEncoder();
     String privateKeyBase64Str = encoder.encodeToString(privateKey.getEncoded());
@@ -61,8 +75,23 @@ public class AppTest
     String privateKeyHex = String.format("%040x", new BigInteger(1, privateKeyBytes));
     System.out.println("The private key in hexadecimal digits:\n" + privateKeyHex);
     
-          
-  
+	//TODO MAKE it randowm to have a differente outcome every execution          
+        
+	//SIGNATURE
+         
+
+	EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+	
+        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.getHashAlgorithm())); 
+	
+	sgr.initSign(privateKey);
+	
+	String hashMessageExample = "someHashMEssage";
+
+	sgr.update(hashMessageExample.getBytes());
+	
+	System.out.println("SIGNATURE:" + sgr.sign());
 	assertTrue( true );
     }
+	
 }
