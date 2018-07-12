@@ -11,7 +11,7 @@ import java.util.Date;
 public class IouParamsDto {
 
     private BigDecimal amount;
-    private String credit;
+    private BigDecimal credit;
     private String domain;
     private Date expire;
     private Date active;
@@ -21,7 +21,7 @@ public class IouParamsDto {
     private String target;
 
     public IouParamsDto(String domain, String source, String target, BigDecimal amount,
-                        String credit, String symbol, String random, Date active, Date expire)
+                        BigDecimal credit, String symbol, String random, Date active, Date expire)
             throws MissingRequiredParameterIOUCreation {
 
         if(source == null || target == null ||
@@ -36,6 +36,7 @@ public class IouParamsDto {
         this.credit = credit;
         this.symbol = symbol;
         this.random = random;
+        this.active = active;
 
         if (random == null){
             int length = 10;
@@ -73,11 +74,11 @@ public class IouParamsDto {
         this.target = target;
     }
 
-    public String getCredit() {
+    public BigDecimal getCredit() {
         return credit;
     }
 
-    public void setCredit(String credit) {
+    public void setCredit(BigDecimal credit) {
         this.credit = credit;
     }
 

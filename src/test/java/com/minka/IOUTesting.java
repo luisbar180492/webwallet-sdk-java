@@ -1,25 +1,20 @@
-# webwallet-sdk
-Webwallet sdk java version
+package com.minka;
 
-This is the java implementation for the nodejs sdk https://github.com/webwallet/sdk
+import com.minka.wallet.IOU;
+import com.minka.wallet.IouParamsDto;
+import com.minka.wallet.MissingRequiredParameterIOUCreation;
+import org.apache.commons.lang.time.DateUtils;
+import org.junit.Test;
 
-``` java
+import java.math.BigDecimal;
+import java.security.PrivateKey;
+import java.util.*;
 
-/* Generate cryptographic keys and addresses */
+public class IOUTesting {
 
-KeyPairHolder keyPair = new KeyPairHolder();
-System.out.println(keyPair.getPublicKey());
-System.out.println(keyPair.getSecretInHexString());
-
-
-Address address = new Address(keyPair.getPublicKey());
-        String value = address.generate().getValue();
-        System.out.println("address generated");
-        System.out.println(value);
-
-        
-        
-IouParamsDto iouParamsDto;
+    @Test
+    public void iou() throws MissingRequiredParameterIOUCreation {
+        IouParamsDto iouParamsDto;
         String domain = "www";
         String source = (new KeyPairHolder()).getPublicKey();
         String target= (new KeyPairHolder()).getPublicKey();
@@ -40,6 +35,5 @@ IouParamsDto iouParamsDto;
         List<PrivateKey> privatekeys = new ArrayList<>();
         theIou.sign(privatekeys);
 
-        
-
-```
+    }
+}

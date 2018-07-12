@@ -33,16 +33,15 @@ public class IOU {
         return meta;
     }
 
-    public IOU sign(Map<String, PrivateKey > privateKeys){
+    public IOU sign(List<PrivateKey > privateKeys){
 
         if (meta.getSignatures() == null){
             meta.setSignatures(new ArrayList<>());
         }
-        Set<String> hashes = privateKeys.keySet();
 
-        for (String currHash: hashes) {
+        for (PrivateKey currKey: privateKeys) {
             String signature;
-            signature = SignatureUtil.signWithEd25519(currHash, privateKeys.get(currHash));
+            signature = SignatureUtil.signWithEd25519(this.hash.getValue(), currKey);
             meta.getSignatures().add(signature);
         }
         return this;
