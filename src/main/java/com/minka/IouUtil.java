@@ -31,9 +31,11 @@ public class IouUtil {
         List<String> encodings = new ArrayList<>();
         encodings.add("utf8");
 
-        hashDto.setValue(HashingUtil.createHash(hashDto.getData(), types, encodings));
+        hashDto.setValue(HashingUtil.createHashForIou(hashDto.getData(), types, encodings));
 
         MetaDto metaDto = new MetaDto();
+        List<String> signatures = new ArrayList<>();
+        metaDto.setSignatures(signatures);
         return new IOU(iouParamsDto, hashDto, metaDto);
     }
 }

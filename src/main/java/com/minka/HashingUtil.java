@@ -57,8 +57,9 @@ public class HashingUtil {
         return  HashingUtil.hashWithRipemd160(HashingUtil.hashWithsha256(data, null), null);
     }
 
-    public static String createHash(String data, List<String> types, List<String> encodings) {
-        //TODO for IOUutil recursive hashing
-        return null;
+    public static String createHashForIou(String data, List<String> hashAlgorithms, List<String> encodings) {
+
+        String firstPass = HashingUtil.hashWithsha256(data, StandardCharsets.UTF_8);
+        return HashingUtil.hashWithsha256(firstPass, null);
     }
 }
