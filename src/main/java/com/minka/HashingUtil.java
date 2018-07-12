@@ -56,4 +56,9 @@ public class HashingUtil {
     public static String createHash(String data) throws DecoderException {
         return  HashingUtil.hashWithRipemd160(HashingUtil.hashWithsha256(data, null), null);
     }
+
+    public static String createHash(String data, List<String> types, List<String> encodings) {
+        //TODO for IOUutil recursive hashing
+        return null;
+    }
 }
