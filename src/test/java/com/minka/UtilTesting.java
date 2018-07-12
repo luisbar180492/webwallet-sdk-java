@@ -22,7 +22,7 @@ public class UtilTesting
     @Test
     public void HashingUtils()  throws Exception {
         String data = "asdf";
-        String sha256 = HashingUtil.hashWithsha256(data);
+        String sha256 = HashingUtil.hashWithsha256(data,null);
         System.out.println(sha256);
 
         String ripemd160 = HashingUtil.hashWithRipemd160(data, StandardCharsets.UTF_8);

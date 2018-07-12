@@ -2,6 +2,7 @@ package com.minka.wallet;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -9,26 +10,26 @@ import java.util.Date;
  */
 public class IouParamsDto {
 
-    private static String DEFAULT_DOMAIN = "www";
-    private String domain;
-    private String source;
-    private String target;
-    private String amount;
+    private BigDecimal amount;
     private String credit;
-    private String symbol;
-    private String random;
-
-    private Date notBefore;
+    private String domain;
     private Date expire;
+    private Date active;
+    private String random;
+    private String source;
+    private String symbol;
+    private String target;
 
-    public IouParamsDto(String domain, String source, String target, String amount,
-                        String credit, String symbol, String random, Date notBefore, Date expire)
+    public IouParamsDto(String domain, String source, String target, BigDecimal amount,
+                        String credit, String symbol, String random, Date active, Date expire)
             throws MissingRequiredParameterIOUCreation {
 
-        if(source == null || target == null || amount == null || symbol == null){
+        if(source == null || target == null ||
+                amount == null || symbol == null || expire == null){
             throw new MissingRequiredParameterIOUCreation("Missing required param");
         }
 
+        this.domain = domain;
         this.source = source;
         this.target = target;
         this.amount = amount;
@@ -45,14 +46,7 @@ public class IouParamsDto {
             this.random = random;
         }
 
-        this.notBefore = notBefore;
         this.expire = expire;
-
-        if (domain == null){
-            this.domain = DEFAULT_DOMAIN;
-        } else{
-            this.domain = domain;
-        }
     }
 
     public String getDomain() {
@@ -79,14 +73,6 @@ public class IouParamsDto {
         this.target = target;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
     public String getCredit() {
         return credit;
     }
@@ -111,19 +97,23 @@ public class IouParamsDto {
         this.random = random;
     }
 
-    public Date getNotBefore() {
-        return notBefore;
-    }
-
-    public void setNotBefore(Date notBefore) {
-        this.notBefore = notBefore;
-    }
-
     public Date getExpire() {
         return expire;
     }
 
     public void setExpire(Date expire) {
         this.expire = expire;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Date getActive() {
+        return active;
+    }
+
+    public void setActive(Date active) {
+        this.active = active;
     }
 }

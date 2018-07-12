@@ -12,16 +12,26 @@ import java.util.List;
 
 public class HashingUtil {
 
-    public static String hashWithsha256(String string){
+    public static String hashWithsha256(String input, Charset charset){
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.reset();
-            messageDigest.update(string.getBytes());
+            byte[] bytes;
+
+            if (charset == null){
+                bytes = org.apache.commons.codec.binary.Hex.decodeHex(input.toCharArray());
+            } else {
+                bytes = input.getBytes(charset);
+            }
+            messageDigest.update(bytes);
 
             byte[] digest = messageDigest.digest();
 
             return new String(Hex.encode(digest));
         } catch (NoSuchAlgorithmException e) {
+            return null;
+        } catch (DecoderException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -44,6 +54,12 @@ public class HashingUtil {
     }
 
     public static String createHash(String data) throws DecoderException {
-        return  HashingUtil.hashWithRipemd160(HashingUtil.hashWithsha256(data), null);
+        return  HashingUtil.hashWithRipemd160(HashingUtil.hashWithsha256(data, null), null);
+    }
+
+    public static String createHashForIou(String data, List<String> hashAlgorithms, List<String> encodings) {
+
+        String firstPass = HashingUtil.hashWithsha256(data, StandardCharsets.UTF_8);
+        return HashingUtil.hashWithsha256(firstPass, null);
     }
 }
