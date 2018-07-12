@@ -16,7 +16,8 @@ public class IOUTesting {
     public void iou() throws MissingRequiredParameterIOUCreation {
         IouParamsDto iouParamsDto;
         String domain = "www";
-        String source = (new KeyPairHolder()).getPublicKey();
+        KeyPairHolder sourceKeys = new KeyPairHolder();
+        String source = (sourceKeys).getPublicKey();
         String target= (new KeyPairHolder()).getPublicKey();
         BigDecimal amount = new BigDecimal(100);
         BigDecimal credit = new BigDecimal(0);
@@ -33,6 +34,7 @@ public class IOUTesting {
         IOU theIou = iouUtil.write(iouParamsDto);
 
         List<PrivateKey> privatekeys = new ArrayList<>();
+        privatekeys.add(sourceKeys.getSecret());
         theIou.sign(privatekeys);
 
     }

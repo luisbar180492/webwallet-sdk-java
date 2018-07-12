@@ -38,6 +38,7 @@ IouParamsDto iouParamsDto;
         IOU theIou = iouUtil.write(iouParamsDto);
 
         List<PrivateKey> privatekeys = new ArrayList<>();
+        privatekeys.add(sourceKeys.getSecret());
         theIou.sign(privatekeys);
 
         
