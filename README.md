@@ -18,10 +18,10 @@ Address address = new Address(keyPair.getPublicKey());
         System.out.println(value);
 
         
-        
 IouParamsDto iouParamsDto;
         String domain = "www";
-        String source = (new KeyPairHolder()).getPublicKey();
+        KeyPairHolder sourceKeys = new KeyPairHolder();
+        String source = (sourceKeys).getPublicKey();
         String target= (new KeyPairHolder()).getPublicKey();
         BigDecimal amount = new BigDecimal(100);
         BigDecimal credit = new BigDecimal(0);
