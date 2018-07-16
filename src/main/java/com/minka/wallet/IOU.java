@@ -1,5 +1,7 @@
 package com.minka.wallet;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.minka.SignatureUtil;
 
 import java.security.PrivateKey;
@@ -47,4 +49,10 @@ public class IOU {
         return this;
     }
 
+    @Override
+    public String toString() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        return gson.toJson(this);
+    }
 }

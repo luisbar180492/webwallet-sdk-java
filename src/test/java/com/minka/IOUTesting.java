@@ -36,6 +36,8 @@ public class IOUTesting {
         List<PrivateKey> privatekeys = new ArrayList<>();
         privatekeys.add(sourceKeys.getSecret());
         theIou.sign(privatekeys);
-
+        //IMPRIMIR JSON
+        String theIouJson = theIou.toString();
+        System.out.println(theIouJson);
     }
 }

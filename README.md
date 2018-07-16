@@ -41,6 +41,7 @@ IouParamsDto iouParamsDto;
         privatekeys.add(sourceKeys.getSecret());
         theIou.sign(privatekeys);
 
-        
+	String theIouJson = theIou.toString();
+        System.out.println(theIouJson);        
 
 ```
