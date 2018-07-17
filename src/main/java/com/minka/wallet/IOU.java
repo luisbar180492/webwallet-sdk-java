@@ -6,7 +6,6 @@ import com.minka.SignatureUtil;
 
 import java.security.PrivateKey;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -57,10 +56,32 @@ public class IOU {
         return this;
     }
 
-    @Override
-    public String toString() {
+    private class IOUPrintingWrapper {
+        private IOU IOU;
+
+        public com.minka.wallet.IOU getIOU() {
+            return IOU;
+        }
+
+        public void setIOU(com.minka.wallet.IOU IOU) {
+            this.IOU = IOU;
+        }
+    }
+
+    public String toPrettyJson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        IOUPrintingWrapper iouPrintingWrapper = new IOUPrintingWrapper();
+        iouPrintingWrapper.setIOU(this);
+        return gson.toJson(iouPrintingWrapper);
+    }
+
+    public String toRawJson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
+        IOUPrintingWrapper iouPrintingWrapper = new IOUPrintingWrapper();
+        iouPrintingWrapper.setIOU(this);
+
         return gson.toJson(this);
     }
 }

@@ -13,7 +13,7 @@ import java.util.TimeZone;
 public class IouUtil {
 
 
-    public String convertToIsoFormat(Date date){
+    public static String convertToIsoFormat(Date date){
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
