@@ -82,6 +82,6 @@ public class IOU {
         IOUPrintingWrapper iouPrintingWrapper = new IOUPrintingWrapper();
         iouPrintingWrapper.setIOU(this);
 
-        return gson.toJson(this);
+        return gson.toJson(iouPrintingWrapper);
     }
 }
