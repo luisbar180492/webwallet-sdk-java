@@ -84,4 +84,17 @@ public class IOU {
 
         return gson.toJson(iouPrintingWrapper);
     }
+
+    public String toPrettyJsonOldFormat(){
+        IouMapper iouMapper = new IouMapper(this);
+        return iouMapper.getOldIouPrettyJson();
+    }
+
+    public String toRawJsonOldFormat(){
+        IouMapper iouMapper = new IouMapper(this);
+        return iouMapper.getOldIouRawJson();
+    }
+
+
+
 }
