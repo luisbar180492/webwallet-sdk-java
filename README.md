@@ -74,11 +74,13 @@ public class IOUTesting {
         logger.info("In order to sign we use the Key,value = PrivateKeys, SignatureDto");
         theIou.sign(signaturePairs);
 
+
         logger.info("Printing pretty JSON ");
         logger.info(theIou.toPrettyJson());
         logger.info("Printing Raw JSON ");
         logger.info(theIou.toRawJson());
                 
+        //  THESE PRINTINGS FOR OLD FORMAT ONLY OWRK for the 0.1.0
         logger.info("Printing pretty JSON for the OLD FORMAT");
         logger.info(theIou.toPrettyJsonOldFormat());
         logger.info("Printing raw JSON for the OLD FORMAT");
