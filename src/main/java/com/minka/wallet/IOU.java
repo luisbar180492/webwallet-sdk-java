@@ -6,28 +6,32 @@ import com.minka.SignatureUtil;
 
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class IOU {
 
-    private IouParamsDto iouParams;
-    private HashDto hash;
+    private IouParamsDto data;
+    private HashDto.HashJson hash;
     private MetaDto meta;
 
-    public IOU(IouParamsDto data, HashDto hash, MetaDto meta){
 
-        this.iouParams = data;
-        this.hash = hash;
+    public void setMeta(MetaDto meta) {
         this.meta = meta;
     }
 
-    public IouParamsDto getIouParams() {
-        return iouParams;
+    public IOU(IouParamsDto data, HashDto.HashJson hash){
+
+        this.data = data;
+        this.hash = hash;
     }
 
-    public HashDto getHash() {
+    public IouParamsDto getData() {
+        return data;
+    }
+
+    public HashDto.HashJson getHash() {
         return hash;
     }
 
@@ -35,17 +39,21 @@ public class IOU {
         return meta;
     }
 
-    public IOU sign(List<PrivateKey > privateKeys){
+    public IOU sign(Map<PrivateKey,SignatureDto> signaturesPair){
 
-        if (meta.getSignatures() == null){
-            meta.setSignatures(new ArrayList<>());
-        }
+        List<SignatureDto> signatureDtos = new ArrayList<>();
 
-        for (PrivateKey currKey: privateKeys) {
+        for (PrivateKey currSignature: signaturesPair.keySet()) {
             String signature;
-            signature = SignatureUtil.signWithEd25519(this.hash.getValue(), currKey);
-            meta.getSignatures().add(signature);
+            signature = SignatureUtil.signWithEd25519(this.hash.getValue(), currSignature);
+            SignatureDto signatureDto = signaturesPair.get(currSignature);
+            signatureDto.setString(signature);
+            signatureDtos.add(signatureDto);
         }
+
+        MetaDto metaDto = new MetaDto();
+        metaDto.setSignatures(signatureDtos);
+        this.setMeta(metaDto);
         return this;
     }
 

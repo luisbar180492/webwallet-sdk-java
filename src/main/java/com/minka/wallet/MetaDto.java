@@ -4,13 +4,14 @@ import java.util.List;
 
 public class MetaDto {
 
-    private List<String> signatures;
+    private List<SignatureDto> signatures;
 
-    public void setSignatures(List<String> signatures) {
-        this.signatures = signatures;
+
+    public List<SignatureDto> getSignatures() {
+        return signatures;
     }
 
-    public List<String> getSignatures() {
-        return signatures;
+    public void setSignatures(List<SignatureDto> signatures) {
+        this.signatures = signatures;
     }
 }

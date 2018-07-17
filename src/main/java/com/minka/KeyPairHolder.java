@@ -1,5 +1,10 @@
 package com.minka;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.annotations.SerializedName;
+import com.minka.wallet.SignatureDto;
 import net.i2p.crypto.eddsa.KeyPairGenerator;
 import org.spongycastle.util.encoders.Hex;
 
@@ -35,5 +40,61 @@ public class KeyPairHolder {
 
     public PrivateKey getSecret() {
         return secret;
+    }
+
+
+    public SignatureDto getBasicSignatureDto(String signerAddress){
+        SignatureDto signatureDto = new SignatureDto();
+        signatureDto.setPublic(this.getPublicKey());
+        signatureDto.setScheme("ed25519");
+        signatureDto.setSigner(signerAddress);
+        return signatureDto;
+    }
+
+    public class KeyPairHolderDto{
+        private String secret;
+        @SerializedName("public")
+        private String publico;
+        private String scheme;
+
+        public String getSecret() {
+            return secret;
+        }
+
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+
+        public String getPublico() {
+            return publico;
+        }
+
+        public void setPublico(String publico) {
+            this.publico = publico;
+        }
+
+        public String getScheme() {
+            return scheme;
+        }
+
+        public void setScheme(String scheme) {
+            this.scheme = scheme;
+        }
+
+        @Override
+        public String toString() {
+            Gson gson = (new GsonBuilder()).create();
+
+            return gson.toJson(this);
+        }
+    }
+
+
+    public KeyPairHolderDto getDtoForJson() {
+        KeyPairHolderDto keyPairHolderDto = new KeyPairHolderDto();
+        keyPairHolderDto.setScheme("ed25519");
+        keyPairHolderDto.setPublico(this.getPublicKey());
+        keyPairHolderDto.setSecret(this.getSecretInHexString());
+        return keyPairHolderDto;
     }
 }

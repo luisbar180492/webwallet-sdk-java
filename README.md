@@ -28,10 +28,10 @@ IouParamsDto iouParamsDto;
 
         String symbol = source;
         Date active = new Date();
-        Date expire = DateUtils.addDays(active,4);
+        Date expiry = DateUtils.addDays(active,4);
 
         iouParamsDto = new IouParamsDto(domain, source,target, amount, credit,
-                                        symbol, null,active, expire);
+                                        symbol, null,active, expiry);
 
 
         IouUtil iouUtil = new IouUtil();

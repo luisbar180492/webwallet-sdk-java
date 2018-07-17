@@ -1,22 +1,29 @@
 package com.minka;
 
 import com.google.gson.GsonBuilder;
-import com.minka.wallet.HashDto;
-import com.minka.wallet.IOU;
-import com.minka.wallet.IouParamsDto;
-import com.minka.wallet.MetaDto;
+import com.minka.wallet.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class IouUtil {
+
+
+    public String convertToIsoFormat(Date date){
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+        df.setTimeZone(tz);
+        return df.format(new Date());
+    }
 
     public IOU write(IouParamsDto iouParamsDto)
     {
         HashDto hashDto = new HashDto();
-        String data = (new GsonBuilder()).create().toJson(iouParamsDto);
 
-        hashDto.setData(data);
         List<String> steps = new ArrayList<>();
         steps.add("stringfy");
         steps.add("data");
@@ -31,11 +38,9 @@ public class IouUtil {
         List<String> encodings = new ArrayList<>();
         encodings.add("utf8");
 
-        hashDto.setValue(HashingUtil.createHashForIou(hashDto.getData(), types, encodings));
+        String data = (new GsonBuilder()).create().toJson(iouParamsDto);
+        hashDto.setValue(HashingUtil.createHashForIou(data, types, encodings));
 
-        MetaDto metaDto = new MetaDto();
-        List<String> signatures = new ArrayList<>();
-        metaDto.setSignatures(signatures);
-        return new IOU(iouParamsDto, hashDto, metaDto);
+        return new IOU(iouParamsDto, hashDto.getDtoForJson());
     }
 }

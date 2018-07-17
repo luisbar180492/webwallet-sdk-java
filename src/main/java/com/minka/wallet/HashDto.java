@@ -7,7 +7,6 @@ public class HashDto {
     private List<String> types;//hash algorithms
     private List<String> steps;
     private String value;
-    private String data;
 
 
     public List<String> getTypes() {
@@ -34,11 +33,57 @@ public class HashDto {
         this.value = value;
     }
 
-    public String getData() {
-        return data;
+    public HashJson getDtoForJson() {
+
+        HashJson result = new HashJson();
+
+        for (String curr:this.getTypes()) {
+            if (result.getTypes() == null){
+                result.setTypes(curr);
+            } else{
+                result.setTypes(result.getTypes() + ":" + curr);
+            }
+        }
+        for (String curr: this.getSteps()) {
+            if (result.getSteps() == null){
+                result.setSteps(curr);
+            } else{
+                result.setSteps(result.getSteps() + ":" + curr);
+            }
+        }
+
+        result.setValue(this.getValue());
+
+        return result;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public class HashJson {
+        private String types;
+        private String steps;
+        private String value;
+
+        public String getTypes() {
+            return types;
+        }
+
+        public void setTypes(String types) {
+            this.types = types;
+        }
+
+        public String getSteps() {
+            return steps;
+        }
+
+        public void setSteps(String steps) {
+            this.steps = steps;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
-}
+    }
