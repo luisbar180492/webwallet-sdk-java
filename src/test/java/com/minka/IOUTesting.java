@@ -73,9 +73,9 @@ public class IOUTesting {
         logger.info("Printing Raw JSON ");
         logger.info(theIou.toRawJson());
 
-        logger.info("Printing pretty JSON for the old FORMAT");
-        logger.info(theIou.toPrettyJsonOldFormat());
-        logger.info("Printing raw JSON for the old FORMAT");
-        logger.info(theIou.toRawJsonOldFormat());
+        logger.info("Printing pretty JSON for the FORMAT V022");
+        logger.info(theIou.toPrettyJsonV022());
+        logger.info("Printing raw JSON for the FORMAT V022");
+        logger.info(theIou.toRawJsonV022());
     }
 }

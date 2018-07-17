@@ -68,10 +68,10 @@ public class main {
         System.out.println("Printing Raw JSON ");
         System.out.println(theIou.toRawJson());
 
-        System.out.println("Printing pretty JSON for the OLD FORMAT");
-        System.out.println(theIou.toPrettyJsonOldFormat());
-        System.out.println("Printing raw JSON for the OLD FORMAT");
-        System.out.println(theIou.toRawJsonOldFormat());
+        System.out.println("Printing pretty JSON for the FORMAT V022");
+        System.out.println(theIou.toPrettyJsonV022());
+        System.out.println("Printing raw JSON for the FORMAT V022");
+        System.out.println(theIou.toRawJsonV022());
     }
 }
 ```
