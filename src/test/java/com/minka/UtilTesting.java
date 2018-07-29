@@ -14,7 +14,7 @@ public class UtilTesting
         String message = "This is a message";
         String hashedMessage = HashingUtil.hashWithRipemd160(message, StandardCharsets.UTF_8);
         KeyPairHolder keyPairHolder = new KeyPairHolder();
-        String signedMessage = SignatureUtil.signWithEd25519(hashedMessage, keyPairHolder.getSecret());
+        String signedMessage = SignatureUtil.signWithEd25519(hashedMessage, keyPairHolder.getPrivateKey());
 
         System.out.println(signedMessage);
     }

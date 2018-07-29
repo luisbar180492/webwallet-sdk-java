@@ -15,7 +15,7 @@ import java.security.PublicKey;
 /***
  * It returns a key-pair generated using Ed25519
  */
-public class KeyPairHolder {
+public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
 
     private PublicKey publicKey;
     private PrivateKey secret;
@@ -38,7 +38,21 @@ public class KeyPairHolder {
         return Hex.toHexString(encoded);
     }
 
-    public PrivateKey getSecret() {
+    @Override
+    public String getScheme() {
+        return "ed25519";
+    }
+
+    @Override
+    public String getPublic() {
+        return getPublicKey();
+    }
+    @Override
+    public String getSecret(){
+        return getSecretInHexString();
+    }
+
+    public PrivateKey getPrivateKey() {
         return secret;
     }
 
