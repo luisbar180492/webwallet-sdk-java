@@ -15,4 +15,9 @@ public class Sdk {
         }
     }
 
+    public static class Address {
+        public static com.minka.wallet.Address generate(String publicKey){
+            return new com.minka.wallet.Address(publicKey);
+        }
+    }
 }
