@@ -2,7 +2,6 @@ package com.minka;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import com.minka.wallet.SignatureDto;
 import net.i2p.crypto.eddsa.KeyPairGenerator;
@@ -63,6 +62,11 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
         signatureDto.setScheme("ed25519");
         signatureDto.setSigner(signerAddress);
         return signatureDto;
+    }
+
+    @Override
+    public String toJson() {
+        return this.getDtoForJson().toString();
     }
 
     public class KeyPairHolderDto{

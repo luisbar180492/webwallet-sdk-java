@@ -8,9 +8,9 @@ import com.minka.wallet.primitives.KeyPair;
  */
 public class Sdk {
 
-    public class Keypair {
+    public static class Keypair {
 
-        public KeyPair generate(){
+        public static KeyPair generate(){
             return new KeyPairHolder();
         }
     }

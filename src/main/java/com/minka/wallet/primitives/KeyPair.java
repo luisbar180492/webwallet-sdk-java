@@ -9,4 +9,5 @@ public interface KeyPair {
     String getScheme();
     String getPublic();
     String getSecret();
+    String toJson();
 }
