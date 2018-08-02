@@ -1,0 +1,40 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: ""
+host: "https://achtin-tst.minka.io"
+basePath: "/v1"
+schemes:
+- "https"
+paths:
+  /keeper:
+      get:
+        summary: "Genera un keeper"
+        description: ""
+        operationId: "obtenerKeeper"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        responses:
+          200:
+            description: "Keypair generated"
+            schema:
+              $ref: "#/definitions/Keeper"
+definitions:
+  Keeper:
+    type: "object"
+    properties:
+      scheme:
+        type: "string"
+      public:
+        type: "string"
+      secret:
+        type: "string"

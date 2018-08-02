@@ -19,7 +19,29 @@
 
 <build>
     <plugins>
-      <!-- any other plugins -->
+        <plugin>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>2.2.2</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                    <configuration>
+                        <!--<inputSpec>http://test.sintesis.com.bo/SintesisIntegradoRest/integrado/swagger.yaml</inputSpec>-->
+                        <inputSpec>${project.basedir}/src/main/resources/swagger.yaml</inputSpec>
+                        <language>java</language>
+                        <configOptions>
+                            <sourceFolder>src/gen/java/main</sourceFolder>
+                        </configOptions>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+
+        <!-- any other plugins -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
@@ -54,8 +76,32 @@
     <version>0.3.0</version>
    </dependency>
 
+  <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>1.5.12</version>
+  </dependency>
+  <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+  <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>3.9.0</version>
+  </dependency>
 
-<!-- https://mvnrepository.com/artifact/org.gnu/gnu-crypto -->
+  <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>logging-interceptor</artifactId>
+      <version>2.7.5</version>
+  </dependency>
+  <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>2.9.7</version>
+  </dependency>
+
+
+
+      <!-- https://mvnrepository.com/artifact/org.gnu/gnu-crypto -->
    <!--  para el algoritmo ripemd160-->
 	<dependency>
     	<groupId>org.gnu</groupId>

@@ -6,6 +6,7 @@ import com.minka.wallet.IOU;
 import com.minka.wallet.IouParamsDto;
 import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.KeyPair;
+import io.swagger.client.ApiClient;
 
 import java.math.BigDecimal;
 
@@ -37,5 +38,9 @@ public class Sdk {
             IouUtil iouUtil = new IouUtil();
             return iouUtil.write(iouParamsDto);
         }
+    }
+    public void simpleCall(){
+        ApiClient apiClient = new ApiClient();
+
     }
 }
