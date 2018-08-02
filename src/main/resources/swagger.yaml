@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: ""
-host: "https://achtin-tst.minka.io"
+host: "achtin-tst.minka.io"
 basePath: "/v1"
 schemes:
 - "https"

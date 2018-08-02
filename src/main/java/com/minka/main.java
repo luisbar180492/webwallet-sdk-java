@@ -1,5 +1,6 @@
 package com.minka;
 
+import com.minka.api.model.Keeper;
 import com.minka.wallet.IOU;
 import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.KeyPair;
@@ -71,5 +72,9 @@ public class main {
         System.out.println(iou.toPrettyJsonV022());
         System.out.println("Printing raw JSON for the FORMAT V022");
         System.out.println(iou.toRawJsonV022());
+
+        Keeper keeper = Sdk.obtenerKeeper();
+        System.out.println(keeper.toString());
+
     }
 }
