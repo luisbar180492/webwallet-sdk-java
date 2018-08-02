@@ -334,10 +334,18 @@ definitions:
             type: "string"
           labels:
             type: "object"
+            additionalProperties:
+                   type: "object"
   walletResponse:
         type: "object"
         properties:
           wallet_id:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+          handle:
             type: "string"
   signerResponse:
         type: "object"

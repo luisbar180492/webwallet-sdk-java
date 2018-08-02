@@ -6,8 +6,11 @@ import com.minka.api.model.Signer;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RestClientSdk {
 
@@ -87,8 +90,11 @@ public class RestClientSdk {
         System.out.println(api.getApiClient().getBasePath());
 
         WalletRequest walletRe = new WalletRequest();
-        walletRe.setHandle("$ldfksa");
-        walletRe.setLabels(new EmptyObject());
+        walletRe.setHandle("$absds");
+        Map<String, Object> labels = new HashMap<>();
+        labels.put("email", "aranibarIvan@mgali.com");
+        labels.put("phonEnumbier", 21721821);
+        walletRe.setLabels(labels);
         try {
             WalletResponse wallet = api.createWallet(apikey, walletRe);
 
