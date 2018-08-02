@@ -82,9 +82,19 @@ public class RestClientSdk {
     public void createWallet(){
 
         WalletApi api = new WalletApi();
+        String apikey = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
+
         System.out.println(api.getApiClient().getBasePath());
 
-//        api.createWallet();
+        WalletRequest walletRe = new WalletRequest();
+        walletRe.setHandle("$ldfksa");
+        walletRe.setLabels(new EmptyObject());
+        try {
+            WalletResponse wallet = api.createWallet(apikey, walletRe);
 
+            System.out.println(wallet);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
     }
 }

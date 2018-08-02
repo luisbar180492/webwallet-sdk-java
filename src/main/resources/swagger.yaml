@@ -202,6 +202,14 @@ paths:
         schema:
           type: string
         required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/walletRequest"
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/walletResponse"
     put:
       summary: "Edita un wallet"
       description: ""
@@ -319,6 +327,18 @@ definitions:
           type: "string"
         secret:
           type: "string"
+  walletRequest:
+        type: "object"
+        properties:
+          handle:
+            type: "string"
+          labels:
+            type: "object"
+  walletResponse:
+        type: "object"
+        properties:
+          wallet_id:
+            type: "string"
   signerResponse:
         type: "object"
         properties:
