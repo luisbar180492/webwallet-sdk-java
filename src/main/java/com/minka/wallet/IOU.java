@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.SignatureUtil;
 import com.minka.Signer;
-import com.minka.wallet.primitives.KeyPair;
 
 import java.security.PrivateKey;
 import java.util.ArrayList;
