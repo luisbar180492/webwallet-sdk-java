@@ -3,10 +3,23 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: ""
-host: "achtin-tst.minka.io"
+#host: "achtin-tst.minka.io"
+host: "192.168.120.173:8080"
 basePath: "/v1"
 schemes:
-- "https"
+- "http"
+#- "https"
+tags:
+  - name: Keeper
+    description:
+  - name: Domain
+    description:
+  - name: Signer
+    description:
+  - name: Wallet
+    description:
+  - name: Transaction
+    description:
 paths:
   /keeper:
       get:
@@ -17,6 +30,8 @@ paths:
         - "application/json"
         produces:
         - "application/json"
+        tags:
+          - Keeper
         parameters:
         - in: header
           name: API_KEY
@@ -28,6 +43,216 @@ paths:
             description: "Keypair generated"
             schema:
               $ref: "#/definitions/Keeper"
+  /domain:
+      post:
+        summary: "Genera un domain"
+        description: ""
+        operationId: "createDomain"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+          - Domain
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: body
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/domainRequest"
+        responses:
+          '200':
+            description: "Domain generated"
+            schema:
+              $ref: "#/definitions/domainResponse"
+          '400':
+            description: "Domain generated"
+            schema:
+              $ref: "#/definitions/domainResponse"
+      get:
+        summary: "Obtiene un domain"
+        description: ""
+        operationId: "readDomain"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+          - Domain
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+      put:
+        summary: "Edita un domain"
+        description: ""
+        operationId: "updateDomain"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+          - Domain
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+  /signer:
+    get:
+      summary: "Obtiene un signer"
+      description: ""
+      operationId: "getSigner"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Signer
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/signerListResponse"
+    post:
+      summary: "Crea un signer"
+      description: ""
+      operationId: "createSigner"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Signer
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+      - in: body
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/signerRequest"
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/signerResponse"
+    put:
+      summary: "Actualiza un signer"
+      description: ""
+      operationId: "updateDomain"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Signer
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+
+  /wallet:
+    get:
+      summary: "Obtiene un wallet"
+      description: ""
+      operationId: "getWallet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+    post:
+      summary: "Crea un wallet"
+      description: ""
+      operationId: "createWallet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+    put:
+      summary: "Edita un wallet"
+      description: ""
+      operationId: "updateWallet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+
+  /transaction:
+    get:
+      summary: "obtiene todos los transfers"
+      description: ""
+      operationId: "listTransactions"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Transaction
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+    post:
+      summary: "Crea un transfer"
+      description: ""
+      operationId: "createTransfer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Transaction
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+
 definitions:
   Keeper:
     type: "object"
@@ -37,4 +262,82 @@ definitions:
       public:
         type: "string"
       secret:
+        type: "string"
+  domainRequest:
+    type: "object"
+    properties:
+      handle:
+        type: "string"
+      router:
+        type: "string"
+      labels:
+        type: "object"
+  transaction:
+      type: "object"
+      properties:
+        claims:
+          type: "object"
+        source:
+          type: "string"
+        target:
+          type: "string"
+        symbol:
+          type: "string"
+        amount:
+          type: "string"
+        labels:
+          type: "object"
+  wallet:
+      type: "object"
+      properties:
+        handle:
+          type: "string"
+        labels:
+          type: "object"
+  signer:
+      type: "object"
+      properties:
+        keeper:
+          type: "object"
+        public:
+          type: "string"
+        labels:
+          type: "object"
+  signerRequest:
+        type: "object"
+        properties:
+          keeper:
+            type: "array"
+            items:
+              $ref: "#/definitions/publicKeys"
+          labels:
+            type: "object"
+  publicKeys:
+      type: "object"
+      properties:
+        public:
+          type: "string"
+        secret:
+          type: "string"
+  signerResponse:
+        type: "object"
+        properties:
+          handle:
+            type: "string"
+          labels:
+            type: "object"
+          signer_id:
+            type: "string"
+          keeper:
+            type: "array"
+            items:
+              $ref: "#/definitions/publicKeys"
+  signerListResponse:
+        type: "array"
+        items:
+          $ref: "#/definitions/signerResponse"
+  domainResponse:
+    type: "string"
+    properties:
+      domain_id:
         type: "string"

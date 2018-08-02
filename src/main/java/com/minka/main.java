@@ -73,8 +73,8 @@ public class main {
         System.out.println("Printing raw JSON for the FORMAT V022");
         System.out.println(iou.toRawJsonV022());
 
-        Keeper keeper = Sdk.obtenerKeeper();
-        System.out.println(keeper.toString());
+//        Keeper keeper = Sdk.obtenerKeeper();
+//        System.out.println(keeper.toString());
 
     }
 }
