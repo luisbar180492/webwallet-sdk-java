@@ -1,6 +1,8 @@
 package com.minka.wallet;
 
 import com.google.gson.annotations.SerializedName;
+import com.minka.Signer;
+import com.minka.wallet.primitives.KeyPair;
 
 public class SignatureDto {
 
@@ -9,6 +11,16 @@ public class SignatureDto {
     @SerializedName("public")
     private String publico;
     private String string;
+
+    public SignatureDto() {
+    }
+
+    public SignatureDto(Signer currentSigner, String signature) {
+        this.setPublic(currentSigner.getKeyPair().getPublic());
+        this.setScheme(currentSigner.getKeyPair().getScheme());
+        this.setString(signature);
+        this.setSigner(currentSigner.getAddress());
+    }
 
     public String getScheme() {
         return scheme;

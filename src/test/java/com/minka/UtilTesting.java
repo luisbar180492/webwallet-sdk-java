@@ -1,6 +1,7 @@
 package com.minka;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import org.junit.Assert;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
 
@@ -37,6 +38,7 @@ public class UtilTesting
         String secretBack = Hex.toHexString(keyIn.getEncoded());
 
         System.out.println("secret:" + secretBack);
+        Assert.assertEquals(secret, secretBack);
 
     }
     @Test

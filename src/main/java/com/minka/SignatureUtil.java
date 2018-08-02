@@ -23,5 +23,7 @@ public class SignatureUtil {
             return null;
         }
     }
-
+    public static String signWithEd25519(String hashMessageExample, String privateKeyInHexString){
+return null;
+    }
 }
