@@ -1,11 +1,3 @@
-# webwallet-sdk
-Webwallet sdk java version
-
-This is the java implementation for the nodejs sdk https://github.com/webwallet/sdk
-
-Below is a complete example for creating an IOU and print it.
-
-``` java
 package com.minka;
 
 import com.minka.wallet.IOU;
@@ -15,21 +7,24 @@ import com.minka.wallet.primitives.utils.Claim;
 import com.minka.wallet.primitives.utils.Sdk;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang.time.DateUtils;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+public class SampleUseTesting {
 
-public class main {
+    private KeyPair sourceKeyPair;
+    private KeyPair targetKeyPair;
+    private String sourceAddress;
+    private String targetAddress;
 
-    private static KeyPair sourceKeyPair;
-    private static KeyPair targetKeyPair;
-    private static String sourceAddress;
-    private static String targetAddress;
-
-    public static void main(String args[]) throws MissingRequiredParameterIOUCreation, DecoderException, NoSuchAlgorithmException {
+    @Ignore
+    @Test
+    public void fullExample() throws DecoderException, NoSuchAlgorithmException, MissingRequiredParameterIOUCreation {
 
         System.out.println("Generate cryptographic keys\n");
         sourceKeyPair = Sdk.Keypair.generate();
@@ -69,16 +64,7 @@ public class main {
         IOU iou = Sdk.IOU.write(claim).sign(signers);
 
         System.out.println(iou.toPrettyJson()  );
-
-        System.out.println("Printing pretty JSON ");
-        System.out.println(iou.toPrettyJson());
-        System.out.println("Printing Raw JSON ");
-        System.out.println(iou.toRawJson());
-
-        System.out.println("Printing pretty JSON for the FORMAT V022");
-        System.out.println(iou.toPrettyJsonV022());
-        System.out.println("Printing raw JSON for the FORMAT V022");
-        System.out.println(iou.toRawJsonV022());
     }
+
+
 }
-```

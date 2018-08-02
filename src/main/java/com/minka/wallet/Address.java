@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Address {
+public class Address implements com.minka.wallet.primitives.Address{
 
     private String data;
     private String hash;
@@ -36,13 +36,9 @@ public class Address {
     public Address generate() throws DecoderException, NoSuchAlgorithmException {
         List<Charset> ENCODINGS = new ArrayList<>();
         ENCODINGS.add(StandardCharsets.UTF_8);
-        System.out.println("this.data: " + this.data);
-
-        System.out.println("this.hash: " + this.hash);
 
         if (hash == null){
             this.hash = HashingUtil.createHash(this.data);
-            System.out.println("this.hash: " + this.hash);
         }
         this.value = encodeAddress(null);
         return this;
@@ -57,8 +53,6 @@ public class Address {
         }
 
         String inputToEncode = prefix + hash;
-        System.out.println("inputToEncode encodeAddress");
-        System.out.println(inputToEncode);
         byte[] bytes = org.apache.commons.codec.binary.Hex.decodeHex(inputToEncode.toCharArray());
         this.value = Base58Check.encode(bytes);
         return this.value;
@@ -96,5 +90,10 @@ public class Address {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public String encode() throws DecoderException, NoSuchAlgorithmException {
+        return this.generate().getValue();
     }
 }

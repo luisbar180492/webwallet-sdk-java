@@ -3,6 +3,7 @@ package com.minka.wallet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.SignatureUtil;
+import com.minka.Signer;
 
 import java.security.PrivateKey;
 import java.util.ArrayList;
@@ -47,6 +48,23 @@ public class IOU {
             signature = SignatureUtil.signWithEd25519(this.hash.getValue(), currSignature);
             SignatureDto signatureDto = signaturesPair.get(currSignature);
             signatureDto.setString(signature);
+            signatureDtos.add(signatureDto);
+        }
+
+        MetaDto metaDto = new MetaDto();
+        metaDto.setSignatures(signatureDtos);
+        this.setMeta(metaDto);
+        return this;
+    }
+
+    public IOU sign(List<Signer> signers) {
+
+        List<SignatureDto> signatureDtos = new ArrayList<>();
+
+        for (Signer currentSigner: signers) {
+            String signature;
+            signature = SignatureUtil.signWithEd25519(this.hash.getValue(), currentSigner.getKeyPair().getSecret());
+            SignatureDto signatureDto = new SignatureDto(currentSigner, signature);
             signatureDtos.add(signatureDto);
         }
 

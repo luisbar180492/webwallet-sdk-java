@@ -1,11 +1,3 @@
-# webwallet-sdk
-Webwallet sdk java version
-
-This is the java implementation for the nodejs sdk https://github.com/webwallet/sdk
-
-Below is a complete example for creating an IOU and print it.
-
-``` java
 package com.minka;
 
 import com.minka.wallet.IOU;
@@ -81,4 +73,3 @@ public class main {
         System.out.println(iou.toRawJsonV022());
     }
 }
-```

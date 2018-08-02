@@ -1,11 +1,14 @@
 package com.minka;
 
 import net.i2p.crypto.eddsa.EdDSAEngine;
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import org.spongycastle.util.encoders.Hex;
 
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 public class SignatureUtil {
 
@@ -23,5 +26,16 @@ public class SignatureUtil {
             return null;
         }
     }
+    public static String signWithEd25519(String hashMessageExample, String privateKeyInHexString) {
 
+        byte[] privateKeyBytes = Hex.decode(privateKeyInHexString);
+        PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(privateKeyBytes);
+        EdDSAPrivateKey keyIn;
+        try {
+            keyIn = new EdDSAPrivateKey(encoded);
+            return signWithEd25519(hashMessageExample, keyIn);
+        } catch (InvalidKeySpecException e) {
+            return null;
+        }
+    }
 }

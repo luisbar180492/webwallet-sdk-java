@@ -2,7 +2,6 @@ package com.minka;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import com.minka.wallet.SignatureDto;
 import net.i2p.crypto.eddsa.KeyPairGenerator;
@@ -15,7 +14,7 @@ import java.security.PublicKey;
 /***
  * It returns a key-pair generated using Ed25519
  */
-public class KeyPairHolder {
+public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
 
     private PublicKey publicKey;
     private PrivateKey secret;
@@ -38,7 +37,21 @@ public class KeyPairHolder {
         return Hex.toHexString(encoded);
     }
 
-    public PrivateKey getSecret() {
+    @Override
+    public String getScheme() {
+        return "ed25519";
+    }
+
+    @Override
+    public String getPublic() {
+        return getPublicKey();
+    }
+    @Override
+    public String getSecret(){
+        return getSecretInHexString();
+    }
+
+    public PrivateKey getPrivateKey() {
         return secret;
     }
 
@@ -49,6 +62,11 @@ public class KeyPairHolder {
         signatureDto.setScheme("ed25519");
         signatureDto.setSigner(signerAddress);
         return signatureDto;
+    }
+
+    @Override
+    public String toJson() {
+        return this.getDtoForJson().toString();
     }
 
     public class KeyPairHolderDto{

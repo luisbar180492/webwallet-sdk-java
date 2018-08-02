@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.wallet.*;
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.lang.time.DateUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -25,6 +27,43 @@ public class IOUTesting {
     public void starter(){
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.setPrettyPrinting().create();
+
+    }
+
+    @Ignore
+    @Test
+    public void iou() throws MissingRequiredParameterIOUCreation {
+        IouParamsDto iouParamsDto;
+        String domain = "www";
+        KeyPairHolder sourceKeys = new KeyPairHolder();
+        String source = (sourceKeys).getPublicKey();
+        System.out.println("source:" + source);
+        String target= (new KeyPairHolder()).getPublicKey();
+        BigDecimal amount = new BigDecimal(100);
+        BigDecimal credit = new BigDecimal(0);
+
+        String symbol = source;
+        Date active = new Date();
+        Date expire = DateUtils.addDays(active,4);
+
+//        iouParamsDto = new IouParamsDto(domain, source,target, amount, credit,
+//                                        symbol, null,active, expire);
+//
+//
+//        IouUtil iouUtil = new IouUtil();
+//        IOU theIou = iouUtil.write(iouParamsDto);
+
+//        List<PrivateKey> privatekeys = new ArrayList<>();
+//        privatekeys.add(sourceKeys.getPrivateKey());
+//        theIou.sign(privatekeys);
+//        //IMPRIMIR JSON
+//        String theIouJson = theIou.toString();
+//
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        Gson gson = gsonBuilder.create();
+//
+//
+//        System.out.println(gson.toJson(theIou));
 
     }
 
@@ -64,9 +103,10 @@ public class IOUTesting {
         IOU theIou = iouUtil.write(iouParamsDto);
 
         Map<PrivateKey, SignatureDto> signaturePairs = new HashMap<>();
-        signaturePairs.put(sourcekeyPairHolder.getSecret(), sourcekeyPairHolder.getBasicSignatureDto(sourceAddress));
+        signaturePairs.put(sourcekeyPairHolder.getPrivateKey(), sourcekeyPairHolder.getBasicSignatureDto(sourceAddress));
         logger.info("In order to sign we use the Key,value = PrivateKeys, SignatureDto");
         theIou.sign(signaturePairs);
+        logger.info(gson.toJson(theIou));
 
         logger.info("Printing pretty JSON ");
         logger.info(theIou.toPrettyJson());
