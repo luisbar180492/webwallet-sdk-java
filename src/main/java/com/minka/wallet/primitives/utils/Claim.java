@@ -12,28 +12,34 @@ public class Claim {
     private String symbol;
     private String expiry;
 
-    public void setDomain(String domain) {
+    public Claim setDomain(String domain) {
         this.domain = domain;
+        return this;
     }
 
-    public void setSource(String source) {
+    public Claim setSource(String source) {
         this.source = source;
+        return this;
     }
 
-    public void setTarget(String target) {
+    public Claim setTarget(String target) {
         this.target = target;
+        return this;
     }
 
-    public void setAmount(String amount) {
+    public Claim setAmount(String amount) {
         this.amount = amount;
+        return this;
     }
 
-    public void setSymbol(String symbol) {
+    public Claim setSymbol(String symbol) {
         this.symbol = symbol;
+        return this;
     }
 
-    public void setExpiry(String expiry) {
+    public Claim setExpiry(String expiry) {
         this.expiry = expiry;
+        return this;
     }
 
     public String getDomain() {

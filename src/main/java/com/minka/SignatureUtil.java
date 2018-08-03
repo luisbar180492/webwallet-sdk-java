@@ -28,13 +28,14 @@ public class SignatureUtil {
     }
     public static String signWithEd25519(String hashMessageExample, String privateKeyInHexString) {
 
-        byte[] privateKeyBytes = Hex.decode(privateKeyInHexString);
-        PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(privateKeyBytes);
+//        byte[] privateKeyBytes = Hex.decode(privateKeyInHexString);
+        PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(privateKeyInHexString.getBytes());
         EdDSAPrivateKey keyIn;
         try {
             keyIn = new EdDSAPrivateKey(encoded);
             return signWithEd25519(hashMessageExample, keyIn);
         } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
             return null;
         }
     }

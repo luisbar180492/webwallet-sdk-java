@@ -1,0 +1,618 @@
+---
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: ""
+#host: "achtin-tst.minka.io"
+host: "192.168.120.173:8080"
+basePath: "/v1"
+schemes:
+- "http"
+#- "https"
+tags:
+  - name: Keeper
+    description:
+  - name: Domain
+    description:
+  - name: Signer
+    description:
+  - name: Wallet
+    description:
+  - name: Transaction
+    description:
+  - name: Klemer
+    description:
+paths:
+  /klemer:
+    post:
+      summary: "Crea un wallet"
+      description: ""
+      operationId: "createClaim"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Klemer
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/createClaimRequest"
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/createClaimResponse"
+  /action/signed:
+      post:
+        summary: "Sign an iou"
+        description: ""
+        operationId: "createClaim"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+            - SignerTemporal
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: body
+          schema:
+            $ref: "#/definitions/createIouRequest"
+          required: true
+        responses:
+          200:
+            schema:
+              $ref: "#/definitions/iouSigned"
+  /keeper:
+      get:
+        summary: "Genera un keeper"
+        description: ""
+        operationId: "obtenerKeeper"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+          - Keeper
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        responses:
+          200:
+            description: "Keypair generated"
+            schema:
+              $ref: "#/definitions/Keeper"
+  /domain:
+      post:
+        summary: "Genera un domain"
+        description: ""
+        operationId: "createDomain"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+          - Domain
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: body
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/domainRequest"
+        responses:
+          '200':
+            description: "Domain generated"
+            schema:
+              $ref: "#/definitions/domainResponse"
+          '400':
+            description: "Domain generated"
+            schema:
+              $ref: "#/definitions/domainResponse"
+      get:
+        summary: "Obtiene un domain"
+        description: ""
+        operationId: "readDomain"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+          - Domain
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+      put:
+        summary: "Edita un domain"
+        description: ""
+        operationId: "updateDomain"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+          - Domain
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+  /signer:
+    get:
+      summary: "Obtiene un signer"
+      description: ""
+      operationId: "getSigner"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Signer
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/signerListResponse"
+    post:
+      summary: "Crea un signer"
+      description: ""
+      operationId: "createSigner"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Signer
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+      - in: body
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/signerRequest"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/signerResponse"
+    put:
+      summary: "Actualiza un signer"
+      description: ""
+      operationId: "updateDomain"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Signer
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+  /wallet:
+    post:
+      summary: "Crea un wallet"
+      description: ""
+      operationId: "createWallet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/walletRequest"
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/walletResponse"
+  /wallet/{handle}/balance:
+    get:
+      summary: "Obtiene el balance"
+      description: ""
+      operationId: "getBalance"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: handle
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: unit
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/balanceResponse"
+  /wallet/{handle}:
+    put:
+      summary: "Edita un wallet"
+      description: ""
+      operationId: "updateWallet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: handle
+        required: true
+        type: string
+      - in: body
+        schema:
+          $ref: "#/definitions/walletUpdateRequest"
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/walletUpdateResponse"
+    get:
+      summary: "Obtiene un wallet"
+      description: ""
+      operationId: "getWallet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - WalletTempo
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: handle
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/getWalletResponse"
+  /action/stored:
+    post:
+      summary: "Create an action store"
+      description: ""
+      operationId: "createActionStore"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - store
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/createActionStoreRequest"
+        required: true
+#      responses:
+#        "400":
+#          schema:
+#            $ref: "#/definitions/createActionResponseError"
+  /transaction:
+    get:
+      summary: "obtiene todos los transfers"
+      description: ""
+      operationId: "listTransactions"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Transaction
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+    post:
+      summary: "Crea un transfer"
+      description: ""
+      operationId: "createTransfer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Transaction
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/transactionRequest"
+        required: true
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/transactionRequest"
+definitions:
+  Keeper:
+    type: "object"
+    properties:
+      scheme:
+        type: "string"
+      public:
+        type: "string"
+      secret:
+        type: "string"
+  domainRequest:
+    type: "object"
+    properties:
+      handle:
+        type: "string"
+      router:
+        type: "string"
+      labels:
+        type: "object"
+  transactionRequest:
+      type: "object"
+      properties:
+        iou:
+          type: "object"
+        labels:
+          type: "object"
+          additionalProperties:
+                 type: "object"
+  wallet:
+      type: "object"
+      properties:
+        handle:
+          type: "string"
+        labels:
+          type: "object"
+  signer:
+      type: "object"
+      properties:
+        keeper:
+          type: "object"
+        public:
+          type: "string"
+        labels:
+          type: "object"
+  signerRequest:
+        type: "object"
+        properties:
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+  publicKeys:
+      type: "object"
+      properties:
+        public:
+          type: "string"
+        secret:
+          type: "string"
+  walletRequest:
+        type: "object"
+        properties:
+          handle:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+  getWalletResponse:
+        type: "object"
+        properties:
+          wallet_id:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+          handle:
+            type: "string"
+          id:
+            type: "string"
+  walletResponse:
+        type: "object"
+        properties:
+          wallet_id:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+          handle:
+            type: "string"
+  walletUpdateRequest:
+        type: "object"
+        properties:
+          default:
+            type: "string"
+          signer:
+            type: "array"
+            items:
+              $ref: "string"
+  walletUpdateResponse:
+        type: "object"
+        properties:
+          id:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+          handle:
+            type: "string"
+          wallet_id:
+            type: "string"
+          signer:
+            type: "array"
+            items:
+             $ref: "string"
+          default:
+             type: "string"
+  signerResponse:
+        type: "object"
+        properties:
+          handle:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+          signer_id:
+            type: "string"
+          keeper:
+            type: "array"
+            items:
+              $ref: "#/definitions/publicKeys"
+  signerListResponse:
+        type: "array"
+        items:
+          $ref: "#/definitions/signerResponse"
+  domainResponse:
+    type: "string"
+    properties:
+      domain_id:
+        type: "string"
+  createActionStoreRequest:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+      target:
+        type: "string"
+      symbol:
+        type: "string"
+      amount:
+        type: "string"
+      labels:
+        type: "object"
+        additionalProperties:
+               type: "object"
+#  createActionResponseError:
+#    type: "object"
+#    properties:
+#      error: "string"
+  createClaimRequest:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+      target:
+        type: "string"
+      symbol:
+        type: "string"
+      amount:
+        type: "string"
+  createClaimResponse:
+    type: "object"
+    properties:
+      claims :
+        type: "object"
+        $ref: "#/definitions/claims"
+  claims:
+    type: "object"
+    properties:
+      expiry:
+        type: "string"
+      source:
+        type: "string"
+      target:
+        type: "string"
+      symbol:
+        type: "string"
+      amount:
+        type: "string"
+  createIouRequest:
+    type: "object"
+    properties:
+      claims :
+        type: "object"
+        $ref: "#/definitions/claims"
+      keeper:
+        type: "array"
+        items:
+          $ref: "#/definitions/Keeper"
+  iouSigned:
+    type: "object"
+    properties:
+      hash:
+        type: "object"
+        additionalProperties:
+               type: "object"
+      data:
+        type: "object"
+        additionalProperties:
+               type: "object"
+      meta:
+        type: "object"
+        additionalProperties:
+               type: "object"
+  balanceResponse:
+    type: "object"
+    additionalProperties:
+           type: "object"

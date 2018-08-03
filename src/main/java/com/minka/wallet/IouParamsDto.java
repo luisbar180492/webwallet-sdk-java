@@ -2,15 +2,13 @@ package com.minka.wallet;
 
 import org.apache.commons.lang.RandomStringUtils;
 
-import java.math.BigDecimal;
-
 /**
  * Class holder for the parameters needed to create an IOU
  */
 public class IouParamsDto {
 
-    private BigDecimal amount;
-    private BigDecimal credit;
+    private String amount;
+    private String credit;
     private String domain;
     private String expiry;
     private String active;
@@ -19,8 +17,8 @@ public class IouParamsDto {
     private String symbol;
     private String target;
 
-    public IouParamsDto(String domain, String source, String target, BigDecimal amount,
-                        BigDecimal credit, String symbol, String random, String active, String expiry)
+    public IouParamsDto(String domain, String source, String target, String amount,
+                        String credit, String symbol, String random, String active, String expiry)
             throws MissingRequiredParameterIOUCreation {
 
         if(source == null || target == null ||
@@ -73,11 +71,11 @@ public class IouParamsDto {
         this.target = target;
     }
 
-    public BigDecimal getCredit() {
+    public String getCredit() {
         return credit;
     }
 
-    public void setCredit(BigDecimal credit) {
+    public void setCredit(String credit) {
         this.credit = credit;
     }
 
@@ -105,11 +103,11 @@ public class IouParamsDto {
         this.expiry = expiry;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 

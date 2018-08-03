@@ -16,12 +16,24 @@ public class Signer {
         this.keyPair = keyPair;
     }
 
+    public Signer() {
+
+    }
+
     public String getAddress() {
         return address;
     }
 
     public KeyPair getKeyPair() {
         return keyPair;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setKeyPair(KeyPair keyPair) {
+        this.keyPair = keyPair;
     }
 }
 
