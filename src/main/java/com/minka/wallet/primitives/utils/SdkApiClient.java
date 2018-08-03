@@ -3,6 +3,7 @@ package com.minka.wallet.primitives.utils;
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -41,38 +42,22 @@ public class SdkApiClient {
     }
 
 
-//    public WalletUpdateResponse getWallet(Keeper keeper, String handle, Map<String, Object> labelsSigner, Map<String, Object> labelsWallet) throws ApiException {
-//        WalletApi walletApi = new WalletApi();
-//        walletApi.getApiClient().setBasePath(CLOUD_URL);
-//
-//        WalletRequest walletCreationRequest = createRequestWallet(handle, labelsWallet);
-//        WalletResponse wallet = createWallet(walletCreationRequest, walletApi);
-//
-//        SignerRequest signerRequest = createSignerRequest(keeper, labelsSigner);
-//        SignerApi signerApi = new SignerApi();
-//        System.out.println("signerRequest");
-//        System.out.println(signerRequest);
-//
-//        SignerResponse signer = signerApi.createSigner(signerRequest, API_KEY);
-//
-//        System.out.println("SignerResponse");
-//        System.out.println(signer);
-//
-//        WalletUpdateRequest walletUpdateRequest = createUpdateWalletReq(signer.getHandle());
-//
-//        WalletUpdateResponse walletUpdateResponse = walletApi.updateWallet(API_KEY, handle, walletUpdateRequest);
-//        return walletUpdateResponse;
-//    }
-//
-//    private WalletUpdateRequest createUpdateWalletReq(String aPublic) {
-//        WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
-//        updateWalletReq.setDefault(aPublic);
-//        List<String> listaSigners = new ArrayList<>();
-//        listaSigners.add(aPublic);
-//        updateWalletReq.setSigner(listaSigners);
-//        return updateWalletReq;
-//    }
-//
+    public WalletUpdateResponse updateWallet(String handle, List<String> signers , String defaultAddress) throws ApiException {
+        WalletApi walletApi = new WalletApi();
+        walletApi.getApiClient().setBasePath(url);
+
+        WalletUpdateRequest walletUpdateRequest = createUpdateWalletReq(signers, defaultAddress);
+
+        return walletApi.updateWallet(apiKey, handle, walletUpdateRequest);
+    }
+
+    private WalletUpdateRequest createUpdateWalletReq(List<String> signers , String defaultAddress) {
+        WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
+        updateWalletReq.setDefault(defaultAddress);
+        updateWalletReq.setSigner(signers);
+        return updateWalletReq;
+    }
+
 //    private SignerRequest createSignerRequest(Keeper keeper, Map<String, Object> labelsSigner) {
 //        SignerRequest result = new SignerRequest();
 //        result.setLabels(labelsSigner);

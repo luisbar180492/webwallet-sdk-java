@@ -109,42 +109,41 @@ public class RestClientSdk {
             System.out.println("wallet created\n");
             System.out.println(wallet);
 
-//            KeeperApi keeperApi = new KeeperApi();
-//            keeperApi.getApiClient().setBasePath(CLOUD_URL);
-//            Keeper keeper = keeperApi.obtenerKeeper(apikey);
-//            System.out.println("keeper created\n");
-//            System.out.println(keeper);
-//
-//            SignerApi signerApi = new SignerApi();
-//            signerApi.getApiClient().setBasePath(CLOUD_URL);
-//            SignerRequest signerREq= new SignerRequest();
-//            Map<String, Object> labelsSigner = new HashMap<>();
-//            labelsSigner.put("bankAccountNumber",new Integer(21212113));
-//            labelsSigner.put("typeAccount", "savings");
-//            signerREq.setLabels(labelsSigner);
-//            List<PublicKeys> llaves = new ArrayList<>();
-//            PublicKeys aPublickKey = new PublicKeys();
-//            aPublickKey.setPublic(keeper.getPublic());
-//            llaves.add(aPublickKey);
-//            signerREq.setKeeper(llaves);
-//
-//            SignerResponse signer = signerApi.createSigner(signerREq, apikey);
-//            System.out.println("Signer created\n");
-//            System.out.println(signer);
+            KeeperApi keeperApi = new KeeperApi();
+            keeperApi.getApiClient().setBasePath(CLOUD_URL);
+            Keeper keeper = keeperApi.obtenerKeeper(apikey);
+            System.out.println("keeper created\n");
+            System.out.println(keeper);
 
-//
-//            System.out.println("UPDATE BASE BATH\n");
-//
-//            System.out.println(walletApi.getApiClient().getBasePath());
-//
-//            WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
-//            updateWalletReq.setDefault(keeper.getPublic());
-//            List<String> listaSigners = new ArrayList<>();
-//            listaSigners.add(keeper.getPublic());
-//            updateWalletReq.setSigner(listaSigners);
-//            WalletUpdateResponse walletUpdateResponse = walletApi.updateWallet(apikey, handle, updateWalletReq);
-//
-//            System.out.println(walletUpdateResponse);
+            SignerApi signerApi = new SignerApi();
+            signerApi.getApiClient().setBasePath(CLOUD_URL);
+            SignerRequest signerREq= new SignerRequest();
+            Map<String, Object> labelsSigner = new HashMap<>();
+            labelsSigner.put("bankAccountNumber",new Integer(21212113));
+            labelsSigner.put("typeAccount", "savings");
+            signerREq.setLabels(labelsSigner);
+            List<PublicKeys> llaves = new ArrayList<>();
+            PublicKeys aPublickKey = new PublicKeys();
+            aPublickKey.setPublic(keeper.getPublic());
+            llaves.add(aPublickKey);
+
+            SignerResponse signer = signerApi.createSigner(signerREq, apikey);
+            System.out.println("Signer created\n");
+            System.out.println(signer);
+
+
+            System.out.println("UPDATE BASE BATH\n");
+
+            System.out.println(walletApi.getApiClient().getBasePath());
+
+            WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
+            updateWalletReq.setDefault(keeper.getPublic());
+            List<String> listaSigners = new ArrayList<>();
+            listaSigners.add(keeper.getPublic());
+            updateWalletReq.setSigner(listaSigners);
+            WalletUpdateResponse walletUpdateResponse = walletApi.updateWallet(apikey, handle, updateWalletReq);
+
+            System.out.println(walletUpdateResponse);
 
         } catch (ApiException e) {
             e.printStackTrace();
