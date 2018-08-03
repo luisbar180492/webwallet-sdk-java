@@ -2,37 +2,52 @@ package com.minka;
 
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
-import com.minka.api.model.Signer;
 import com.minka.wallet.primitives.utils.Claim;
-import com.sun.java.browser.plugin2.DOM;
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.*;
 
 public class RestClientSdk {
 
     static String DOMAIN_ACH = "achtin-tst.minka.io";
     static String CLOUD_URL = "https://achtin-tst.minka.io/v1";
     static String API_KEY = "5b481fc2ae177010e197026b9778ac575c36480a918674e7a76d8037";
-//    static String ANDRES_URL = "http://192.168.120.173:8080/v1";
 
     @Ignore
     @Test
     public void obtenerKeeper(){
         KeeperApi api = new KeeperApi();
-
+        api.getApiClient().setBasePath(CLOUD_URL);
         System.out.println(api.getApiClient().getBasePath());
         try {
             String apikey = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
             Keeper keeper = api.obtenerKeeper(apikey);
 
             System.out.println(keeper.toString());
+
+            System.out.println("PUBLIC Key length");
+            System.out.println( keeper.getPublic().length());
+            System.out.println("secrete Key length");
+            System.out.println( keeper.getSecret().length());
+            byte[] bytes = keeper.getSecret().getBytes();
+            byte[] decode = Base64.getDecoder().decode(bytes);
+            PKCS8EncodedKeySpec encodedPrivate = new PKCS8EncodedKeySpec(decode);
+
+//            try {
+//                EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encodedPrivate);
+//            } catch (InvalidKeySpecException e) {
+//                System.out.println("encodedPrivate failed");
+//
+//                e.printStackTrace();
+//            }
+
+
+//            PKCS8EncodedKeySpec encodedPublic = new PKCS8EncodedKeySpec(keeper.getPublic().getBytes());
         } catch (ApiException e) {
             System.out.println("EXCEPTION");
 
@@ -206,7 +221,11 @@ public class RestClientSdk {
         claim.setTarget("$abcd7");
         claim.setSymbol("$abcd8");
         claim.setAmount("100");
-        return klemerApi.createClaim(API_KEY, claim);
+        SignerTemporalApi firmador= new SignerTemporalApi();
+
+        CreateClaimResponse result = klemerApi.createClaim(API_KEY, claim);
+
+        return result;
     }
 
     @Test
@@ -220,8 +239,6 @@ public class RestClientSdk {
                 .setSource(claims.getSource())
                 .setSymbol(claims.getSymbol())
                 .setTarget(claims.getTarget());
-
-
 
     }
 

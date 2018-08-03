@@ -95,7 +95,7 @@ public class IOUTesting {
         String expiry = IouUtil.convertToIsoFormat(new Date());
 
         iouParamsDto = new IouParamsDto(domain,
-                source, target, amount, credit,
+                source, target, amount.toString(), credit.toString(),
                 symbol, random, null, expiry);
 
         IouUtil iouUtil = new IouUtil();

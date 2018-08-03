@@ -25,7 +25,7 @@ public class IouUtil {
         HashDto hashDto = new HashDto();
 
         List<String> steps = new ArrayList<>();
-        steps.add("stringfy");
+        steps.add("stringify");
         steps.add("data");
         hashDto.setSteps(steps);
 

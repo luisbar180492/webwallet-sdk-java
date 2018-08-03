@@ -32,6 +32,9 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
         return Hex.toHexString(encoded);
     }
 
+    public PublicKey getPublicKeyOriginal(){
+        return this.publicKey;
+    }
     public String getSecretInHexString() {
         byte[] encoded = secret.getEncoded();
         return Hex.toHexString(encoded);
@@ -54,6 +57,7 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
     public PrivateKey getPrivateKey() {
         return secret;
     }
+
 
 
     public SignatureDto getBasicSignatureDto(String signerAddress){

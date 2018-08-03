@@ -48,6 +48,31 @@ paths:
         200:
           schema:
             $ref: "#/definitions/createClaimResponse"
+  /action/signed:
+      post:
+        summary: "Sign an iou"
+        description: ""
+        operationId: "createClaim"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+            - SignerTemporal
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: body
+          schema:
+            $ref: "#/definitions/createIouRequest"
+          required: true
+        responses:
+          200:
+            schema:
+              $ref: "#/definitions/iouSigned"
   /keeper:
       get:
         summary: "Genera un keeper"
@@ -289,40 +314,47 @@ paths:
 #        "400":
 #          schema:
 #            $ref: "#/definitions/createActionResponseError"
-#  /transaction:
-#    get:
-#      summary: "obtiene todos los transfers"
-#      description: ""
-#      operationId: "listTransactions"
-#      consumes:
-#      - "application/json"
-#      produces:
-#      - "application/json"
-#      tags:
-#          - Transaction
-#      parameters:
-#      - in: header
-#        name: API_KEY
-#        schema:
-#          type: string
-#        required: true
-#    post:
-#      summary: "Crea un transfer"
-#      description: ""
-#      operationId: "createTransfer"
-#      consumes:
-#      - "application/json"
-#      produces:
-#      - "application/json"
-#      tags:
-#          - Transaction
-#      parameters:
-#      - in: header
-#        name: API_KEY
-#        schema:
-#          type: string
-#        required: true
-
+  /transaction:
+    get:
+      summary: "obtiene todos los transfers"
+      description: ""
+      operationId: "listTransactions"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Transaction
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+    post:
+      summary: "Crea un transfer"
+      description: ""
+      operationId: "createTransfer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Transaction
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/transactionRequest"
+        required: true
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/transactionRequest"
 definitions:
   Keeper:
     type: "object"
@@ -342,21 +374,15 @@ definitions:
         type: "string"
       labels:
         type: "object"
-  transaction:
+  transactionRequest:
       type: "object"
       properties:
-        claims:
+        iou:
           type: "object"
-        source:
-          type: "string"
-        target:
-          type: "string"
-        symbol:
-          type: "string"
-        amount:
-          type: "string"
         labels:
           type: "object"
+          additionalProperties:
+                 type: "object"
   wallet:
       type: "object"
       properties:
@@ -512,3 +538,28 @@ definitions:
         type: "string"
       amount:
         type: "string"
+  createIouRequest:
+    type: "object"
+    properties:
+      claims :
+        type: "object"
+        $ref: "#/definitions/claims"
+      keeper:
+        type: "array"
+        items:
+          $ref: "#/definitions/Keeper"
+  iouSigned:
+    type: "object"
+    properties:
+      hash:
+        type: "object"
+        additionalProperties:
+               type: "object"
+      data:
+        type: "object"
+        additionalProperties:
+               type: "object"
+      meta:
+        type: "object"
+        additionalProperties:
+               type: "object"

@@ -8,7 +8,6 @@ import com.minka.wallet.IouParamsDto;
 import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.KeyPair;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ import java.util.Map;
  */
 public class Sdk {
 
-    public static Claim createClaim(String sourceHandle, String targetHandle, String amount, String domainAch) throws ApiException {
+    public static Claims createClaim(String sourceHandle, String targetHandle, String amount, String domainAch) throws ApiException {
         SdkApiClient sdkApiClient = new SdkApiClient();
         CreateClaimRequest req = new CreateClaimRequest();
         req.setAmount(amount);
@@ -26,14 +25,7 @@ public class Sdk {
         req.setSource(sourceHandle);
         CreateClaimResponse claimResp = sdkApiClient.createClaim(req);
 
-        Claims claims = claimResp.getClaims();
-        return (new Claim())
-                .setDomain(domainAch)
-                .setTarget(claims.getTarget())
-                .setSymbol(claims.getSource())
-                .setSource(claims.getSource())
-                .setExpiry(claims.getExpiry())
-                .setAmount(claims.getAmount());
+        return claimResp.getClaims();
     }
 
     public static class Keypair {
@@ -53,7 +45,7 @@ public class Sdk {
         public static com.minka.wallet.IOU write(Claim claim) throws MissingRequiredParameterIOUCreation {
 
             IouParamsDto iouParamsDto = new IouParamsDto(claim.getDomain(),
-                    claim.getSource(),claim.getTarget(), new BigDecimal(claim.getAmount()), null,
+                    claim.getSource(),claim.getTarget(), claim.getAmount(), null,
                     claim.getSymbol(), null, null, claim.getExpiry());
 
             IouUtil iouUtil = new IouUtil();
