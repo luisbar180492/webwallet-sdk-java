@@ -73,6 +73,32 @@ paths:
             200:
               schema:
                 $ref: "#/definitions/createActionResponse"
+  /action/{hash}:
+        get:
+           summary: "Sign an iou"
+           description: ""
+           operationId: "getAction"
+           consumes:
+           - "application/json"
+           produces:
+           - "application/json"
+           tags:
+               - action
+           parameters:
+           - in: header
+             name: API_KEY
+             schema:
+               type: string
+             required: true
+           - in: path
+             name: hash
+             schema:
+               type: string
+             required: true
+           responses:
+             200:
+               schema:
+                 $ref: "#/definitions/genericResponse"
   /action/signed:
       post:
         summary: "Sign an iou"
@@ -657,6 +683,10 @@ definitions:
         additionalProperties:
                type: "object"
   createActionResponse:
+    type: "object"
+    additionalProperties:
+           type: "object"
+  genericResponse:
     type: "object"
     additionalProperties:
            type: "object"

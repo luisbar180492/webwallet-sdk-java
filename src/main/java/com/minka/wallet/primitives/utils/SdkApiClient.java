@@ -80,6 +80,12 @@ public class SdkApiClient {
         return actionApi.createAction(apiKey, actionReq);
     }
 
+    public GenericResponse getAction(String hashValue) throws ApiException {
+        ActionApi actionApi = new ActionApi();
+        actionApi.getApiClient().setBasePath(url);
+        return actionApi.getAction(apiKey, hashValue);
+    }
+
 //    private SignerRequest createSignerRequest(Keeper keeper, Map<String, Object> labelsSigner) {
 //        SignerRequest result = new SignerRequest();
 //        result.setLabels(labelsSigner);
