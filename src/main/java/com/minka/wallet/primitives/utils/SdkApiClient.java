@@ -3,9 +3,6 @@ package com.minka.wallet.primitives.utils;
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -33,6 +30,14 @@ public class SdkApiClient {
         walletRe.setHandle(handle);
         walletRe.setLabels(labelsWallet);
         return walletApi.createWallet(apiKey, walletRe);
+    }
+
+    public SignerResponse createSigner(Map<String, Object> labels) throws ApiException {
+        SignerRequest signerRequest = new SignerRequest();
+        signerRequest.setLabels(labels);
+        SignerApi signerApi = new SignerApi();
+        signerApi.getApiClient().setBasePath(url);
+        return signerApi.createSigner(signerRequest, apiKey);
     }
 
 

@@ -402,10 +402,6 @@ definitions:
   signerRequest:
         type: "object"
         properties:
-          keeper:
-            type: "array"
-            items:
-              $ref: "#/definitions/publicKeys"
           labels:
             type: "object"
             additionalProperties:

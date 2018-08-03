@@ -46,11 +46,6 @@ public class RestClientSdk {
 
         try {
             SignerRequest signerReq = new SignerRequest();
-            List<PublicKeys> keepers = new ArrayList<>();
-            PublicKeys llave = new PublicKeys();
-            llave.setPublic("041726541843d5c1924ad7dbfde8307cce6d96e9dfdab61759fb155b54581dc08c4e5575262a150e23ceffee70ce166000766bc477b61a8e8ea95be5c0b37b66ef");
-            keepers.add(llave);
-            signerReq.setKeeper(keepers);
             Map<String, Object> labelsSigner = new HashMap<>();
             labelsSigner.put("bankAccountNumber",new Integer(2121211));
             labelsSigner.put("typeAccount", "savings");
