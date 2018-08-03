@@ -3,9 +3,7 @@ package com.minka.wallet.primitives.utils;
 import com.minka.IouUtil;
 import com.minka.KeyPairHolder;
 import com.minka.api.handler.ApiException;
-import com.minka.api.model.Keeper;
-import com.minka.api.model.WalletUpdateRequest;
-import com.minka.api.model.WalletUpdateResponse;
+import com.minka.api.model.*;
 import com.minka.wallet.IouParamsDto;
 import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.KeyPair;
@@ -18,6 +16,25 @@ import java.util.Map;
  * Utils exposing the SDK library.
  */
 public class Sdk {
+
+    public static Claim createClaim(String sourceHandle, String targetHandle, String amount, String domainAch) throws ApiException {
+        SdkApiClient sdkApiClient = new SdkApiClient();
+        CreateClaimRequest req = new CreateClaimRequest();
+        req.setAmount(amount);
+        req.setSymbol(sourceHandle);
+        req.setTarget(targetHandle);
+        req.setSource(sourceHandle);
+        CreateClaimResponse claimResp = sdkApiClient.createClaim(req);
+
+        Claims claims = claimResp.getClaims();
+        return (new Claim())
+                .setDomain(domainAch)
+                .setTarget(claims.getTarget())
+                .setSymbol(claims.getSource())
+                .setSource(claims.getSource())
+                .setExpiry(claims.getExpiry())
+                .setAmount(claims.getAmount());
+    }
 
     public static class Keypair {
 

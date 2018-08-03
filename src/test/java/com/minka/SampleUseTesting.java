@@ -71,18 +71,33 @@ public class SampleUseTesting {
     }
 
 
+    static String DOMAIN_ACH = "achtin-tst.minka.io";
+
     @Test
-    public void fullCreateWalletCalled() throws ApiException {
-        String handle = "$abcd8";// + RandomStringUtils.random(3);
+    public void fullCreateWalletCalled() throws ApiException, MissingRequiredParameterIOUCreation {
+        String sourceHandle = "$abcd11";// + RandomStringUtils.random(3);
         Map<String, Object> labelsSigner = new HashMap<>();
         Map<String, Object> labelsWallet = new HashMap<>();
 
-        WalletResult walletCreationResult = Sdk.createWallet(handle, labelsSigner, labelsWallet);
+        WalletResult walletCreationResult = Sdk.createWallet(sourceHandle, labelsSigner, labelsWallet);
 
         Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
 
         System.out.println(gson.toJson(walletCreationResult));
 
+        String targetHandle = "$abcd10";
+        String amount = "100";
+        Claim claim = Sdk.createClaim(sourceHandle, targetHandle, amount, DOMAIN_ACH);
+
+        System.out.println("Claim\n");
+        System.out.println(gson.toJson(claim));
+        Signer sourceSigner = SignerUtil.toSigner(walletCreationResult.getKeeper(), claim.getSource());
+        List<Signer> signers = new ArrayList<>();
+        signers.add(sourceSigner);
+
+        IOU iou = Sdk.IOU.write(claim).sign(signers);
+
+        System.out.println(iou.toPrettyJson());
 //        List<String> newSigners = walletCreationResult.getWallet().getSigner();
 //        String newSigner = "wQJjeZMXctGvdhJMa63azvuFfxDNqV7CBc";
 //

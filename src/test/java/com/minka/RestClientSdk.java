@@ -3,6 +3,8 @@ package com.minka;
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
 import com.minka.api.model.Signer;
+import com.minka.wallet.primitives.utils.Claim;
+import com.sun.java.browser.plugin2.DOM;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -15,6 +17,7 @@ import java.util.Map;
 
 public class RestClientSdk {
 
+    static String DOMAIN_ACH = "achtin-tst.minka.io";
     static String CLOUD_URL = "https://achtin-tst.minka.io/v1";
     static String API_KEY = "5b481fc2ae177010e197026b9778ac575c36480a918674e7a76d8037";
 //    static String ANDRES_URL = "http://192.168.120.173:8080/v1";
@@ -188,6 +191,12 @@ public class RestClientSdk {
 
     @Test
     public void createKlemer() throws ApiException {
+        CreateClaimResponse response = getCreateClaimResponse();
+
+        System.out.println(response);
+    }
+
+    private CreateClaimResponse getCreateClaimResponse() throws ApiException {
         KlemerApi klemerApi = new KlemerApi();
 
         klemerApi.getApiClient().setBasePath(CLOUD_URL);
@@ -197,8 +206,23 @@ public class RestClientSdk {
         claim.setTarget("$abcd7");
         claim.setSymbol("$abcd8");
         claim.setAmount("100");
-        CreateClaimResponse response = klemerApi.createClaim(API_KEY, claim);
-
-        System.out.println(response);
+        return klemerApi.createClaim(API_KEY, claim);
     }
+
+    @Test
+    public void signIouLocally() throws ApiException {
+        CreateClaimResponse createClaimResponse = getCreateClaimResponse();
+        Claims claims = createClaimResponse.getClaims();
+        Claim claim = new Claim()
+                .setDomain(DOMAIN_ACH)
+                .setAmount(claims.getAmount())
+                .setExpiry(claims.getExpiry())
+                .setSource(claims.getSource())
+                .setSymbol(claims.getSymbol())
+                .setTarget(claims.getTarget());
+
+
+
+    }
+
 }

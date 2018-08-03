@@ -1,9 +1,6 @@
 package com.minka.wallet.primitives.utils;
 
-import com.minka.api.handler.ApiException;
-import com.minka.api.handler.KeeperApi;
-import com.minka.api.handler.SignerApi;
-import com.minka.api.handler.WalletApi;
+import com.minka.api.handler.*;
 import com.minka.api.model.*;
 
 import java.util.ArrayList;
@@ -87,5 +84,12 @@ public class SdkApiClient {
         walletApi.getApiClient().setBasePath(CLOUD_URL);
 
         return walletApi.updateWallet(API_KEY, handle, walletUpdateRequest);
+    }
+
+    public CreateClaimResponse createClaim(CreateClaimRequest req) throws ApiException {
+        KlemerApi klemerApi = new KlemerApi();
+
+        klemerApi.getApiClient().setBasePath(CLOUD_URL);
+        return klemerApi.createClaim(API_KEY, req);
     }
 }
