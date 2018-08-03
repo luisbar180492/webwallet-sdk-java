@@ -6,6 +6,8 @@ import com.minka.KeyPairHolder;
 //import com.minka.api.handler.ApiException;
 //import com.minka.api.handler.DefaultApi;
 //import com.minka.api.model.Keeper;
+import com.minka.api.handler.ApiException;
+import com.minka.api.model.Keeper;
 import com.minka.wallet.IouParamsDto;
 import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.KeyPair;
@@ -13,6 +15,7 @@ import com.minka.wallet.primitives.KeyPair;
 
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * Utils exposing the SDK library.
@@ -44,21 +47,17 @@ public class Sdk {
         }
     }
 
-//    public static Keeper obtenerKeeper(){
-//        DefaultApi api = new DefaultApi();
-//        ApiClient apiclient = new ApiClient();
-//        api.setApiClient(apiclient);
-//
-//        System.out.println(api.getApiClient().getBasePath());
-//        try {
-//            String apikey = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
-//
-//            return api.obtenerKeeper(apikey);
-//        } catch (ApiException e) {
-//            System.out.println("EXCEPTION");
-//
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    public static WalletCreationResult createWallet(String handle, Map<String, Object> labelsSigner, Map<String, Object> labelsWallet) throws ApiException {
+
+        WalletCreationResult result = new WalletCreationResult();
+
+        SdkApiClient sdkApiClient = new SdkApiClient();
+        Keeper keeper = sdkApiClient.getKeeper();
+//        System.out.println(keeper);
+        result.setKeeper(keeper);
+
+        result.setWallet(sdkApiClient.getWallet(keeper, handle, labelsSigner, labelsWallet));
+
+        return result;
+    }
 }

@@ -234,10 +234,10 @@ paths:
         schema:
           $ref: "#/definitions/walletUpdateRequest"
         required: true
-#      responses:
-#        200:
-#          schema:
-#            $ref: "#/definitions/walletUpdateResponse"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/walletUpdateResponse"
   /transaction:
     get:
       summary: "obtiene todos los transfers"
@@ -331,6 +331,8 @@ definitions:
               $ref: "#/definitions/publicKeys"
           labels:
             type: "object"
+            additionalProperties:
+                   type: "object"
   publicKeys:
       type: "object"
       properties:
@@ -370,7 +372,7 @@ definitions:
   walletUpdateResponse:
         type: "object"
         properties:
-          wallet_id:
+          id:
             type: "string"
           labels:
             type: "object"
@@ -378,6 +380,14 @@ definitions:
                    type: "object"
           handle:
             type: "string"
+          wallet_id:
+            type: "string"
+          signer:
+            type: "array"
+            items:
+             $ref: "string"
+          default:
+             type: "string"
   signerResponse:
         type: "object"
         properties:
@@ -385,6 +395,8 @@ definitions:
             type: "string"
           labels:
             type: "object"
+            additionalProperties:
+                   type: "object"
           signer_id:
             type: "string"
           keeper:

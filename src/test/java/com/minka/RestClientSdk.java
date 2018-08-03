@@ -50,8 +50,10 @@ public class RestClientSdk {
             llave.setPublic("041726541843d5c1924ad7dbfde8307cce6d96e9dfdab61759fb155b54581dc08c4e5575262a150e23ceffee70ce166000766bc477b61a8e8ea95be5c0b37b66ef");
             keepers.add(llave);
             signerReq.setKeeper(keepers);
-            EmptyObject emptyObject = new EmptyObject();
-            signerReq.setLabels(emptyObject);
+            Map<String, Object> labelsSigner = new HashMap<>();
+            labelsSigner.put("bankAccountNumber",new Integer(2121211));
+            labelsSigner.put("typeAccount", "savings");
+            signerReq.setLabels(labelsSigner);
             System.out.println(signerReq);
 
             SignerResponse signer = api.createSigner(signerReq, apikey);
@@ -102,10 +104,10 @@ public class RestClientSdk {
         WalletRequest walletRe = new WalletRequest();
         String handle = "$abc";
         walletRe.setHandle(handle);
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("email", "aranibarIvan@mgali.com");
-        labels.put("phonEnumbier", 21721821);
-        walletRe.setLabels(labels);
+        Map<String, Object> walletLabels = new HashMap<>();
+        walletLabels.put("email", "aranibarIvan@mgali.com");
+        walletLabels.put("phoneNumber", new Integer(21721821));
+        walletRe.setLabels(walletLabels);
         try {
             WalletResponse wallet = walletApi.createWallet(apikey, walletRe);
             System.out.println("wallet created\n");
@@ -120,7 +122,10 @@ public class RestClientSdk {
             SignerApi signerApi = new SignerApi();
             signerApi.getApiClient().setBasePath(CLOUD_URL);
             SignerRequest signerREq= new SignerRequest();
-            signerREq.setLabels(new EmptyObject());
+            Map<String, Object> labelsSigner = new HashMap<>();
+            labelsSigner.put("bankAccountNumber",new Integer(21212113));
+            labelsSigner.put("typeAccount", "savings");
+            signerREq.setLabels(labelsSigner);
             List<PublicKeys> llaves = new ArrayList<>();
             PublicKeys aPublickKey = new PublicKeys();
             aPublickKey.setPublic(keeper.getPublic());
@@ -136,13 +141,14 @@ public class RestClientSdk {
 
             System.out.println(walletApi.getApiClient().getBasePath());
 
-
             WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
             updateWalletReq.setDefault(keeper.getPublic());
             List<String> listaSigners = new ArrayList<>();
             listaSigners.add(keeper.getPublic());
             updateWalletReq.setSigner(listaSigners);
-            walletApi.updateWallet(apikey,handle, updateWalletReq);
+            WalletUpdateResponse walletUpdateResponse = walletApi.updateWallet(apikey, handle, updateWalletReq);
+
+            System.out.println(walletUpdateResponse);
 
         } catch (ApiException e) {
             e.printStackTrace();

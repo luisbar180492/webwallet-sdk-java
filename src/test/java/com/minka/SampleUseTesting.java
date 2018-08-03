@@ -1,18 +1,21 @@
 package com.minka;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.minka.api.handler.ApiException;
 import com.minka.wallet.IOU;
 import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.KeyPair;
 import com.minka.wallet.primitives.utils.Claim;
 import com.minka.wallet.primitives.utils.Sdk;
+import com.minka.wallet.primitives.utils.WalletCreationResult;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang.time.DateUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class SampleUseTesting {
 
@@ -21,6 +24,7 @@ public class SampleUseTesting {
     private String sourceAddress;
     private String targetAddress;
 
+    @Ignore
     @Test
     public void fullExample() throws DecoderException, NoSuchAlgorithmException, MissingRequiredParameterIOUCreation {
 
@@ -66,4 +70,16 @@ public class SampleUseTesting {
     }
 
 
+    @Test
+    public void fullCreateWalletCalled() throws ApiException {
+        String handle = "$abcd2";// + RandomStringUtils.random(3);
+        Map<String, Object> labelsSigner = new HashMap<>();
+        Map<String, Object> labelsWallet = new HashMap<>();
+
+        WalletCreationResult walletCreationResult = Sdk.createWallet(handle, labelsSigner, labelsWallet);
+
+        Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
+
+        System.out.println(gson.toJson(walletCreationResult));
+    }
 }
