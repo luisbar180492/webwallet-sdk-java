@@ -14,7 +14,7 @@ public class createPersonWallet {
 
         SdkApiClient sdkApiClient = new SdkApiClient("https://achtin-tst.minka.io/v1","5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c");
 
-        String handle = "$userphonenumber";
+        String handle = "$userphonenumber1";
 
         Map<String, Object> labels = new HashMap<>();
         labels.put("first_name", "user_first_name");

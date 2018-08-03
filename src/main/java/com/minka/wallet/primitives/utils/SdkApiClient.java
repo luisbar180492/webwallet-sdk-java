@@ -73,6 +73,13 @@ public class SdkApiClient {
         return walletApi.getWallet(apiKey, yourBankName);
     }
 
+
+    public CreateActionResponse createAction(CreateActionRequest actionReq ) throws ApiException {
+        ActionApi actionApi = new ActionApi();
+        actionApi.getApiClient().setBasePath(url);
+        return actionApi.createAction(apiKey, actionReq);
+    }
+
 //    private SignerRequest createSignerRequest(Keeper keeper, Map<String, Object> labelsSigner) {
 //        SignerRequest result = new SignerRequest();
 //        result.setLabels(labelsSigner);

@@ -14,8 +14,8 @@ public class addAddressToWallet {
         SdkApiClient sdkApiClient = new SdkApiClient("https://achtin-tst.minka.io/v1","5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c");
 
         try {
-            String handle = "$yourbankname1221";
-            String defaultAddress = "wVb5Ppmv4wwPeXMLjSWLF9dHFschxpaSfp";
+            String handle = "$userphonenumber1";
+            String defaultAddress = "wXK6boH2pLf8raZwpSQH3JRgzW7qH7WyVf";
             List<String> signers = new ArrayList<>();
             signers.add(defaultAddress);
             WalletUpdateResponse signer = sdkApiClient.updateWallet(handle, signers, defaultAddress);

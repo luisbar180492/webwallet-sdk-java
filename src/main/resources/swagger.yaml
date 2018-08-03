@@ -48,6 +48,31 @@ paths:
         200:
           schema:
             $ref: "#/definitions/createClaimResponse"
+  /action:
+        post:
+          summary: "Sign an iou"
+          description: ""
+          operationId: "createAction"
+          consumes:
+          - "application/json"
+          produces:
+          - "application/json"
+          tags:
+              - action
+          parameters:
+          - in: header
+            name: API_KEY
+            schema:
+              type: string
+            required: true
+          - in: body
+            schema:
+              $ref: "#/definitions/createActionRequest"
+            required: true
+          responses:
+            200:
+              schema:
+                $ref: "#/definitions/createActionResponse"
   /action/signed:
       post:
         summary: "Sign an iou"
@@ -613,6 +638,25 @@ definitions:
         additionalProperties:
                type: "object"
   balanceResponse:
+    type: "object"
+    additionalProperties:
+           type: "object"
+  createActionRequest:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+      target:
+        type: "string"
+      symbol:
+        type: "string"
+      amount:
+        type: "string"
+      labels:
+        type: "object"
+        additionalProperties:
+               type: "object"
+  createActionResponse:
     type: "object"
     additionalProperties:
            type: "object"
