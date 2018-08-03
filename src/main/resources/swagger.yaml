@@ -260,6 +260,37 @@ paths:
         200:
           schema:
             $ref: "#/definitions/walletResponse"
+  /wallet/{handle}/balance:
+    get:
+      summary: "Obtiene el balance"
+      description: ""
+      operationId: "getBalance"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: handle
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: tin
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/balanceResponse"
   /wallet/{handle}:
     put:
       summary: "Edita un wallet"
@@ -559,3 +590,7 @@ definitions:
         type: "object"
         additionalProperties:
                type: "object"
+  balanceResponse:
+    type: "object"
+    additionalProperties:
+           type: "object"

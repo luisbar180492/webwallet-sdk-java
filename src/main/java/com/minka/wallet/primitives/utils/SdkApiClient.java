@@ -58,6 +58,14 @@ public class SdkApiClient {
         return updateWalletReq;
     }
 
+    public BalanceResponse getBalance(String bankName, String currency) throws ApiException {
+        WalletApi walletApi = new WalletApi();
+        walletApi.getApiClient().setBasePath(url);
+
+        BalanceResponse balance = walletApi.getBalance(apiKey, bankName, currency);
+        return balance;
+    }
+
 //    private SignerRequest createSignerRequest(Keeper keeper, Map<String, Object> labelsSigner) {
 //        SignerRequest result = new SignerRequest();
 //        result.setLabels(labelsSigner);
