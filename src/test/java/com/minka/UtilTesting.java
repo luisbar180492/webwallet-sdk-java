@@ -27,6 +27,7 @@ public class UtilTesting
         KeyPairHolder keyPairHolder = new KeyPairHolder();
         String signedMessage = SignatureUtil.signWithEd25519(hashedMessage, keyPairHolder.getPrivateKey());
 
+
         System.out.println(signedMessage);
     }
 
@@ -125,10 +126,16 @@ public class UtilTesting
 
         KeyPair keyPair = keyGen.genKeyPair();
         EdDSAPublicKey publicKey = (EdDSAPublicKey) keyPair.getPublic();
-        char[] chars = org.apache.commons.codec.binary.Hex.encodeHex(publicKey.getAbyte());
-        String result = new String(chars);
-        System.out.println(result);
-        System.out.println(result.length());
+//        "kpub=" +
+//                String s = Base64.getEncoder().encodeToString(publicKey.);
+
+        System.out.println(publicKey.getFormat());
+
+//        System.out.println(s.length());
+//        char[] chars = org.apache.commons.codec.binary.Hex.encodeHex(publicKey.getAbyte());
+//        String result = new String(chars);
+//        System.out.println(result);
+//        System.out.println(result.length());
 
 
     }

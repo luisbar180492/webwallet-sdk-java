@@ -289,27 +289,27 @@ paths:
         200:
           schema:
             $ref: "#/definitions/walletUpdateResponse"
-#  /action:
-#    post:
-#      summary: "Create an action"
-#      description: ""
-#      operationId: "createAction"
-#      consumes:
-#      - "application/json"
-#      produces:
-#      - "application/json"
-#      tags:
-#          - action
-#      parameters:
-#      - in: header
-#        name: API_KEY
-#        schema:
-#          type: string
-#        required: true
-#      - in: body
-#        schema:
-#          $ref: "#/definitions/createActionRequest"
-#        required: true
+  /action/stored:
+    post:
+      summary: "Create an action store"
+      description: ""
+      operationId: "createActionStore"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - store
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/createActionStoreRequest"
+        required: true
 #      responses:
 #        "400":
 #          schema:
@@ -489,21 +489,21 @@ definitions:
     properties:
       domain_id:
         type: "string"
-#  createActionRequest:
-#    type: "object"
-#    properties:
-#      source:
-#        type: "string"
-#      target:
-#        type: "string"
-#      symbol:
-#        type: "string"
-#      amounts:
-#        type: "string"
-#      labels:
-#        type: "object"
-#        additionalProperties:
-#               type: "object"
+  createActionStoreRequest:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+      target:
+        type: "string"
+      symbol:
+        type: "string"
+      amount:
+        type: "string"
+      labels:
+        type: "object"
+        additionalProperties:
+               type: "object"
 #  createActionResponseError:
 #    type: "object"
 #    properties:

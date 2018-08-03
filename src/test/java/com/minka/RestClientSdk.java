@@ -3,14 +3,13 @@ package com.minka;
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
 import com.minka.wallet.primitives.utils.Claim;
-import net.i2p.crypto.eddsa.EdDSAPrivateKey;
-import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RestClientSdk {
 
@@ -30,24 +29,6 @@ public class RestClientSdk {
 
             System.out.println(keeper.toString());
 
-            System.out.println("PUBLIC Key length");
-            System.out.println( keeper.getPublic().length());
-            System.out.println("secrete Key length");
-            System.out.println( keeper.getSecret().length());
-            byte[] bytes = keeper.getSecret().getBytes();
-            byte[] decode = Base64.getDecoder().decode(bytes);
-            PKCS8EncodedKeySpec encodedPrivate = new PKCS8EncodedKeySpec(decode);
-
-//            try {
-//                EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encodedPrivate);
-//            } catch (InvalidKeySpecException e) {
-//                System.out.println("encodedPrivate failed");
-//
-//                e.printStackTrace();
-//            }
-
-
-//            PKCS8EncodedKeySpec encodedPublic = new PKCS8EncodedKeySpec(keeper.getPublic().getBytes());
         } catch (ApiException e) {
             System.out.println("EXCEPTION");
 
@@ -122,7 +103,7 @@ public class RestClientSdk {
         System.out.println(walletApi.getApiClient().getBasePath());
 
         WalletRequest walletRe = new WalletRequest();
-        String handle = "$abc";
+        String handle = "$abc1115";
         walletRe.setHandle(handle);
         Map<String, Object> walletLabels = new HashMap<>();
         walletLabels.put("email", "aranibarIvan@mgali.com");
@@ -133,42 +114,42 @@ public class RestClientSdk {
             System.out.println("wallet created\n");
             System.out.println(wallet);
 
-            KeeperApi keeperApi = new KeeperApi();
-            keeperApi.getApiClient().setBasePath(CLOUD_URL);
-            Keeper keeper = keeperApi.obtenerKeeper(apikey);
-            System.out.println("keeper created\n");
-            System.out.println(keeper);
+//            KeeperApi keeperApi = new KeeperApi();
+//            keeperApi.getApiClient().setBasePath(CLOUD_URL);
+//            Keeper keeper = keeperApi.obtenerKeeper(apikey);
+//            System.out.println("keeper created\n");
+//            System.out.println(keeper);
+//
+//            SignerApi signerApi = new SignerApi();
+//            signerApi.getApiClient().setBasePath(CLOUD_URL);
+//            SignerRequest signerREq= new SignerRequest();
+//            Map<String, Object> labelsSigner = new HashMap<>();
+//            labelsSigner.put("bankAccountNumber",new Integer(21212113));
+//            labelsSigner.put("typeAccount", "savings");
+//            signerREq.setLabels(labelsSigner);
+//            List<PublicKeys> llaves = new ArrayList<>();
+//            PublicKeys aPublickKey = new PublicKeys();
+//            aPublickKey.setPublic(keeper.getPublic());
+//            llaves.add(aPublickKey);
+//            signerREq.setKeeper(llaves);
+//
+//            SignerResponse signer = signerApi.createSigner(signerREq, apikey);
+//            System.out.println("Signer created\n");
+//            System.out.println(signer);
 
-            SignerApi signerApi = new SignerApi();
-            signerApi.getApiClient().setBasePath(CLOUD_URL);
-            SignerRequest signerREq= new SignerRequest();
-            Map<String, Object> labelsSigner = new HashMap<>();
-            labelsSigner.put("bankAccountNumber",new Integer(21212113));
-            labelsSigner.put("typeAccount", "savings");
-            signerREq.setLabels(labelsSigner);
-            List<PublicKeys> llaves = new ArrayList<>();
-            PublicKeys aPublickKey = new PublicKeys();
-            aPublickKey.setPublic(keeper.getPublic());
-            llaves.add(aPublickKey);
-            signerREq.setKeeper(llaves);
-
-            SignerResponse signer = signerApi.createSigner(signerREq, apikey);
-            System.out.println("Signer created\n");
-            System.out.println(signer);
-
-
-            System.out.println("UPDATE BASE BATH\n");
-
-            System.out.println(walletApi.getApiClient().getBasePath());
-
-            WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
-            updateWalletReq.setDefault(keeper.getPublic());
-            List<String> listaSigners = new ArrayList<>();
-            listaSigners.add(keeper.getPublic());
-            updateWalletReq.setSigner(listaSigners);
-            WalletUpdateResponse walletUpdateResponse = walletApi.updateWallet(apikey, handle, updateWalletReq);
-
-            System.out.println(walletUpdateResponse);
+//
+//            System.out.println("UPDATE BASE BATH\n");
+//
+//            System.out.println(walletApi.getApiClient().getBasePath());
+//
+//            WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
+//            updateWalletReq.setDefault(keeper.getPublic());
+//            List<String> listaSigners = new ArrayList<>();
+//            listaSigners.add(keeper.getPublic());
+//            updateWalletReq.setSigner(listaSigners);
+//            WalletUpdateResponse walletUpdateResponse = walletApi.updateWallet(apikey, handle, updateWalletReq);
+//
+//            System.out.println(walletUpdateResponse);
 
         } catch (ApiException e) {
             e.printStackTrace();
