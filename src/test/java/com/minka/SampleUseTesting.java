@@ -73,7 +73,7 @@ public class SampleUseTesting {
 
     @Test
     public void fullCreateWalletCalled() throws ApiException {
-        String handle = "$abcd3";// + RandomStringUtils.random(3);
+        String handle = "$abcd8";// + RandomStringUtils.random(3);
         Map<String, Object> labelsSigner = new HashMap<>();
         Map<String, Object> labelsWallet = new HashMap<>();
 
@@ -83,13 +83,13 @@ public class SampleUseTesting {
 
         System.out.println(gson.toJson(walletCreationResult));
 
-        List<String> newSigners = walletCreationResult.getWallet().getSigner();
-        String newSigner = "wQJjeZMXctGvdhJMa63azvuFfxDNqV7CBc";
-
-        newSigners.add(newSigner);
-        WalletUpdateResponse walletUpdateResponse = Sdk.updateWallet(handle, newSigners, newSigners.get(0));
-
-        System.out.println(gson.toJson(walletUpdateResponse));
+//        List<String> newSigners = walletCreationResult.getWallet().getSigner();
+//        String newSigner = "wQJjeZMXctGvdhJMa63azvuFfxDNqV7CBc";
+//
+//        newSigners.add(newSigner);
+//        WalletUpdateResponse walletUpdateResponse = Sdk.updateWallet(handle, newSigners, newSigners.get(0));
+//
+//        System.out.println(gson.toJson(walletUpdateResponse));
 
     }
 }

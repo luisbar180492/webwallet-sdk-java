@@ -6,6 +6,7 @@ import com.minka.api.model.Signer;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class RestClientSdk {
 
     static String CLOUD_URL = "https://achtin-tst.minka.io/v1";
+    static String API_KEY = "5b481fc2ae177010e197026b9778ac575c36480a918674e7a76d8037";
 //    static String ANDRES_URL = "http://192.168.120.173:8080/v1";
 
     @Ignore
@@ -182,5 +184,21 @@ public class RestClientSdk {
 //        } catch (ApiException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    @Test
+    public void createKlemer() throws ApiException {
+        KlemerApi klemerApi = new KlemerApi();
+
+        klemerApi.getApiClient().setBasePath(CLOUD_URL);
+        CreateClaimRequest claim = new CreateClaimRequest();
+
+        claim.setSource("$abcd8");
+        claim.setTarget("$abcd7");
+        claim.setSymbol("$abcd8");
+        claim.setAmount("100");
+        CreateClaimResponse response = klemerApi.createClaim(API_KEY, claim);
+
+        System.out.println(response);
     }
 }

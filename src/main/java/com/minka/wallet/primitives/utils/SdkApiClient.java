@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class SdkApiClient {
     static String CLOUD_URL = "https://achtin-tst.minka.io/v1";
-    static String API_KEY = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
+    static String API_KEY = "5b481fc2ae177010e197026b9778ac575c36480a918674e7a76d8037";
 
     public Keeper getKeeper() throws ApiException {
         KeeperApi keeperApi = new KeeperApi();
@@ -30,10 +30,13 @@ public class SdkApiClient {
 
         SignerRequest signerRequest = createSignerRequest(keeper, labelsSigner);
         SignerApi signerApi = new SignerApi();
-//        System.out.println("signerRequest");
-//        System.out.println(signerRequest);
+        System.out.println("signerRequest");
+        System.out.println(signerRequest);
 
         SignerResponse signer = signerApi.createSigner(signerRequest, API_KEY);
+
+        System.out.println("SignerResponse");
+        System.out.println(signer);
 
         WalletUpdateRequest walletUpdateRequest = createUpdateWalletReq(signer.getHandle());
 
@@ -63,7 +66,7 @@ public class SdkApiClient {
     private PublicKeys convert(Keeper keeper) {
         PublicKeys result = new PublicKeys();
         result.setPublic(keeper.getPublic());
-        //TODO more keepers?
+        result.setSecret(keeper.getSecret());
         return result;
     }
 
