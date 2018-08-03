@@ -14,6 +14,9 @@ import java.util.Map;
 
 public class RestClientSdk {
 
+    static String CLOUD_URL = "https://achtin-tst.minka.io/v1";
+//    static String ANDRES_URL = "http://192.168.120.173:8080/v1";
+
     @Ignore
     @Test
     public void obtenerKeeper(){
@@ -37,6 +40,7 @@ public class RestClientSdk {
         SignerApi api = new SignerApi();
         String apikey = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
 
+        api.getApiClient().setBasePath(CLOUD_URL);
         System.out.println(api.getApiClient().getBasePath());
 
         try {
@@ -48,6 +52,8 @@ public class RestClientSdk {
             signerReq.setKeeper(keepers);
             EmptyObject emptyObject = new EmptyObject();
             signerReq.setLabels(emptyObject);
+            System.out.println(signerReq);
+
             SignerResponse signer = api.createSigner(signerReq, apikey);
 
             System.out.println(signer);
@@ -81,26 +87,94 @@ public class RestClientSdk {
         }
     }
 
+    @Ignore
     @Test
     public void createWallet(){
+
+        WalletApi walletApi = new WalletApi();
+        String apikey = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
+
+        walletApi.getApiClient().setBasePath(CLOUD_URL);
+        System.out.println("wallet url");
+
+        System.out.println(walletApi.getApiClient().getBasePath());
+
+        WalletRequest walletRe = new WalletRequest();
+        String handle = "$abc";
+        walletRe.setHandle(handle);
+        Map<String, Object> labels = new HashMap<>();
+        labels.put("email", "aranibarIvan@mgali.com");
+        labels.put("phonEnumbier", 21721821);
+        walletRe.setLabels(labels);
+        try {
+            WalletResponse wallet = walletApi.createWallet(apikey, walletRe);
+            System.out.println("wallet created\n");
+            System.out.println(wallet);
+
+            KeeperApi keeperApi = new KeeperApi();
+            keeperApi.getApiClient().setBasePath(CLOUD_URL);
+            Keeper keeper = keeperApi.obtenerKeeper(apikey);
+            System.out.println("keeper created\n");
+            System.out.println(keeper);
+
+            SignerApi signerApi = new SignerApi();
+            signerApi.getApiClient().setBasePath(CLOUD_URL);
+            SignerRequest signerREq= new SignerRequest();
+            signerREq.setLabels(new EmptyObject());
+            List<PublicKeys> llaves = new ArrayList<>();
+            PublicKeys aPublickKey = new PublicKeys();
+            aPublickKey.setPublic(keeper.getPublic());
+            llaves.add(aPublickKey);
+            signerREq.setKeeper(llaves);
+
+            SignerResponse signer = signerApi.createSigner(signerREq, apikey);
+            System.out.println("Signer created\n");
+            System.out.println(signer);
+
+
+            System.out.println("UPDATE BASE BATH\n");
+
+            System.out.println(walletApi.getApiClient().getBasePath());
+
+
+            WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
+            updateWalletReq.setDefault(keeper.getPublic());
+            List<String> listaSigners = new ArrayList<>();
+            listaSigners.add(keeper.getPublic());
+            updateWalletReq.setSigner(listaSigners);
+            walletApi.updateWallet(apikey,handle, updateWalletReq);
+
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void updateWallet(){
+
+        //CREATE WALLET
 
         WalletApi api = new WalletApi();
         String apikey = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
 
         System.out.println(api.getApiClient().getBasePath());
 
-        WalletRequest walletRe = new WalletRequest();
-        walletRe.setHandle("$absds");
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("email", "aranibarIvan@mgali.com");
-        labels.put("phonEnumbier", 21721821);
-        walletRe.setLabels(labels);
-        try {
-            WalletResponse wallet = api.createWallet(apikey, walletRe);
-
-            System.out.println(wallet);
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
+        WalletUpdateRequest updateWaletReq = new WalletUpdateRequest();
+//        updateWaletReq.setDefault();
+//
+//        api.updateWallet(apikey, "@tina1", updateWaletReq);
+//        WalletRequest walletRe = new WalletRequest();
+//        walletRe.setHandle("$absds");
+//        Map<String, Object> labels = new HashMap<>();
+//        labels.put("email", "aranibarIvan@mgali.com");
+//        labels.put("phonEnumbier", 21721821);
+//        walletRe.setLabels(labels);
+//        try {
+//            WalletResponse wallet = api.createWallet(apikey, walletRe);
+//
+//            System.out.println(wallet);
+//        } catch (ApiException e) {
+//            e.printStackTrace();
+//        }
     }
 }

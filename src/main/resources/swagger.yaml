@@ -147,7 +147,6 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/signerRequest"
-        required: true
       responses:
         200:
           schema:
@@ -210,6 +209,7 @@ paths:
         200:
           schema:
             $ref: "#/definitions/walletResponse"
+  /wallet/{handle}:
     put:
       summary: "Edita un wallet"
       description: ""
@@ -226,7 +226,18 @@ paths:
         schema:
           type: string
         required: true
-
+      - in: path
+        name: handle
+        required: true
+        type: string
+      - in: body
+        schema:
+          $ref: "#/definitions/walletUpdateRequest"
+        required: true
+#      responses:
+#        200:
+#          schema:
+#            $ref: "#/definitions/walletUpdateResponse"
   /transaction:
     get:
       summary: "obtiene todos los transfers"
@@ -337,6 +348,26 @@ definitions:
             additionalProperties:
                    type: "object"
   walletResponse:
+        type: "object"
+        properties:
+          wallet_id:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+          handle:
+            type: "string"
+  walletUpdateRequest:
+        type: "object"
+        properties:
+          default:
+            type: "string"
+          signer:
+            type: "array"
+            items:
+              $ref: "string"
+  walletUpdateResponse:
         type: "object"
         properties:
           wallet_id:
