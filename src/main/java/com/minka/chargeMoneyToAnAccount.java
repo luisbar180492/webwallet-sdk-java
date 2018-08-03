@@ -4,7 +4,6 @@ import com.minka.api.handler.ApiException;
 import com.minka.api.model.CreateActionRequest;
 import com.minka.api.model.CreateActionResponse;
 import com.minka.api.model.GenericResponse;
-import com.minka.api.model.SignerResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 
 import java.util.HashMap;
