@@ -66,6 +66,13 @@ public class SdkApiClient {
         return balance;
     }
 
+    public GetWalletResponse getWallet(String yourBankName) throws ApiException {
+        WalletTempoApi walletApi = new WalletTempoApi();
+        walletApi.getApiClient().setBasePath(url);
+
+        return walletApi.getWallet(apiKey, yourBankName);
+    }
+
 //    private SignerRequest createSignerRequest(Keeper keeper, Map<String, Object> labelsSigner) {
 //        SignerRequest result = new SignerRequest();
 //        result.setLabels(labelsSigner);

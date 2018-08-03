@@ -220,22 +220,6 @@ paths:
           type: string
         required: true
   /wallet:
-    get:
-      summary: "Obtiene un wallet"
-      description: ""
-      operationId: "getWallet"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      tags:
-          - Wallet
-      parameters:
-      - in: header
-        name: API_KEY
-        schema:
-          type: string
-        required: true
     post:
       summary: "Crea un wallet"
       description: ""
@@ -320,6 +304,31 @@ paths:
         200:
           schema:
             $ref: "#/definitions/walletUpdateResponse"
+    get:
+      summary: "Obtiene un wallet"
+      description: ""
+      operationId: "getWallet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - WalletTempo
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: handle
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/getWalletResponse"
   /action/stored:
     post:
       summary: "Create an action store"
@@ -453,6 +462,19 @@ definitions:
             type: "object"
             additionalProperties:
                    type: "object"
+  getWalletResponse:
+        type: "object"
+        properties:
+          wallet_id:
+            type: "string"
+          labels:
+            type: "object"
+            additionalProperties:
+                   type: "object"
+          handle:
+            type: "string"
+          id:
+            type: "string"
   walletResponse:
         type: "object"
         properties:
