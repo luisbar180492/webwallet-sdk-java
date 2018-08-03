@@ -63,7 +63,7 @@ public class SdkApiClient {
     private PublicKeys convert(Keeper keeper) {
         PublicKeys result = new PublicKeys();
         result.setPublic(keeper.getPublic());
-        //TODO
+        //TODO more keepers?
         return result;
     }
 
@@ -79,4 +79,10 @@ public class SdkApiClient {
     }
 
 
+    public WalletUpdateResponse updateWallet(String handle, WalletUpdateRequest walletUpdateRequest) throws ApiException {
+        WalletApi walletApi = new WalletApi();
+        walletApi.getApiClient().setBasePath(CLOUD_URL);
+
+        return walletApi.updateWallet(API_KEY, handle, walletUpdateRequest);
+    }
 }

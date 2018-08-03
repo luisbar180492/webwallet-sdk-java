@@ -4,7 +4,7 @@ import com.minka.api.model.Keeper;
 import com.minka.api.model.WalletUpdateResponse;
 
 
-public class WalletCreationResult {
+public class WalletResult {
 
     private Keeper keeper;
     private WalletUpdateResponse wallet;

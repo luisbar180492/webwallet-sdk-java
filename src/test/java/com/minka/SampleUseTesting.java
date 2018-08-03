@@ -3,12 +3,13 @@ package com.minka;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.api.handler.ApiException;
+import com.minka.api.model.WalletUpdateResponse;
 import com.minka.wallet.IOU;
 import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.KeyPair;
 import com.minka.wallet.primitives.utils.Claim;
 import com.minka.wallet.primitives.utils.Sdk;
-import com.minka.wallet.primitives.utils.WalletCreationResult;
+import com.minka.wallet.primitives.utils.WalletResult;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Ignore;
@@ -72,14 +73,23 @@ public class SampleUseTesting {
 
     @Test
     public void fullCreateWalletCalled() throws ApiException {
-        String handle = "$abcd2";// + RandomStringUtils.random(3);
+        String handle = "$abcd3";// + RandomStringUtils.random(3);
         Map<String, Object> labelsSigner = new HashMap<>();
         Map<String, Object> labelsWallet = new HashMap<>();
 
-        WalletCreationResult walletCreationResult = Sdk.createWallet(handle, labelsSigner, labelsWallet);
+        WalletResult walletCreationResult = Sdk.createWallet(handle, labelsSigner, labelsWallet);
 
         Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
 
         System.out.println(gson.toJson(walletCreationResult));
+
+        List<String> newSigners = walletCreationResult.getWallet().getSigner();
+        String newSigner = "wQJjeZMXctGvdhJMa63azvuFfxDNqV7CBc";
+
+        newSigners.add(newSigner);
+        WalletUpdateResponse walletUpdateResponse = Sdk.updateWallet(handle, newSigners, newSigners.get(0));
+
+        System.out.println(gson.toJson(walletUpdateResponse));
+
     }
 }
