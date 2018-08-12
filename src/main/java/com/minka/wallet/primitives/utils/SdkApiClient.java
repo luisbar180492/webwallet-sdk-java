@@ -18,6 +18,7 @@ public class SdkApiClient {
     private String apiKey;
     private String secret;
     private String clientId;
+    private int timeout;
 
     /**
      *
@@ -49,6 +50,11 @@ public class SdkApiClient {
         return this;
     }
 
+    public SdkApiClient setTimeout(int timeout){
+        this.timeout = timeout;
+        return this;
+    }
+
     /**
      * Solicita una pareja de llave privada y pública al Web service de TINAPI
      * @return un objeto con las llaves (privada y pública)
@@ -56,6 +62,11 @@ public class SdkApiClient {
     public Keeper getKeeper() throws ExceptionResponseTinApi {
         KeeperApi keeperApi = new KeeperApi();
         keeperApi.getApiClient().setBasePath(url);
+
+        if (timeout > 0){
+            keeperApi.getApiClient().setConnectTimeout(timeout);
+        }
+
         try {
             return keeperApi.obtenerKeeper(apiKey);
         } catch (ApiException e) {
