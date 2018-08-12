@@ -1,4 +1,3 @@
----
 swagger: "2.0"
 info:
   version: "1.0.0"
@@ -10,18 +9,18 @@ schemes:
 - "http"
 #- "https"
 tags:
-  - name: Keeper
-    description:
-  - name: Domain
-    description:
-  - name: Signer
-    description:
-  - name: Wallet
-    description:
-  - name: Transaction
-    description:
-  - name: Klemer
-    description:
+  - name: "Keeper"
+    description: "Endpoint to get keypairs"
+  - name: "Domain"
+    description: ""
+  - name: "Signer"
+    description: ""
+  - name: "Wallet"
+    description: ""
+  - name: "Transaction"
+    description: ""
+  - name: "Klemer"
+    description: ""
 paths:
   /klemer:
     post:
@@ -146,6 +145,10 @@ paths:
             description: "Keypair generated"
             schema:
               $ref: "#/definitions/Keeper"
+          403:
+            description: "Keypair error"
+            schema:
+              $ref: "#/definitions/ErrorForbidden"
   /domain:
       post:
         summary: "Genera un domain"
@@ -686,6 +689,12 @@ definitions:
     type: "object"
     additionalProperties:
            type: "object"
+  ErrorForbidden:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+
   genericResponse:
     type: "object"
     additionalProperties:

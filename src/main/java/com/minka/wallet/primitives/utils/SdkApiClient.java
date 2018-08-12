@@ -1,25 +1,74 @@
 package com.minka.wallet.primitives.utils;
 
+import com.google.gson.Gson;
+import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
+import com.minka.utils.Constants;
 
 import java.util.List;
 import java.util.Map;
 
-
+/***
+ * Cliente para la integración con el servicio WEB de TINAPI de MINKA
+ */
 public class SdkApiClient {
-    private String url;//= "https://achtin-tst.minka.io/v1";
-    private String apiKey;//= "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
 
-    public SdkApiClient(String url, String apiKey) {
-        this.url = url;
+    private String url;
+    private String apiKey;
+    private String secret;
+    private String clientId;
+
+    /**
+     *
+     * @param domain
+     * @param apiKey
+     */
+    public SdkApiClient(String domain, String apiKey) {
+        this.url = "https://" + domain + ".minka.io/v1";
         this.apiKey = apiKey;
     }
 
-    public Keeper getKeeper() throws ApiException {
+    /**
+     *
+     * @param secret
+     * @return
+     */
+    public SdkApiClient setSecret(String secret){
+        this.secret = secret;
+        return this;
+    }
+
+    /**
+     *
+     * @param clientId
+     * @return
+     */
+    public SdkApiClient setClientId(String clientId){
+        this.clientId = clientId;
+        return this;
+    }
+
+    /**
+     * Solicita una pareja de llave privada y pública al Web service de TINAPI
+     * @return un objeto con las llaves (privada y pública)
+     */
+    public Keeper getKeeper() throws ExceptionResponseTinApi {
         KeeperApi keeperApi = new KeeperApi();
         keeperApi.getApiClient().setBasePath(url);
-        return keeperApi.obtenerKeeper(apiKey);
+        try {
+            return keeperApi.obtenerKeeper(apiKey);
+        } catch (ApiException e) {
+
+            String responseBody = e.getResponseBody();
+
+            if (e.getCode() == Constants.FORBIDDEN){
+                ErrorForbidden errorForbidden = new Gson().fromJson(responseBody, ErrorForbidden.class);
+                throw new ExceptionResponseTinApi(e.getCode(), errorForbidden.getError());
+            } else{
+                throw new ExceptionResponseTinApi(e.getCode(), "Error inesperado");
+            }
+        }
     }
 
     public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws ApiException {

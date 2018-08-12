@@ -31,6 +31,8 @@ public class RestClientSdk {
 
         } catch (ApiException e) {
             System.out.println("EXCEPTION");
+            System.out.println(e.getCode());
+            System.out.println(e.getResponseBody());
 
             e.printStackTrace();
         }
