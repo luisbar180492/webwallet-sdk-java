@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
 
 
 public class KeeperTesting {

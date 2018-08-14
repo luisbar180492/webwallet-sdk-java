@@ -298,6 +298,10 @@ paths:
         200:
           schema:
             $ref: "#/definitions/walletResponse"
+        400:
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /wallet/{handle}/balance:
     get:
       summary: "Obtiene el balance"
@@ -529,6 +533,10 @@ definitions:
             type: "string"
           id:
             type: "string"
+          error:
+            type: "object"
+            $ref: "#/definitions/ErrorGenerico"
+
   walletResponse:
         type: "object"
         properties:
@@ -540,6 +548,10 @@ definitions:
                    type: "object"
           handle:
             type: "string"
+          error:
+            type: "object"
+            $ref: "#/definitions/ErrorGenerico"
+
   walletUpdateRequest:
         type: "object"
         properties:
@@ -689,10 +701,26 @@ definitions:
     type: "object"
     additionalProperties:
            type: "object"
+
   ErrorForbidden:
     type: "object"
     properties:
       error:
+        type: "string"
+
+  ErrorResponse:
+    type: "object"
+    properties:
+      error:
+        type: "object"
+        $ref: "#/definitions/ErrorGenerico"
+
+  ErrorGenerico:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+      message:
         type: "string"
 
   genericResponse:

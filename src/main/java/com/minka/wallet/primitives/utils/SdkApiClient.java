@@ -82,7 +82,7 @@ public class SdkApiClient {
         }
     }
 
-    public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws ApiException {
+    public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws WalletCreationException {
         WalletApi walletApi = new WalletApi();
 
         walletApi.getApiClient().setBasePath(url);
@@ -90,8 +90,27 @@ public class SdkApiClient {
         WalletRequest walletRe = new WalletRequest();
         walletRe.setHandle(handle);
         walletRe.setLabels(labelsWallet);
-        return walletApi.createWallet(apiKey, walletRe);
+        try {
+            return walletApi.createWallet(apiKey, walletRe);
+        } catch (ApiException e) {
+
+            if (e.getCode() == Constants.BAD_REQUEST){
+                ErrorResponse errorGenerico = new Gson().fromJson(e.getResponseBody(), ErrorResponse.class);
+                throw new WalletCreationException(errorGenerico.getError().getCode(), errorGenerico.getError().getMessage());
+            } else{
+                throw new WalletCreationException(Constants.UNEXPECTED_ERROR,Constants.UNEXPECTED_ERROR_MESSAGE);
+            }
+        }
     }
+
+
+    public GetWalletResponse getWallet(String handle) throws ApiException {
+        WalletTempoApi walletApi = new WalletTempoApi();
+        walletApi.getApiClient().setBasePath(url);
+
+        return walletApi.getWallet(apiKey, handle);
+    }
+
 
     public SignerResponse createSigner(Map<String, Object> labels) throws ApiException {
         SignerRequest signerRequest = new SignerRequest();
@@ -126,12 +145,6 @@ public class SdkApiClient {
         return balance;
     }
 
-    public GetWalletResponse getWallet(String yourBankName) throws ApiException {
-        WalletTempoApi walletApi = new WalletTempoApi();
-        walletApi.getApiClient().setBasePath(url);
-
-        return walletApi.getWallet(apiKey, yourBankName);
-    }
 
 
     public CreateActionResponse createAction(CreateActionRequest actionReq ) throws ApiException {
