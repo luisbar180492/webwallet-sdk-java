@@ -60,15 +60,15 @@ public class SdkApiClient {
      * @return un objeto con las llaves (privada y pública)
      */
     public Keeper getKeeper() throws ExceptionResponseTinApi {
-        KeeperApi keeperApi = new KeeperApi();
-        keeperApi.getApiClient().setBasePath(url);
+        KeeperApi api = new KeeperApi();
+        api.getApiClient().setBasePath(url);
 
         if (timeout > 0){
-            keeperApi.getApiClient().setConnectTimeout(timeout);
+            api.getApiClient().setConnectTimeout(timeout);
         }
 
         try {
-            return keeperApi.obtenerKeeper(apiKey);
+            return api.obtenerKeeper(apiKey);
         } catch (ApiException e) {
 
             String responseBody = e.getResponseBody();
@@ -83,15 +83,19 @@ public class SdkApiClient {
     }
 
     public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws WalletCreationException {
-        WalletApi walletApi = new WalletApi();
+        WalletApi api = new WalletApi();
 
-        walletApi.getApiClient().setBasePath(url);
+        api.getApiClient().setBasePath(url);
+
+        if (timeout > 0){
+            api.getApiClient().setConnectTimeout(timeout);
+        }
 
         WalletRequest walletRe = new WalletRequest();
         walletRe.setHandle(handle);
         walletRe.setLabels(labelsWallet);
         try {
-            return walletApi.createWallet(apiKey, walletRe);
+            return api.createWallet(apiKey, walletRe);
         } catch (ApiException e) {
 
             if (e.getCode() == Constants.BAD_REQUEST){
@@ -104,11 +108,18 @@ public class SdkApiClient {
     }
 
 
-    public GetWalletResponse getWallet(String handle) throws ApiException {
-        WalletTempoApi walletApi = new WalletTempoApi();
-        walletApi.getApiClient().setBasePath(url);
+    public GetWalletResponse getWallet(String handle) throws ExceptionResponseTinApi {
+        WalletTempoApi api = new WalletTempoApi();
+        api.getApiClient().setBasePath(url);
+        if (timeout > 0){
+            api.getApiClient().setConnectTimeout(timeout);
+        }
 
-        return walletApi.getWallet(apiKey, handle);
+        try {
+            return api.getWallet(apiKey, handle);
+        } catch (ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
     }
 
 
@@ -121,13 +132,23 @@ public class SdkApiClient {
     }
 
 
-    public WalletUpdateResponse updateWallet(String handle, List<String> signers , String defaultAddress) throws ApiException {
+    public WalletUpdateResponse updateWallet(String handle, List<String> signers , String defaultAddress) throws ExceptionResponseTinApi {
         WalletApi walletApi = new WalletApi();
         walletApi.getApiClient().setBasePath(url);
 
         WalletUpdateRequest walletUpdateRequest = createUpdateWalletReq(signers, defaultAddress);
 
-        return walletApi.updateWallet(apiKey, handle, walletUpdateRequest);
+        try {
+            return walletApi.updateWallet(apiKey, handle, walletUpdateRequest);
+        } catch (ApiException e) {
+            String responseBody = e.getResponseBody();
+            if (e.getCode() == Constants.BAD_REQUEST){
+                WalletUpdateResponse response= new Gson().fromJson(responseBody, WalletUpdateResponse.class);
+                throw new ExceptionResponseTinApi(response.getError().getCode(),response.getError().getMessage());
+            }else{
+                throw new ExceptionResponseTinApi(Constants.UNEXPECTED_ERROR ,Constants.UNEXPECTED_ERROR_MESSAGE);
+            }
+        }
     }
 
     private WalletUpdateRequest createUpdateWalletReq(List<String> signers , String defaultAddress) {
@@ -137,11 +158,16 @@ public class SdkApiClient {
         return updateWalletReq;
     }
 
-    public BalanceResponse getBalance(String bankName, String currency) throws ApiException {
+    public BalanceResponse getBalance(String bankName, String currency)  {
         WalletApi walletApi = new WalletApi();
         walletApi.getApiClient().setBasePath(url);
 
-        BalanceResponse balance = walletApi.getBalance(apiKey, bankName, currency);
+        BalanceResponse balance = null;
+        try {
+            balance = walletApi.getBalance(apiKey, bankName, currency);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
         return balance;
     }
 

@@ -580,6 +580,9 @@ definitions:
              $ref: "string"
           default:
              type: "string"
+          error:
+            $ref: "#/definitions/ErrorGenerico"
+
   signerResponse:
         type: "object"
         properties:
