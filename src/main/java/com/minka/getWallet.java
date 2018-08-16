@@ -16,8 +16,8 @@ public class getWallet {
         try {
             GetWalletResponse wallet = sdkApiClient.getWallet(yourBankName);
             System.out.println(wallet);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
         }
 
     }

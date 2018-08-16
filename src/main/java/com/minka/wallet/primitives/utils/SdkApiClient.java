@@ -1,37 +1,127 @@
 package com.minka.wallet.primitives.utils;
 
+import com.google.gson.Gson;
+import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
+import com.minka.utils.Constants;
 
 import java.util.List;
 import java.util.Map;
 
-
+/***
+ * Cliente para la integración con el servicio WEB de TINAPI de MINKA
+ */
 public class SdkApiClient {
-    private String url;//= "https://achtin-tst.minka.io/v1";
-    private String apiKey;//= "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
 
-    public SdkApiClient(String url, String apiKey) {
-        this.url = url;
+    private String url;
+    private String apiKey;
+    private String secret;
+    private String clientId;
+    private int timeout;
+
+    /**
+     *
+     * @param domain
+     * @param apiKey
+     */
+    public SdkApiClient(String domain, String apiKey) {
+        this.url = "https://" + domain + ".minka.io/v1";
         this.apiKey = apiKey;
     }
 
-    public Keeper getKeeper() throws ApiException {
-        KeeperApi keeperApi = new KeeperApi();
-        keeperApi.getApiClient().setBasePath(url);
-        return keeperApi.obtenerKeeper(apiKey);
+    /**
+     *
+     * @param secret
+     * @return
+     */
+    public SdkApiClient setSecret(String secret){
+        this.secret = secret;
+        return this;
     }
 
-    public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws ApiException {
-        WalletApi walletApi = new WalletApi();
+    /**
+     *
+     * @param clientId
+     * @return
+     */
+    public SdkApiClient setClientId(String clientId){
+        this.clientId = clientId;
+        return this;
+    }
 
-        walletApi.getApiClient().setBasePath(url);
+    public SdkApiClient setTimeout(int timeout){
+        this.timeout = timeout;
+        return this;
+    }
+
+    /**
+     * Solicita una pareja de llave privada y pública al Web service de TINAPI
+     * @return un objeto con las llaves (privada y pública)
+     */
+    public Keeper getKeeper() throws ExceptionResponseTinApi {
+        KeeperApi api = new KeeperApi();
+        api.getApiClient().setBasePath(url);
+
+        if (timeout > 0){
+            api.getApiClient().setConnectTimeout(timeout);
+        }
+
+        try {
+            return api.obtenerKeeper(apiKey);
+        } catch (ApiException e) {
+
+            String responseBody = e.getResponseBody();
+
+            if (e.getCode() == Constants.FORBIDDEN){
+                ErrorForbidden errorForbidden = new Gson().fromJson(responseBody, ErrorForbidden.class);
+                throw new ExceptionResponseTinApi(e.getCode(), errorForbidden.getError());
+            } else{
+                throw new ExceptionResponseTinApi(e.getCode(), "Error inesperado");
+            }
+        }
+    }
+
+    public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws WalletCreationException {
+        WalletApi api = new WalletApi();
+
+        api.getApiClient().setBasePath(url);
+
+        if (timeout > 0){
+            api.getApiClient().setConnectTimeout(timeout);
+        }
 
         WalletRequest walletRe = new WalletRequest();
         walletRe.setHandle(handle);
         walletRe.setLabels(labelsWallet);
-        return walletApi.createWallet(apiKey, walletRe);
+        try {
+            return api.createWallet(apiKey, walletRe);
+        } catch (ApiException e) {
+
+            if (e.getCode() == Constants.BAD_REQUEST){
+                ErrorResponse errorGenerico = new Gson().fromJson(e.getResponseBody(), ErrorResponse.class);
+                throw new WalletCreationException(errorGenerico.getError().getCode(), errorGenerico.getError().getMessage());
+            } else{
+                throw new WalletCreationException(Constants.UNEXPECTED_ERROR,Constants.UNEXPECTED_ERROR_MESSAGE);
+            }
+        }
     }
+
+
+    public GetWalletResponse getWallet(String handle) throws ExceptionResponseTinApi {
+        WalletTempoApi api = new WalletTempoApi();
+        api.getApiClient().setBasePath(url);
+        if (timeout > 0){
+            api.getApiClient().setConnectTimeout(timeout);
+        }
+
+        try {
+            return api.getWallet(apiKey, handle);
+        } catch (ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
+
 
     public SignerResponse createSigner(Map<String, Object> labels) throws ApiException {
         SignerRequest signerRequest = new SignerRequest();
@@ -42,13 +132,23 @@ public class SdkApiClient {
     }
 
 
-    public WalletUpdateResponse updateWallet(String handle, List<String> signers , String defaultAddress) throws ApiException {
+    public WalletUpdateResponse updateWallet(String handle, List<String> signers , String defaultAddress) throws ExceptionResponseTinApi {
         WalletApi walletApi = new WalletApi();
         walletApi.getApiClient().setBasePath(url);
 
         WalletUpdateRequest walletUpdateRequest = createUpdateWalletReq(signers, defaultAddress);
 
-        return walletApi.updateWallet(apiKey, handle, walletUpdateRequest);
+        try {
+            return walletApi.updateWallet(apiKey, handle, walletUpdateRequest);
+        } catch (ApiException e) {
+            String responseBody = e.getResponseBody();
+            if (e.getCode() == Constants.BAD_REQUEST){
+                WalletUpdateResponse response= new Gson().fromJson(responseBody, WalletUpdateResponse.class);
+                throw new ExceptionResponseTinApi(response.getError().getCode(),response.getError().getMessage());
+            }else{
+                throw new ExceptionResponseTinApi(Constants.UNEXPECTED_ERROR ,Constants.UNEXPECTED_ERROR_MESSAGE);
+            }
+        }
     }
 
     private WalletUpdateRequest createUpdateWalletReq(List<String> signers , String defaultAddress) {
@@ -58,26 +158,31 @@ public class SdkApiClient {
         return updateWalletReq;
     }
 
-    public BalanceResponse getBalance(String bankName, String currency) throws ApiException {
+    public BalanceResponse getBalance(String bankName, String currency)  {
         WalletApi walletApi = new WalletApi();
         walletApi.getApiClient().setBasePath(url);
 
-        BalanceResponse balance = walletApi.getBalance(apiKey, bankName, currency);
+        BalanceResponse balance = null;
+        try {
+            balance = walletApi.getBalance(apiKey, bankName, currency);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
         return balance;
     }
 
-    public GetWalletResponse getWallet(String yourBankName) throws ApiException {
-        WalletTempoApi walletApi = new WalletTempoApi();
-        walletApi.getApiClient().setBasePath(url);
-
-        return walletApi.getWallet(apiKey, yourBankName);
-    }
 
 
     public CreateActionResponse createAction(CreateActionRequest actionReq ) throws ApiException {
         ActionApi actionApi = new ActionApi();
         actionApi.getApiClient().setBasePath(url);
         return actionApi.createAction(apiKey, actionReq);
+    }
+
+    public GenericResponse signAction( String actionId) throws ApiException {
+        ActionApi actionApi = new ActionApi();
+        actionApi.getApiClient().setBasePath(url);
+        return actionApi.signAction(apiKey, actionId);
     }
 
     public GenericResponse getAction(String hashValue) throws ApiException {

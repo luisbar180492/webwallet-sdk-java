@@ -3,6 +3,7 @@ package com.minka;
 import com.minka.api.handler.ApiException;
 import com.minka.api.model.WalletResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import com.minka.wallet.primitives.utils.WalletCreationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +27,8 @@ public class main {
         try {
             wallet = sdkApiClient.createWallet(yourBankName, labels);
             System.out.println(wallet);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
+        } catch (WalletCreationException e) {
+            e.printStackTrace();
         }
 
     }

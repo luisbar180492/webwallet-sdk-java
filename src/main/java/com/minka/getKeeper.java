@@ -16,10 +16,8 @@ public class getKeeper {
             Keeper keeper = sdkApiClient.getKeeper();
             System.out.println(keeper);
 
-        } catch (ApiException e) {
-            System.out.println(e.getCode());
-
-            System.out.println(e.getResponseBody());
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
         }
     }
 }
