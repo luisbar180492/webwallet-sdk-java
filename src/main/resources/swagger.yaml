@@ -123,6 +123,34 @@ paths:
           200:
             schema:
               $ref: "#/definitions/iouSigned"
+
+  /action/{actionid}/signed:
+        post:
+           summary: "Sign action"
+           description: ""
+           operationId: "signAction"
+           consumes:
+           - "application/json"
+           produces:
+           - "application/json"
+           tags:
+               - action
+           parameters:
+           - in: header
+             name: API_KEY
+             schema:
+               type: string
+             required: true
+           - in: path
+             name: actionid
+             schema:
+               type: string
+             required: true
+           responses:
+             200:
+               schema:
+                 $ref: "#/definitions/genericResponse"
+
   /keeper:
       get:
         summary: "Genera un keeper"

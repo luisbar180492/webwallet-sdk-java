@@ -179,6 +179,12 @@ public class SdkApiClient {
         return actionApi.createAction(apiKey, actionReq);
     }
 
+    public GenericResponse signAction( String actionId) throws ApiException {
+        ActionApi actionApi = new ActionApi();
+        actionApi.getApiClient().setBasePath(url);
+        return actionApi.signAction(apiKey, actionId);
+    }
+
     public GenericResponse getAction(String hashValue) throws ApiException {
         ActionApi actionApi = new ActionApi();
         actionApi.getApiClient().setBasePath(url);
