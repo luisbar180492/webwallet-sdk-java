@@ -309,6 +309,58 @@ public String createTransferRequest(String handleTarget,
 
    }
 
+public String createNoTrustedTransfer(String handleTarget, 
+                             String handleSourceAddress,
+                             String amount,
+                             String smsMessage){
+        //read the action 
+        try {
+            //upload
+            CreateActionRequest req_upload = new CreateActionRequest();
+            Map<String, Object> labels_upload = new HashMap<>();
+            labels_upload.put("type", "UPLOAD");
+            req_upload.setLabels(labels_upload);
+            req_upload.setAmount(amount);
+            req_upload.setSource(this.bankLimitAccountSigner);
+            req_upload.setSymbol("$tin");
+            req_upload.setTarget(handleSourceAddress);
+            CreateActionResponse action_upload = null;
+            action_upload = createAction(req_upload);//call to aPi
+            String action_id_upload =  (String) action_upload.get("action_id");
+            System.out.println(action_id_upload);
+            //sign upload action with amount from bank to target address 
+            GenericResponse genericResponse_upload = signAction(action_id_upload);
+            System.out.println(genericResponse_upload);
+            //send
+            CreateActionRequest req_send = new CreateActionRequest();
+            Map<String, Object> labels_send = new HashMap<>();
+            labels_send.put("type", "SEND");
+            req_send.setLabels(labels_send);
+            req_send.setAmount(amount);
+            req_send.setSource(handleSourceAddress);
+            req_send.setSymbol("$tin");
+            req_send.setTarget(handleTarget);
+            CreateActionResponse action_send = null;
+            action_send = createAction(req_send);//call api
+            String action_id_send =  (String) action_send.get("action_id");
+            System.out.println(action_id_send);
+            //GenericResponse genericResponse_send = signAction(action_id_send);
+            //sms
+            ErrorResponse sendSms = sendSms(handleTarget, smsMessage);
+            if (sendSms != null){
+                if (sendSms.getError().getCode() == 0){
+                   //notify target user to download transfer
+                    return (String) action_send.get("action_id");
+                }                
+            }
+            return null;
+        } catch (ApiException e) {
+            System.out.println("e.getResponseBody()");
+            System.out.println(e.getResponseBody());
+            return null;
+        }
+   }
+
 public String createTransfer(String handleTarget, 
                              String handleSourceAddress,
                              String amount,
