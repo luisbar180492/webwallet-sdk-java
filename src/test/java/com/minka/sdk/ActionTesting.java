@@ -11,6 +11,10 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static org.junit.Assert.assertNotEquals;
+import org.junit.Ignore;
 
 public class ActionTesting {
 
@@ -28,7 +32,32 @@ public class ActionTesting {
                 .setClientId(TestingConstants.CLIENT_ID);
 
     }
-
+    
+//    @Test
+//    public void shouldInitiateRequestTransfer(){
+//        String handleTarget = "$3004431529";//to numero de telefono
+//        String smsMessage = "ENVIO de";//solicit
+//        String amount = "1";
+//        String handleSourceAddress = "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
+//        String action;
+//        action = sdkApiClient.acceptTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
+//        System.out.println("ACTION ID " + action);
+//        assertNotEquals(null, action);
+//    }
+    
+    @Test
+    public void shouldInitiateRequestTransfer(){
+        String handleTarget = "$3004431529";//to numero de telefono
+        String smsMessage = "ENVIO de";//solicit
+        String amount = "1";
+        String handleSourceAddress = "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
+        String action;
+        action = sdkApiClient.initiateTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
+        System.out.println("ACTION ID " + action);
+        assertNotEquals(null, action);
+    }
+    
+    @Ignore
     @Test
     public void shouldCreateAction(){
         CreateActionRequest req = new CreateActionRequest();
@@ -52,6 +81,16 @@ public class ActionTesting {
         System.out.println(action);
     }
 
+    @Test
+    public void getActionByActionId(){
+        try {
+            GenericResponse actionResponse = sdkApiClient.getAction("e3979875-45ac-424e-bf23-3c50409437b2");
+            System.out.println(actionResponse);
+        } catch (ApiException ex) {
+            Logger.getLogger(ActionTesting.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @Ignore
     @Test
     public void shouldSignAction(){
         try {
