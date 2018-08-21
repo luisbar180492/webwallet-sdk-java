@@ -224,10 +224,13 @@ public String confirmTransferRequest(String handleSourceAddress,
             //sign upload action with amount from bank to target address 
             GenericResponse genericResponse_download = signAction(action_id);
             //TODO: notify bank status endpoint source
+            notifyStatusToBank(handleSourceAddress, action_id);
             return (String) genericResponse_download.get("action_id");
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
             System.out.println(e.getResponseBody());
+            return null;
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             return null;
         }
 }    
@@ -257,13 +260,17 @@ public String acceptTransferRequest(String handleTargetAddress,
             System.out.println(genericResponse_upload);
             GenericResponse genericResponse_send = signAction(actionRequestId);
             //TODO: notify bank with credit download endpoint
+            notifyStatusToBank(handleTargetAddress, action_id);
             return (String) genericResponse_send.get("action_id");
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
             System.out.println(e.getResponseBody());
             return null;
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+            return null;
         }
-   }
+}
 
 public String createTransferRequest(String handleTarget, 
                                 String handleSourceAddress,
@@ -313,7 +320,7 @@ public String createTransferRequest(String handleTarget,
         }
     }
 
-    public void notifyBank(String solicitanteaddress, String actionid) throws ExceptionResponseTinApi {
+    public void notifyBankToDownload(String solicitanteaddress, String actionid) throws ExceptionResponseTinApi {
         SignerApi signerApi = new SignerApi();
         signerApi.getApiClient().setBasePath(url);
 
@@ -336,7 +343,7 @@ public String createTransferRequest(String handleTarget,
             labels.setLabels(maps);
             GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
             System.out.println(genericResponse);
-//            notifyBank(addressForNotification, actionId);
+//            notifyBankStatus(addressForNotification, actionId);
             //TODO notify status reject to solicitado
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
@@ -344,4 +351,17 @@ public String createTransferRequest(String handleTarget,
         }
     }
 
+    public void notifyStatusToBank(String solicitanteAddress, String actionId) throws ExceptionResponseTinApi {
+        SignerApi signerApi = new SignerApi();
+        signerApi.getApiClient().setBasePath(url);
+
+        try {
+            ErrorResponse errorResponse = signerApi.notifyStatusToBank(apiKey,solicitanteAddress, actionId);
+            System.out.println(errorResponse);
+        } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+
+    }
 }
