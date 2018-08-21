@@ -191,8 +191,47 @@ public class SdkApiClient {
         actionApi.getApiClient().setBasePath(url);
         return actionApi.getAction(apiKey, hashValue);
     }
+    
+public String acceptTransferRequest(String handleTargetAddress, 
+                                String actionRequestId,
+                                String bankAddressTarget){
+        //read the action 
+        try {
+            GenericResponse actionResponse = getAction(actionRequestId);
+            System.out.println(actionResponse);
+            //get amount data from action
+            String amount =  (String) actionResponse.get("amount");
+            //create upload action with amount from bank to target address 
+            CreateActionRequest req = new CreateActionRequest();
+            Map<String, Object> labels = new HashMap<>();
+            labels.put("type", "REQUEST");
+            req.setLabels(labels);
+            req.setAmount(amount);
+            req.setSource(bankAddressTarget);
+            req.setSymbol("$tin");
+            req.setTarget(handleTargetAddress);
+            System.out.println(req);
+            System.out.println(amount);
+            CreateActionResponse action = null;
+            try {
+                action = createAction(req);
+                //TODO SEND SMS
+                return (String) action.get("action_id");
+            } catch (ApiException e) {
+            System.out.println("e.getResponseBody()");
+            System.out.println(e.getResponseBody());
+//            e.printStackTrace();
+            return null;
+            }
+        } catch (ApiException e) {
+            System.out.println("e.getResponseBody()");
+            System.out.println(e.getResponseBody());
+            return null;
+        }
+        
+   }
 
-public String initiateTransferRequest(String handleTarget, 
+public String createTransferRequest(String handleTarget, 
                                 String handleSourceAddress,
                                 String amount,
                                 String smsMessage){
@@ -209,7 +248,13 @@ public String initiateTransferRequest(String handleTarget,
         CreateActionResponse action = null;
         try {
             action = createAction(req);
-            return (String) action.get("action_id");
+            ErrorResponse sendSms = sendSms(handleTarget, smsMessage);
+            if (sendSms != null){
+                if (sendSms.getError().getCode() == 0){
+                    return (String) action.get("action_id");
+                }                
+            }
+            return null;
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
             System.out.println(e.getResponseBody());

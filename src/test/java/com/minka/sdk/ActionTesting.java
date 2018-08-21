@@ -32,19 +32,20 @@ public class ActionTesting {
                 .setClientId(TestingConstants.CLIENT_ID);
 
     }
+
+    @Ignore
+    @Test
+    public void shouldAcceptRequestTransfer(){
+        String handleTargetAddress = "wiwVeCcDSm7P419TZMESJdHaE2sTsVR36t";
+        String actionRequestId = "e3979875-45ac-424e-bf23-3c50409437b2";
+        String bankAddressTarget = "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
+        String action;
+        action = sdkApiClient.acceptTransferRequest(handleTargetAddress, actionRequestId, bankAddressTarget);
+        System.out.println("ACTION ID " + action);
+        assertNotEquals(null, action);
+    }
     
-//    @Test
-//    public void shouldInitiateRequestTransfer(){
-//        String handleTarget = "$3004431529";//to numero de telefono
-//        String smsMessage = "ENVIO de";//solicit
-//        String amount = "1";
-//        String handleSourceAddress = "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
-//        String action;
-//        action = sdkApiClient.acceptTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
-//        System.out.println("ACTION ID " + action);
-//        assertNotEquals(null, action);
-//    }
-    
+    @Ignore
     @Test
     public void shouldInitiateRequestTransfer(){
         String handleTarget = "$3004431529";//to numero de telefono
@@ -52,7 +53,7 @@ public class ActionTesting {
         String amount = "1";
         String handleSourceAddress = "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
         String action;
-        action = sdkApiClient.initiateTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
+        action = sdkApiClient.createTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
@@ -81,6 +82,7 @@ public class ActionTesting {
         System.out.println(action);
     }
 
+    @Ignore
     @Test
     public void getActionByActionId(){
         try {
