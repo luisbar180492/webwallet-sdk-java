@@ -2,8 +2,8 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: ""
-#host: "achtin-tst.minka.io"
-host: "192.168.120.173:8080"
+host: "achtin-tst.minka.io"
+# host: "192.168.120.173:8080"
 basePath: "/v1"
 schemes:
 - "http"
@@ -327,6 +327,37 @@ paths:
           schema:
             $ref: "#/definitions/walletResponse"
         400:
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /wallet/{solicitadoAlias}/channel/sms:
+    post:
+      summary: "Envia sms"
+      description: ""
+      operationId: "sendSms"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Wallet
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: solicitadoAlias
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: '#/definitions/smsRequest'
+        required: true
+      responses:
+        200:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
@@ -751,6 +782,12 @@ definitions:
     properties:
       code:
         type: "integer"
+      message:
+        type: "string"
+
+  smsRequest:
+    type: "object"
+    properties:
       message:
         type: "string"
 

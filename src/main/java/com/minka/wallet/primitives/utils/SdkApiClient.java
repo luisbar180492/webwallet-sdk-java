@@ -191,59 +191,16 @@ public class SdkApiClient {
         return actionApi.getAction(apiKey, hashValue);
     }
 
-//    private SignerRequest createSignerRequest(Keeper keeper, Map<String, Object> labelsSigner) {
-//        SignerRequest result = new SignerRequest();
-//        result.setLabels(labelsSigner);
-//        List<PublicKeys> keepers = new ArrayList<>();
-//        PublicKeys llave = convert(keeper);
-//        keepers.add(llave);
-//        result.setKeeper(keepers);
-//        return result;
-//    }
-//
-//    private PublicKeys convert(Keeper keeper) {
-//        PublicKeys result = new PublicKeys();
-//        result.setPublic(keeper.getPublic());
-//        result.setSecret(keeper.getSecret());
-//        return result;
-//    }
-//
-//    private WalletRequest createRequestWallet(String handle, Map<String, Object> labelsWallet) {
-//        WalletRequest result = new WalletRequest();
-//        result.setHandle(handle);
-//        result.setLabels(labelsWallet);
-//        return result;
-//    }
-//
-//    private WalletResponse createWallet(WalletRequest handle, WalletApi walletApi) throws ApiException {
-//        return walletApi.createWallet(API_KEY, handle);
-//    }
-//
-//
-//    public WalletUpdateResponse updateWallet(String handle, WalletUpdateRequest walletUpdateRequest) throws ApiException {
-//        WalletApi walletApi = new WalletApi();
-//        walletApi.getApiClient().setBasePath(CLOUD_URL);
-//
-//        return walletApi.updateWallet(API_KEY, handle, walletUpdateRequest);
-//    }
-//
-//    public CreateClaimResponse createClaim(CreateClaimRequest req) throws ApiException {
-//        KlemerApi klemerApi = new KlemerApi();
-//
-//        klemerApi.getApiClient().setBasePath(CLOUD_URL);
-//        return klemerApi.createClaim(API_KEY, req);
-//    }
-//
-//    public static TransactionRequest createTransfer(Object iou, Map<String, Object> labelsIou) throws ApiException {
-//        TransactionApi api = new TransactionApi();
-//
-//        api.getApiClient().setBasePath(CLOUD_URL);
-//        TransactionRequest transactionReq = new TransactionRequest();
-//        transactionReq.setLabels(labelsIou);
-//        transactionReq.setIou(iou);
-//        System.out.println("transactionReq");
-//        System.out.println(transactionReq);
-//        TransactionRequest transfer = api.createTransfer(API_KEY, transactionReq);
-//        return transfer;
-//    }
+    public ErrorResponse sendSms(String solicitadoAlias, String message){
+        WalletApi walletApi = new WalletApi();
+        walletApi.getApiClient().setBasePath(url);
+
+        try {
+            SmsRequest req = new SmsRequest();
+            req.setMessage(message);
+            return walletApi.sendSms(apiKey, solicitadoAlias , req);
+        } catch (ApiException e) {
+            return null;
+        }
+    }
 }
