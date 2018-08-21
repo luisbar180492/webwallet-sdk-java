@@ -301,6 +301,37 @@ paths:
         schema:
           type: string
         required: true
+  /signer/{solicitanteAddress}/router/{actionId}/download:
+    post:
+        summary: "Notify source Bank to execute credit"
+        description: ""
+        operationId: "notifySourceBank"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        tags:
+            - Signer
+        parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: solicitanteAddress
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionId
+          schema:
+            type: string
+          required: true
+        responses:
+          200:
+            schema:
+              $ref: "#/definitions/ErrorResponse"
   /wallet:
     post:
       summary: "Crea un wallet"

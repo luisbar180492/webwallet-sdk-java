@@ -276,4 +276,17 @@ public String createTransferRequest(String handleTarget,
             return null;
         }
     }
+
+    public void notifyBank(String solicitanteaddress, String actionid) throws ExceptionResponseTinApi {
+        SignerApi signerApi = new SignerApi();
+        signerApi.getApiClient().setBasePath(url);
+
+        try {
+            ErrorResponse errorResponse = signerApi.notifySourceBank(apiKey, solicitanteaddress, actionid);
+            System.out.println(errorResponse);
+        } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
 }
