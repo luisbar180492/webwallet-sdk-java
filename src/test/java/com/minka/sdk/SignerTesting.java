@@ -55,8 +55,8 @@ public class SignerTesting {
     public void createSignerForOnlineUse(){
 
         Map<String, Object> labels = new HashMap<>();
-        labels.put("description", "limit");
-        labels.put("bank_account_number", "BANK_LIMIT_ACCOUNT_NUMBER");
+
+
         try {
             SignerResponse signer = sdkApiClient.createSigner(labels);
             System.out.println(signer);

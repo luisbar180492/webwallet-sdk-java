@@ -50,7 +50,7 @@ public class ActionTesting {
     @Test
     public void shouldAcceptRequestTransfer(){
         String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
-        String actionRequestId = "3438e47e-4034-4787-a206-0fc8f8df31e2";
+        String actionRequestId = "dff4423c-8c85-4902-a792-7c5168ba842d";
         String action;
         action = sdkApiClient.acceptTransferRequest(handleTargetAddress, actionRequestId);
         System.out.println("ACTION ID " + action);
@@ -60,8 +60,8 @@ public class ActionTesting {
     @Ignore
     @Test
     public void shouldInitiateRequestTransfer(){
-        String handleTarget = "$perro_teo";//to numero de telefono
-        String smsMessage = "ENVIO de TINS";//solicit
+        String handleTarget = "$3104845181";//to numero de telefono
+        String smsMessage = "solicitando 1 Tin";//solicit
         String amount = "1";
         String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String action;
@@ -96,20 +96,20 @@ public class ActionTesting {
     @Ignore
     @Test
     public void shouldInitiateTransfer(){
-        String handleTarget = "$perro_mike";//to numero de telefono
-        String smsMessage = "ENVIO de TINS";//solicit
+        String handleTarget = "$3104845181";//to numero de telefono
+        String smsMessage = "ENVIO de TINS prueba envío";//solicit
         String amount = "1";
-        String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
+        String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk   ";
         String action;
         action = sdkApiClient.createTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
     
-    @Ignore
+
     @Test
     public void shouldRejectRequestTransfer(){
-        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
+        String actionId = "60e34229-5fe4-46a5-9709-208e52bf9877";
         String address = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
 
         try {

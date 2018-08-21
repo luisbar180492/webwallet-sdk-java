@@ -226,14 +226,14 @@ public String confirmTransferRequest(String handleSourceAddress,
             //sign upload action with amount from bank to target address 
             GenericResponse genericResponse_download = signAction(action_id);
             //TODO: notify bank status endpoint source
-            notifyStatusToBank(handleSourceAddress, action_id);
+//            notifyStatusToBank(handleSourceAddress, action_id);
             return (String) genericResponse_download.get("action_id");
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
             System.out.println(e.getResponseBody());
             return null;
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            return null;
+//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+//            return null;
         }
 }    
     
@@ -262,15 +262,15 @@ public String acceptTransferRequest(String handleTargetAddress,
             System.out.println(genericResponse_upload);
             GenericResponse genericResponse_send = signAction(actionRequestId);
             //TODO: notify bank with credit download endpoint
-            notifyStatusToBank(handleTargetAddress, action_id);
+//            notifyStatusToBank(handleTargetAddress, action_id);
             return (String) genericResponse_send.get("action_id");
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
             System.out.println(e.getResponseBody());
             return null;
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
-            return null;
+//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+//            exceptionResponseTinApi.printStackTrace();
+//            return null;
         }
 }
 
@@ -402,7 +402,7 @@ public String createTransfer(String handleTarget,
             if (sendSms != null){
                 if (sendSms.getError().getCode() == 0){
                    //TODO: notify bank with credit download endpoint
-                    notifyBankToDownload(handleSourceAddress, action_id_send );
+//                    notifyBankToDownload(handleSourceAddress, action_id_send );
                     return (String) genericResponse_send.get("action_id");
                 }                
             }
@@ -411,9 +411,9 @@ public String createTransfer(String handleTarget,
             System.out.println("e.getResponseBody()");
             System.out.println(e.getResponseBody());
             return null;
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
-            return null;
+//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+//            exceptionResponseTinApi.printStackTrace();
+//            return null;
         }
 }
 
@@ -441,15 +441,15 @@ public String confirmTransfer(String handleTargetAddress,
             GenericResponse genericResponse_download = signAction(action_id);
             //TODO: notify bank status endpoint source
             String action_id_final = (String) genericResponse_download.get("action_id");
-            notifyStatusToBank(handleTargetAddress, action_id_final);
+//            notifyStatusToBank(handleTargetAddress, action_id_final);
             return action_id_final;
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
             System.out.println(e.getResponseBody());
             return null;
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
-            return null;
+//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+//            exceptionResponseTinApi.printStackTrace();
+//            return null;
         }
 }    
 
@@ -489,13 +489,13 @@ public String confirmTransfer(String handleTargetAddress,
             labels.setLabels(maps);
             GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
             System.out.println(genericResponse);
-            notifyBankToDownload(addressForNotification, actionId);
+//            notifyBankToDownload(addressForNotification, actionId);
             //TODO notify status reject to solicitado
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
+//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+//            exceptionResponseTinApi.printStackTrace();
         }
     }
 
@@ -509,7 +509,7 @@ public String confirmTransfer(String handleTargetAddress,
             labels.setLabels(maps);
             GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
             System.out.println(genericResponse);
-            notifyStatusToBank(addressForNotification, actionId);
+//            notifyStatusToBank(addressForNotification, actionId);
             //TODO notify status reject to solicitado
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());

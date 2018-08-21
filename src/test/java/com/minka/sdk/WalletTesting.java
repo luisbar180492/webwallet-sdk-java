@@ -42,8 +42,7 @@ public class WalletTesting {
         System.out.println(handle);
 
         Map<String, Object> walletLabels = new HashMap<>();
-        walletLabels.put("email", "aranibarIvan@mgali.com");
-        walletLabels.put("phoneNumber", new Integer(21721821));
+        walletLabels.put("channelSms", "573004431529");
 
         try {
             WalletResponse wallet = sdkApiClient.createWallet(handle, walletLabels);
@@ -125,12 +124,13 @@ public class WalletTesting {
 
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$userphonenumber1";
-        String defaultAddress = "wXK6boH2pLf8raZwpSQH3JRgzW7qH7WyVf";
+        String handle = "$okuhytjsgexzniqnnyo";
+        String defaultAddress = "whhmBt66ZynrnQcVgp1cLFfZJ3zbqWMEEH";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 
         WalletUpdateResponse walletUpdateResponse = sdkApiClient.updateWallet(handle, signers, defaultAddress);
+        System.out.println(walletUpdateResponse);
         assertEquals(walletUpdateResponse.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
     }
 
