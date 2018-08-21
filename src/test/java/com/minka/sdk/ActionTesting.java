@@ -1,8 +1,7 @@
 package com.minka.sdk;
 
-
-import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.ApiException;
+import com.minka.ExceptionResponseTinApi;
 import com.minka.api.model.CreateActionRequest;
 import com.minka.api.model.CreateActionResponse;
 import com.minka.api.model.GenericResponse;
@@ -70,7 +69,30 @@ public class ActionTesting {
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
-
+    
+    @Test
+    public void shouldConfirmTransfer(){
+        String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
+        String actionRequestId = "49528514-48a4-4e8a-8111-92ea1e54abe4";
+        String action;
+        action = sdkApiClient.confirmTransfer(handleTargetAddress, actionRequestId);
+        System.out.println("ACTION ID " + action);
+        assertNotEquals(null, action);
+    }
+    
+    @Ignore
+    @Test
+    public void shouldInitiateTransfer(){
+        String handleTarget = "$perro_mike";//to numero de telefono
+        String smsMessage = "ENVIO de TINS";//solicit
+        String amount = "1";
+        String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
+        String action;
+        action = sdkApiClient.createTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
+        System.out.println("ACTION ID " + action);
+        assertNotEquals(null, action);
+    }
+    
     @Ignore
     @Test
     public void shouldRejectRequestTransfer(){
