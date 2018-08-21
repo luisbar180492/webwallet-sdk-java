@@ -159,4 +159,15 @@ public class ActionTesting {
         System.out.println(genericResponse.size());
 
     }
+
+    @Test
+    public void shouldRejectTransferSend(){
+        String addressForNotification= "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
+        String sendActionId = "d6979617-28bb-40fa-87f3-0c9dfff0bbd5";
+        try {
+            sdkApiClient.rejectTransferSend(addressForNotification, sendActionId);
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
+    }
 }

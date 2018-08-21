@@ -427,8 +427,24 @@ public String confirmTransfer(String handleTargetAddress,
         }
     }
 
-    public void rejectTransferSend(String actionId) {
-
+    public void rejectTransferSend(String addressForNotification,String actionId) throws ExceptionResponseTinApi {
+        ActionApi  api = new ActionApi();
+        api.getApiClient().setBasePath(url);
+        try {
+            LabelsStatusRequest labels = new LabelsStatusRequest();
+            Map<String, Object> maps = new HashMap<>();
+            maps.put("status", "REJECTED");
+            labels.setLabels(maps);
+            GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
+            System.out.println(genericResponse);
+            notifyBankToDownload(addressForNotification, actionId);
+            //TODO notify status reject to solicitado
+        } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
     }
 
     public void rejectTransferRequest(String addressForNotification, String actionId) throws ExceptionResponseTinApi{
