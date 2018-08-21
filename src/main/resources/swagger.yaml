@@ -49,6 +49,36 @@ paths:
         200:
           schema:
             $ref: "#/definitions/ErrorResponse"
+    get:
+      summary: "Get link"
+      description: ""
+      operationId: "getLink"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Links
+      parameters:
+      - in: 'header'
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: source
+        schema:
+          type: 'string'
+        required: true
+      - in: query
+        name: target
+        schema:
+          type: 'string'
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/getLinkResponse"
 
   /klemer:
     post:
@@ -931,6 +961,19 @@ definitions:
         type: "string"
       "type":
         enum: [TRUST, BLOCK]
+
+  getLinkResponse:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+      target:
+        type: "string"
+      "type":
+        enum: [TRUST, BLOCK]
+      error:
+        type: "object"
+        $ref: "#/definitions/ErrorGenerico"
 
   genericResponse:
     type: "object"

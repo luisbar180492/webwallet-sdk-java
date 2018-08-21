@@ -364,6 +364,8 @@ public String createTransferRequest(String handleTarget,
         }
     }
 
+
+
     public ErrorResponse createLink(String source, String target, CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
         LinksApi api = new LinksApi();
         api.getApiClient().setBasePath(url);
@@ -380,4 +382,13 @@ public String createTransferRequest(String handleTarget,
         }
     }
 
+    public GetLinkResponse getLink(String source, String target) throws ExceptionResponseTinApi {
+        LinksApi api = new LinksApi();
+        api.getApiClient().setBasePath(url);
+        try {
+            return api.getLink(apiKey, source, target);
+        } catch (ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
 }
