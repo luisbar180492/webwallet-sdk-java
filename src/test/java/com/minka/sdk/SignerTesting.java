@@ -33,12 +33,22 @@ public class SignerTesting {
         String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
         String solicitanteAddress = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
         try {
-            sdkApiClient.notifyBank(solicitanteAddress, actionId);
+            sdkApiClient.notifyBankToDownload(solicitanteAddress, actionId);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
         }
     }
 
+    @Test
+    public void shouldNotifyStatusToBank(){
+        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
+        String solicitanteAddress = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
+        try {
+            sdkApiClient.notifyStatusToBank(solicitanteAddress, actionId);
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
+    }
 
 
     @Test
