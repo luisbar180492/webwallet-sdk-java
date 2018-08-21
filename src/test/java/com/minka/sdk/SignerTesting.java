@@ -1,6 +1,7 @@
 package com.minka.sdk;
 
 
+import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.model.SignerResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
@@ -27,6 +28,29 @@ public class SignerTesting {
 
     }
 
+    @Test
+    public void shouldNotifyBank(){
+        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
+        String solicitanteAddress = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
+        try {
+            sdkApiClient.notifyBank(solicitanteAddress, actionId);
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
+    }
+
+    @Test
+    public void shouldRejectRequestTransfer(){
+        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
+        String address = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
+
+        try {
+            sdkApiClient.rejectTransferRequest(address, actionId);
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
+
+    }
 
     @Test
     public void createSignerForOnlineUse(){

@@ -289,4 +289,22 @@ public String createTransferRequest(String handleTarget,
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
         }
     }
+
+    public void rejectTransferRequest(String addressForNotification, String actionId) throws ExceptionResponseTinApi{
+        ActionApi  api = new ActionApi();
+        api.getApiClient().setBasePath(url);
+        try {
+            LabelsStatusRequest labels = new LabelsStatusRequest();
+            Map<String, Object> maps = new HashMap<>();
+            maps.put("status", "REJECTED");
+            labels.setLabels(maps);
+            GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
+            System.out.println(genericResponse);
+            notifyBank(addressForNotification, actionId);
+        } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
+
 }
