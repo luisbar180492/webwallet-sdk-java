@@ -31,16 +31,27 @@ public class ActionTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
+        sdkApiClient.setBankLimitParams(TestingConstants.BANK_LIMIT_WALLET, TestingConstants.BANK_LIMIT_ADDRESS);
     }
 
+    
     @Ignore
     @Test
-    public void shouldAcceptRequestTransfer(){
-        String handleTargetAddress = "wiwVeCcDSm7P419TZMESJdHaE2sTsVR36t";
-        String actionRequestId = "e3979875-45ac-424e-bf23-3c50409437b2";
-        String bankAddressTarget = "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
+    public void shouldConfirmRequestTransfer(){
+        String handleTargetAddress = "wTEro49jTuEDmbsqKvehY2Khv533cnG6jA";
+        String actionRequestId = "213e5f57-be2b-421e-ae45-ea908c8ef0bd";
         String action;
-        action = sdkApiClient.acceptTransferRequest(handleTargetAddress, actionRequestId, bankAddressTarget);
+        action = sdkApiClient.confirmTransferRequest(handleTargetAddress, actionRequestId);
+        System.out.println("ACTION ID " + action);
+        assertNotEquals(null, action);
+    }
+    
+    @Test
+    public void shouldAcceptRequestTransfer(){
+        String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
+        String actionRequestId = "3438e47e-4034-4787-a206-0fc8f8df31e2";
+        String action;
+        action = sdkApiClient.acceptTransferRequest(handleTargetAddress, actionRequestId);
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
@@ -48,10 +59,10 @@ public class ActionTesting {
     @Ignore
     @Test
     public void shouldInitiateRequestTransfer(){
-        String handleTarget = "$3004431529";//to numero de telefono
-        String smsMessage = "ENVIO de";//solicit
+        String handleTarget = "$perro_teo";//to numero de telefono
+        String smsMessage = "ENVIO de TINS";//solicit
         String amount = "1";
-        String handleSourceAddress = "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
+        String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String action;
         action = sdkApiClient.createTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
         System.out.println("ACTION ID " + action);
