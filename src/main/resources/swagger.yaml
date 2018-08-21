@@ -130,6 +130,42 @@ paths:
             200:
               schema:
                 $ref: "#/definitions/createActionResponse"
+  /action/unsigned:
+    get:
+      summary: "Get link"
+      description: ""
+      operationId: "getPending"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Action
+      parameters:
+      - in: 'header'
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum: [REQUEST, SEND]
+        required: true
+      - in: query
+        name: target
+        schema:
+          type: 'string'
+      - in: query
+        name: source
+        schema:
+          type: 'string'
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/pendingActionResponse"
+
   /action/{hash}:
         get:
            summary: "Sign an iou"
@@ -974,6 +1010,10 @@ definitions:
       error:
         type: "object"
         $ref: "#/definitions/ErrorGenerico"
+  pendingActionResponse:
+        type: "array"
+        items:
+          $ref: "#/definitions/genericResponse"
 
   genericResponse:
     type: "object"

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.*;
 import com.minka.api.model.*;
+import com.minka.utils.ActionType;
+import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
 import java.util.HashMap;
 
@@ -474,4 +476,21 @@ public String confirmTransfer(String handleTargetAddress,
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
         }
     }
+
+
+    public PendingActionResponse getActionPendings(String alias, AliasType aliasType, ActionType action) {
+        ActionApi actionApi = new ActionApi();
+        actionApi.getApiClient().setBasePath(url);
+        try {
+            if (aliasType.getValue().equals(AliasType.SOURCE.getValue())){
+                return actionApi.getPending(apiKey, action.getValue(), null, alias);
+            }else {
+                return actionApi.getPending(apiKey, action.getValue(), alias, null);
+            }
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

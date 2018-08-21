@@ -2,9 +2,9 @@ package com.minka.sdk;
 
 import com.minka.api.handler.ApiException;
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.CreateActionRequest;
-import com.minka.api.model.CreateActionResponse;
-import com.minka.api.model.GenericResponse;
+import com.minka.api.model.*;
+import com.minka.utils.ActionType;
+import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import org.junit.Before;
 import org.junit.Test;
@@ -149,6 +149,14 @@ public class ActionTesting {
         } catch (ApiException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Test
+    public void shouldGetPendingActions(){
+        String source = "$3104845181";
+        PendingActionResponse genericResponse = sdkApiClient.getActionPendings(source, AliasType.TARGET, ActionType.REQUEST);
+        System.out.println(genericResponse.size());
 
     }
 }
