@@ -192,32 +192,6 @@ public class SdkApiClient {
         return actionApi.getAction(apiKey, hashValue);
     }
 
-    
-//public String acceptTransferRequest(String handleTargetAddress, 
-//                                String actionRequestId,
-//                                String bankAddressTarget){
-//        CreateActionRequest req = new CreateActionRequest();
-//        Map<String, Object> labels = new HashMap<>();
-//        labels.put("type", "REQUEST");
-//        req.setLabels(labels);
-//        req.setAmount(amount);
-//        req.setSource(handleTarget);
-//        req.setSymbol("$tin");
-//        req.setTarget(handleSourceAddress);
-//        System.out.println(req);
-//
-//        CreateActionResponse action = null;
-//        try {
-//            action = createAction(req);
-//            return (String) action.get("action_id");
-//        } catch (ApiException e) {
-//            System.out.println("e.getResponseBody()");
-//            System.out.println(e.getResponseBody());
-////            e.printStackTrace();
-//            return null;
-//        }
-//   }
-
 public String initiateTransferRequest(String handleTarget, 
                                 String handleSourceAddress,
                                 String amount,
@@ -245,4 +219,16 @@ public String initiateTransferRequest(String handleTarget,
 
    }
 
+    public ErrorResponse sendSms(String solicitadoAlias, String message){
+        WalletApi walletApi = new WalletApi();
+        walletApi.getApiClient().setBasePath(url);
+
+        try {
+            SmsRequest req = new SmsRequest();
+            req.setMessage(message);
+            return walletApi.sendSms(apiKey, solicitadoAlias , req);
+        } catch (ApiException e) {
+            return null;
+        }
+    }
 }
