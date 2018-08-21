@@ -69,8 +69,9 @@ public class ActionTesting {
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
-    
-        @Test
+
+    @Ignore
+    @Test
     public void shouldInitiateNoTrustedTransfer(){
         String handleTarget = "$perro_mike";//to numero de telefono
         String smsMessage = "ENVIO de TINS";//solicit
@@ -79,7 +80,6 @@ public class ActionTesting {
         String action;
         action = sdkApiClient.createNoTrustedTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
         System.out.println("ACTION ID " + action);
-        assertNotEquals(null, action);
     }
     
     @Ignore
