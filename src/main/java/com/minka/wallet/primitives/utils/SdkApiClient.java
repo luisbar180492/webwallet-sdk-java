@@ -300,6 +300,89 @@ public String createTransferRequest(String handleTarget,
 
    }
 
+public String createTransfer(String handleTarget, 
+                             String handleSourceAddress,
+                             String amount,
+                             String smsMessage){
+        //read the action 
+        try {
+            //upload
+            CreateActionRequest req_upload = new CreateActionRequest();
+            Map<String, Object> labels_upload = new HashMap<>();
+            labels_upload.put("type", "UPLOAD");
+            req_upload.setLabels(labels_upload);
+            req_upload.setAmount(amount);
+            req_upload.setSource(this.bankLimitAccountSigner);
+            req_upload.setSymbol("$tin");
+            req_upload.setTarget(handleSourceAddress);
+            CreateActionResponse action_upload = null;
+            action_upload = createAction(req_upload);//call to aPi
+            String action_id_upload =  (String) action_upload.get("action_id");
+            System.out.println(action_id_upload);
+            //sign upload action with amount from bank to target address 
+            GenericResponse genericResponse_upload = signAction(action_id_upload);
+            System.out.println(genericResponse_upload);
+            //send
+            CreateActionRequest req_send = new CreateActionRequest();
+            Map<String, Object> labels_send = new HashMap<>();
+            labels_send.put("type", "SEND");
+            req_send.setLabels(labels_send);
+            req_send.setAmount(amount);
+            req_send.setSource(handleSourceAddress);
+            req_send.setSymbol("$tin");
+            req_send.setTarget(handleTarget);
+            CreateActionResponse action_send = null;
+            action_send = createAction(req_send);//call api
+            String action_id_send =  (String) action_send.get("action_id");
+            System.out.println(action_id_send);
+            GenericResponse genericResponse_send = signAction(action_id_send);
+            //sms
+            ErrorResponse sendSms = sendSms(handleTarget, smsMessage);
+            if (sendSms != null){
+                if (sendSms.getError().getCode() == 0){
+                   //TODO: notify bank with credit download endpoint
+                    return (String) genericResponse_send.get("action_id");
+                }                
+            }
+            return null;
+        } catch (ApiException e) {
+            System.out.println("e.getResponseBody()");
+            System.out.println(e.getResponseBody());
+            return null;
+        }
+   }
+
+public String confirmTransfer(String handleTargetAddress, 
+                                String actionRequestId
+                                ){
+    try {
+            GenericResponse actionResponse = getAction(actionRequestId);
+            //get amount data from action
+            String amount =  (String) actionResponse.get("amount");
+            //create upload action with amount from bank to target address 
+            CreateActionRequest req = new CreateActionRequest();
+            Map<String, Object> labels = new HashMap<>();
+            labels.put("type", "DOWNLOAD");
+            req.setLabels(labels);
+            req.setAmount(amount);
+            req.setSource(handleTargetAddress);
+            req.setSymbol("$tin");
+            req.setTarget(this.bankLimitAccountSigner);
+            CreateActionResponse action = null;
+            action = createAction(req);
+            String action_id =  (String) action.get("action_id");
+            System.out.println(action_id);
+            //sign upload action with amount from bank to target address 
+            GenericResponse genericResponse_download = signAction(action_id);
+            //TODO: notify bank status endpoint source
+            return (String) genericResponse_download.get("action_id");
+        } catch (ApiException e) {
+            System.out.println("e.getResponseBody()");
+            System.out.println(e.getResponseBody());
+            return null;
+        }
+}    
+
     public ErrorResponse sendSms(String solicitadoAlias, String message){
         WalletApi walletApi = new WalletApi();
         walletApi.getApiClient().setBasePath(url);
