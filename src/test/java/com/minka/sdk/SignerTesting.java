@@ -39,18 +39,7 @@ public class SignerTesting {
         }
     }
 
-    @Test
-    public void shouldRejectRequestTransfer(){
-        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
-        String address = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
 
-        try {
-            sdkApiClient.rejectTransferRequest(address, actionId);
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
-        }
-
-    }
 
     @Test
     public void createSignerForOnlineUse(){

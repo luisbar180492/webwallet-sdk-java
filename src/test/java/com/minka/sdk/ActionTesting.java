@@ -1,6 +1,7 @@
 package com.minka.sdk;
 
 
+import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.model.CreateActionRequest;
 import com.minka.api.model.CreateActionResponse;
@@ -34,7 +35,7 @@ public class ActionTesting {
         sdkApiClient.setBankLimitParams(TestingConstants.BANK_LIMIT_WALLET, TestingConstants.BANK_LIMIT_ADDRESS);
     }
 
-    
+
     @Ignore
     @Test
     public void shouldConfirmRequestTransfer(){
@@ -45,7 +46,8 @@ public class ActionTesting {
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
-    
+
+    @Ignore
     @Test
     public void shouldAcceptRequestTransfer(){
         String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
@@ -55,7 +57,7 @@ public class ActionTesting {
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
-    
+
     @Ignore
     @Test
     public void shouldInitiateRequestTransfer(){
@@ -68,7 +70,20 @@ public class ActionTesting {
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
     }
-    
+
+    @Ignore
+    @Test
+    public void shouldRejectRequestTransfer(){
+        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
+        String address = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
+
+        try {
+            sdkApiClient.rejectTransferRequest(address, actionId);
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
+
+    }
     @Ignore
     @Test
     public void shouldCreateAction(){

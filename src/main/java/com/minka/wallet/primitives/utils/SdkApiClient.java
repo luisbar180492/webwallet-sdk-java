@@ -223,7 +223,7 @@ public String confirmTransferRequest(String handleSourceAddress,
             System.out.println(action_id);
             //sign upload action with amount from bank to target address 
             GenericResponse genericResponse_download = signAction(action_id);
-            //TODO: notify bank
+            //TODO: notify bank status endpoint source
             return (String) genericResponse_download.get("action_id");
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
@@ -256,7 +256,7 @@ public String acceptTransferRequest(String handleTargetAddress,
             GenericResponse genericResponse_upload = signAction(action_id);
             System.out.println(genericResponse_upload);
             GenericResponse genericResponse_send = signAction(actionRequestId);
-            //TODO: notify bank
+            //TODO: notify bank with credit download endpoint
             return (String) genericResponse_send.get("action_id");
         } catch (ApiException e) {
             System.out.println("e.getResponseBody()");
@@ -336,7 +336,8 @@ public String createTransferRequest(String handleTarget,
             labels.setLabels(maps);
             GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
             System.out.println(genericResponse);
-            notifyBank(addressForNotification, actionId);
+//            notifyBank(addressForNotification, actionId);
+            //TODO notify status reject to solicitado
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
