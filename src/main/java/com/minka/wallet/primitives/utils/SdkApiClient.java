@@ -362,6 +362,22 @@ public String createTransferRequest(String handleTarget,
             System.out.println(e.getResponseBody());
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
         }
-
     }
+
+    public ErrorResponse createLink(String source, String target, CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
+        LinksApi api = new LinksApi();
+        api.getApiClient().setBasePath(url);
+
+        CreateLinkRequest req = new CreateLinkRequest();
+        req.setSource(source);
+        req.setTarget(target);
+        req.setType(typeLink);
+        try {
+            ErrorResponse link = api.createLink(apiKey, req);
+            return link;
+        } catch (ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
+
 }

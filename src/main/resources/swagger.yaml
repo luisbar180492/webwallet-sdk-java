@@ -21,7 +21,35 @@ tags:
     description: ""
   - name: "Klemer"
     description: ""
+  - name: "Links"
+    description: "Enlaces de confianza"
 paths:
+  /link:
+    post:
+      summary: "Crea un link"
+      description: ""
+      operationId: "createLink"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      tags:
+          - Links
+      parameters:
+      - in: header
+        name: API_KEY
+        schema:
+          type: string
+        required: true
+      - in: body
+        schema:
+          $ref: "#/definitions/createLinkRequest"
+        required: true
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /klemer:
     post:
       summary: "Crea un wallet"
@@ -893,6 +921,16 @@ definitions:
           type: "object"
           additionalProperties:
                  type: "object"
+
+  createLinkRequest:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+      target:
+        type: "string"
+      "type":
+        enum: [TRUST, BLOCK]
 
   genericResponse:
     type: "object"
