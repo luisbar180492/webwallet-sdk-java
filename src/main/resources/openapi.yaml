@@ -17,6 +17,8 @@ tags:
     description: ''
   - name: Links
     description: Enlaces de confianza
+
+
 paths:
   /link:
     post:
@@ -714,8 +716,7 @@ components:
           type: object
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     wallet:
       type: object
       properties:
@@ -737,8 +738,7 @@ components:
       properties:
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     publicKeys:
       type: object
       properties:
@@ -753,8 +753,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     getWalletResponse:
       type: object
       properties:
@@ -762,8 +761,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         handle:
           type: string
         id:
@@ -778,8 +776,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         handle:
           type: string
         error:
@@ -801,8 +798,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         handle:
           type: string
         wallet_id:
@@ -822,8 +818,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         signer_id:
           type: string
         keeper:
@@ -852,8 +847,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     createClaimRequest:
       type: object
       properties:
@@ -899,20 +893,16 @@ components:
       properties:
         hash:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         data:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         meta:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     balanceResponse:
       type: object
-      additionalProperties:
-        type: object
+      additionalProperties: true
     createActionRequest:
       type: object
       properties:
@@ -926,12 +916,10 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     createActionResponse:
       type: object
-      additionalProperties:
-        type: object
+      additionalProperties: true
     ErrorForbidden:
       type: object
       properties:
@@ -960,8 +948,7 @@ components:
       properties:
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     createLinkRequest:
       type: object
       properties:
@@ -993,5 +980,4 @@ components:
         $ref: '#/components/schemas/genericResponse'
     genericResponse:
       type: object
-      additionalProperties:
-        type: object
+      additionalProperties: true
