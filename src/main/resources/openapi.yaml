@@ -274,14 +274,10 @@ paths:
       summary: Genera un keeper
       description: ''
       operationId: obtenerKeeper
+      security:
+        - ApiKeyAuth: []
       tags:
         - Keeper
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
       responses:
         '200':
           description: Keypair generated
@@ -688,8 +684,13 @@ paths:
               $ref: '#/components/schemas/transactionRequest'
         required: true
 servers:
-  - url: 'http://achtin-tst.minka.io/v1'
+  - url: 'https://achtin-tst.minka.io/v1'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: API_KEY
   schemas:
     Keeper:
       type: object

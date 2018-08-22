@@ -3,10 +3,36 @@ package com.minka.wallet.primitives.utils;
 import com.google.gson.Gson;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.*;
-import com.minka.api.model.*;
+import com.minka.api.handler.ActionApi;
+import com.minka.api.handler.ApiException;
+import com.minka.api.handler.LinksApi;
+import com.minka.api.handler.SignerApi;
+import com.minka.api.handler.WalletApi;
+import com.minka.api.handler.WalletTempoApi;
+import com.minka.api.model.BalanceResponse;
+import com.minka.api.model.CreateActionRequest;
+import com.minka.api.model.CreateActionResponse;
+import com.minka.api.model.CreateLinkRequest;
+import com.minka.api.model.ErrorForbidden;
+import com.minka.api.model.ErrorResponse;
+import com.minka.api.model.GenericResponse;
+import com.minka.api.model.GetLinkResponse;
+import com.minka.api.model.GetWalletResponse;
+import com.minka.api.model.LabelsStatusRequest;
+import com.minka.api.model.PendingActionResponse;
+import com.minka.api.model.SignerRequest;
+import com.minka.api.model.SignerResponse;
+import com.minka.api.model.SmsRequest;
+import com.minka.api.model.WalletRequest;
+import com.minka.api.model.WalletResponse;
+import com.minka.api.model.WalletUpdateRequest;
+import com.minka.api.model.WalletUpdateResponse;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
+import io.minka.api.handler.*;
+import io.minka.api.handler.ApiClient;
+
 import java.util.HashMap;
 
 import java.util.List;
@@ -17,6 +43,7 @@ import java.util.Map;
  */
 public class SdkApiClient {
 
+    private final ApiClient apiClient;
     private String url;
     private String apiKey;
     private String secret;
@@ -33,6 +60,12 @@ public class SdkApiClient {
     public SdkApiClient(String domain, String apiKey) {
         this.url = "https://" + domain + ".minka.io/v1";
         this.apiKey = apiKey;
+        apiClient = new ApiClient();
+        apiClient.setApiKey(apiKey);
+        apiClient.setBasePath(url);
+        if (timeout > 0){
+            apiClient.setConnectTimeout(timeout);
+        }
     }
 
     /**
@@ -71,19 +104,13 @@ public class SdkApiClient {
      * Solicita una pareja de llave privada y pública al Web service de TINAPI
      * @return un objeto con las llaves (privada y pública)
      */
-    public Keeper getKeeper() throws ExceptionResponseTinApi {
+    public io.minka.api.model.Keeper getKeeper() throws ExceptionResponseTinApi {
 
-
-        KeeperApi api = new KeeperApi();
-        api.getApiClient().setBasePath(url);
-
-        if (timeout > 0){
-            api.getApiClient().setConnectTimeout(timeout);
-        }
+        io.minka.api.handler.KeeperApi api = new io.minka.api.handler.KeeperApi(apiClient);
 
         try {
-            return api.obtenerKeeper(apiKey);
-        } catch (ApiException e) {
+            return api.obtenerKeeper();
+        } catch (io.minka.api.handler.ApiException e) {
 
             String responseBody = e.getResponseBody();
 
