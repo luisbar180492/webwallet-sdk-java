@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: ''
+  title: 'TINAPI '
 tags:
   - name: Keeper
     description: Endpoint to get keypairs
@@ -15,7 +15,64 @@ tags:
     description: ''
   - name: Klemer
     description: ''
+  - name: Links
+    description: Enlaces de confianza
 paths:
+  /link:
+    post:
+      summary: Crea un link
+      description: ''
+      operationId: createLink
+      tags:
+        - Links
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createLinkRequest'
+        required: true
+    get:
+      summary: Get link
+      description: ''
+      operationId: getLink
+      tags:
+        - Links
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: source
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: target
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getLinkResponse'
   /klemer:
     post:
       summary: Crea un wallet
@@ -68,6 +125,42 @@ paths:
             schema:
               $ref: '#/components/schemas/createActionRequest'
         required: true
+  /action/unsigned:
+    get:
+      summary: Get link
+      description: ''
+      operationId: getPending
+      tags:
+        - Action
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum:
+              - REQUEST
+              - SEND
+          required: true
+        - in: query
+          name: target
+          schema:
+            type: string
+        - in: query
+          name: source
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pendingActionResponse'
   '/action/{hash}':
     get:
       summary: Sign an iou
@@ -93,6 +186,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/genericResponse'
+    put:
+      summary: Actualiza los labels de un action
+      description: ''
+      operationId: updateActionLabels
+      tags:
+        - action
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: hash
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/labelsStatusRequest'
+        required: true
   /action/signed:
     post:
       summary: Sign an iou
@@ -119,6 +242,31 @@ paths:
             schema:
               $ref: '#/components/schemas/createIouRequest'
         required: true
+  '/action/{actionid}/signed':
+    post:
+      summary: Sign action
+      description: ''
+      operationId: signAction
+      tags:
+        - action
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericResponse'
   /keeper:
     get:
       summary: Genera un keeper
@@ -139,6 +287,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Keeper'
+        '403':
+          description: Keypair error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorForbidden'
   /domain:
     post:
       summary: Genera un domain
@@ -260,6 +414,66 @@ paths:
       responses:
         default:
           description: Default response
+  '/signer/{solicitanteAddress}/router/{actionId}/status':
+    post:
+      summary: Notify source Bank to execute credit
+      description: ''
+      operationId: notifyStatusToBank
+      tags:
+        - Signer
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: solicitanteAddress
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/signer/{solicitanteAddress}/router/{actionId}/download':
+    post:
+      summary: Notify source Bank to execute credit
+      description: ''
+      operationId: notifySourceBank
+      tags:
+        - Signer
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: solicitanteAddress
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /wallet:
     post:
       summary: Crea un wallet
@@ -280,11 +494,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/walletResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/walletRequest'
+        required: true
+  '/wallet/{solicitadoAlias}/channel/sms':
+    post:
+      summary: Envia sms
+      description: ''
+      operationId: sendSms
+      tags:
+        - Wallet
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: solicitadoAlias
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/smsRequest'
         required: true
   '/wallet/{handle}/balance':
     get:
@@ -435,7 +686,7 @@ paths:
               $ref: '#/components/schemas/transactionRequest'
         required: true
 servers:
-  - url: 'http://192.168.120.173:8080/v1'
+  - url: 'http://achtin-tst.minka.io/v1'
 components:
   schemas:
     Keeper:
@@ -517,6 +768,9 @@ components:
           type: string
         id:
           type: string
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     walletResponse:
       type: object
       properties:
@@ -528,6 +782,9 @@ components:
             type: object
         handle:
           type: string
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     walletUpdateRequest:
       type: object
       properties:
@@ -556,6 +813,8 @@ components:
             $ref: string
         default:
           type: string
+        error:
+          $ref: '#/components/schemas/ErrorGenerico'
     signerResponse:
       type: object
       properties:
@@ -673,6 +932,65 @@ components:
       type: object
       additionalProperties:
         type: object
+    ErrorForbidden:
+      type: object
+      properties:
+        error:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
+    ErrorGenerico:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    smsRequest:
+      type: object
+      properties:
+        message:
+          type: string
+    labelsStatusRequest:
+      type: object
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            type: object
+    createLinkRequest:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        type:
+          enum:
+            - TRUST
+            - BLOCK
+    getLinkResponse:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        type:
+          enum:
+            - TRUST
+            - BLOCK
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
+    pendingActionResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/genericResponse'
     genericResponse:
       type: object
       additionalProperties:

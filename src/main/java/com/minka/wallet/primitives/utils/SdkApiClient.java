@@ -72,6 +72,8 @@ public class SdkApiClient {
      * @return un objeto con las llaves (privada y pública)
      */
     public Keeper getKeeper() throws ExceptionResponseTinApi {
+
+
         KeeperApi api = new KeeperApi();
         api.getApiClient().setBasePath(url);
 
