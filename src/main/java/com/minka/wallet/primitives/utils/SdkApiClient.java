@@ -1,11 +1,10 @@
 package com.minka.wallet.primitives.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.handler.*;
 import com.minka.api.handler.ActionApi;
 import com.minka.api.handler.ApiException;
-import com.minka.api.handler.LinksApi;
 import com.minka.api.handler.SignerApi;
 import com.minka.api.handler.WalletApi;
 import com.minka.api.handler.WalletTempoApi;
@@ -16,7 +15,6 @@ import com.minka.api.model.CreateLinkRequest;
 import com.minka.api.model.ErrorForbidden;
 import com.minka.api.model.ErrorResponse;
 import com.minka.api.model.GenericResponse;
-import com.minka.api.model.GetLinkResponse;
 import com.minka.api.model.GetWalletResponse;
 import com.minka.api.model.LabelsStatusRequest;
 import com.minka.api.model.PendingActionResponse;
@@ -30,13 +28,11 @@ import com.minka.api.model.WalletUpdateResponse;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
-import io.minka.api.handler.*;
 import io.minka.api.handler.ApiClient;
+import io.minka.api.model.LinkItem;
+import io.minka.api.model.ListLinks;
 
-import java.util.HashMap;
-
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /***
  * Cliente para la integración con el servicio WEB de TINAPI de MINKA
@@ -122,6 +118,43 @@ public class SdkApiClient {
             }
         }
     }
+
+    public ListLinks getLinks() throws ExceptionResponseTinApi {
+        io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
+        try {
+            Object response = api.getLink(null,null);
+            Gson gson = (new GsonBuilder()).create();
+            return new Gson().fromJson(gson.toJson(response), ListLinks.class);
+        } catch (io.minka.api.handler.ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
+
+    public LinkItem getLink(String source, String target) throws ExceptionResponseTinApi {
+        io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
+        try {
+            Object response = api.getLink(source,target);
+            Gson gson = (new GsonBuilder()).create();
+            return new Gson().fromJson(gson.toJson(response), LinkItem.class);
+        } catch (io.minka.api.handler.ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
+    public LinkItem createLink(String source, String target, io.minka.api.model.CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
+        io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
+
+        io.minka.api.model.CreateLinkRequest req = new io.minka.api.model.CreateLinkRequest();
+        req.setSource(source);
+        req.setTarget(target);
+        req.setType(typeLink);
+        try {
+            return api.createLink(req);
+        } catch (io.minka.api.handler.ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+
+        }
+    }
+
 
     public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws WalletCreationException {
         WalletApi api = new WalletApi();
@@ -560,32 +593,6 @@ public String confirmTransfer(String handleTargetAddress,
     }
 
 
-
-    public ErrorResponse createLink(String source, String target, CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
-        LinksApi api = new LinksApi();
-        api.getApiClient().setBasePath(url);
-
-        CreateLinkRequest req = new CreateLinkRequest();
-        req.setSource(source);
-        req.setTarget(target);
-        req.setType(typeLink);
-        try {
-            ErrorResponse link = api.createLink(apiKey, req);
-            return link;
-        } catch (ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
-
-    public GetLinkResponse getLink(String source, String target) throws ExceptionResponseTinApi {
-        LinksApi api = new LinksApi();
-        api.getApiClient().setBasePath(url);
-        try {
-            return api.getLink(apiKey, source, target);
-        } catch (ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
 
 
     public PendingActionResponse getActionPendings(String alias, AliasType aliasType, ActionType action) {

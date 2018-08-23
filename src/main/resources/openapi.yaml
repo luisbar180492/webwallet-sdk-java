@@ -18,28 +18,23 @@ tags:
   - name: Links
     description: Enlaces de confianza
 
-
 paths:
   /link:
     post:
-      summary: Crea un link
+      summary: Crear un link
       description: ''
       operationId: createLink
       tags:
         - Links
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
+      security:
+        - ApiKeyAuth: []
       responses:
         '200':
-          description: OK
+          description: Link creado exitosamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/LinkItem'
       requestBody:
         content:
           application/json:
@@ -52,29 +47,26 @@ paths:
       operationId: getLink
       tags:
         - Links
+      security:
+        - ApiKeyAuth: []
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: query
           name: source
           schema:
             type: string
-          required: true
         - in: query
           name: target
           schema:
             type: string
-          required: true
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getLinkResponse'
+                oneOf:
+                  - $ref: '#/components/schemas/ListLinks'
+                  - $ref: '#/components/schemas/LinkItem'
   /klemer:
     post:
       summary: Crea un wallet
@@ -286,7 +278,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Keeper'
         '403':
-          description: Keypair error
+          description: Forbidden ac
           content:
             application/json:
               schema:
@@ -972,9 +964,26 @@ components:
           enum:
             - TRUST
             - BLOCK
-        error:
-          type: object
-          $ref: '#/components/schemas/ErrorGenerico'
+    ListLinks:
+      type: array
+      items:
+        $ref: '#/components/schemas/LinkItem'
+
+    LinkItem:
+      type: object
+      properties:
+        id:
+          type: string
+        source:
+          type: string
+        target:
+          type: string
+        created:
+          type: string
+        link_id:
+          type: string
+        'type':
+          type: string
     pendingActionResponse:
       type: array
       items:
