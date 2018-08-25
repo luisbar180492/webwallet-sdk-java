@@ -912,7 +912,21 @@ components:
           additionalProperties: true
     createActionResponse:
       type: object
-      additionalProperties: true
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        symbol:
+          type: string
+        amount:
+          type: string
+        labels:
+          type: object
+          additionalProperties: true
+        snapshot:
+          type: object
+          additionalProperties: true
     ErrorForbidden:
       type: object
       properties:
