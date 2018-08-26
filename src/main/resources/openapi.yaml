@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.3
+  version: 0.0.5
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -345,6 +345,28 @@ paths:
       responses:
         default:
           description: Default response
+  /signer/{signerAddress}:
+    get:
+      summary: Obtiene un signer por address
+      description: ''
+      operationId: getSignerByAddress
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Signer
+      parameters:
+        - in: path
+          name: signerAddress
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signerResponse'
   /signer:
     get:
       summary: Obtiene un signer
@@ -750,6 +772,8 @@ components:
     getWalletResponse:
       type: object
       properties:
+        default:
+          type: string
         wallet_id:
           type: string
         labels:
