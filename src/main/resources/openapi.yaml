@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.5
+  version: 0.0.6
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -426,11 +426,65 @@ paths:
       responses:
         default:
           description: Default response
+  '/signer/{userAddress}/router/{actionId}/action':
+    post:
+      summary: Call action in user's Bank
+      description: ''
+      operationId: callAction
+      tags:
+        - Signer
+      security:
+              - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: userAddress
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/signer/{userAddress}/router/{actionId}/upload':
+    post:
+      summary: Call debit in user's bank
+      description: ''
+      operationId: callUpload
+      tags:
+        - Signer
+      security:
+              - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: userAddress
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   '/signer/{solicitanteAddress}/router/{actionId}/status':
     post:
-      summary: Notify source Bank to execute credit
+      summary: Notify status
       description: ''
-      operationId: notifyStatusToBank
+      operationId: callStatus
       tags:
         - Signer
       parameters:
@@ -458,9 +512,9 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
   '/signer/{solicitanteAddress}/router/{actionId}/download':
     post:
-      summary: Notify source Bank to execute credit
+      summary: Notify bank
       description: ''
-      operationId: notifySourceBank
+      operationId: callDownload
       tags:
         - Signer
       parameters:
