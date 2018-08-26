@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
+  version: 0.0.3
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -1006,6 +1006,8 @@ components:
         action_id:
           type: string
         source:
+          type: string
+        symbol:
           type: string
         target:
           type: string
