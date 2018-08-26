@@ -8,13 +8,29 @@
 
   <name>webwallet-sdk</name>
   <url>http://maven.apache.org</url>
-
+<description>SDK in Java for the tinapi project</description>
 <properties>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   <maven.compiler.source>1.8</maven.compiler.source>
   <maven.compiler.target>1.8</maven.compiler.target>
 </properties>
 
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>ivancho98</id>
+            <name>ivancho</name>
+            <email>ivan@minka.io</email>
+        </developer>
+    </developers>
+  
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
