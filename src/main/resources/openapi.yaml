@@ -179,7 +179,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/genericResponse'
+                $ref: '#/components/schemas/getActionResponse'
     put:
       summary: Actualiza los labels de un action
       description: ''
@@ -913,6 +913,8 @@ components:
     createActionResponse:
       type: object
       properties:
+        action_id:
+          type: string
         source:
           type: string
         target:
@@ -998,6 +1000,26 @@ components:
           type: string
         'type':
           type: string
+    getActionResponse:
+      type: object
+      properties:
+        action_id:
+          type: string
+        source:
+          type: string
+        target:
+          type: string
+        amount:
+          type: string
+        snapshot:
+          type: object
+          additionalProperties: true
+        labels:
+          type: object
+          additionalProperties: true
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     pendingActionResponse:
       type: array
       items:
