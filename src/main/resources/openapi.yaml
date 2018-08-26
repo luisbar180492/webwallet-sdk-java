@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
-  title: ''
+  version: 0.0.5
+  title: 'TINAPI '
 tags:
   - name: Keeper
     description: Endpoint to get keypairs
@@ -15,7 +15,58 @@ tags:
     description: ''
   - name: Klemer
     description: ''
+  - name: Links
+    description: Enlaces de confianza
+
 paths:
+  /link:
+    post:
+      summary: Crear un link
+      description: ''
+      operationId: createLink
+      tags:
+        - Links
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Link creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkItem'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createLinkRequest'
+        required: true
+    get:
+      summary: Get link
+      description: ''
+      operationId: getLink
+      tags:
+        - Links
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: source
+          schema:
+            type: string
+        - in: query
+          name: target
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ListLinks'
+                  - $ref: '#/components/schemas/LinkItem'
   /klemer:
     post:
       summary: Crea un wallet
@@ -68,6 +119,42 @@ paths:
             schema:
               $ref: '#/components/schemas/createActionRequest'
         required: true
+  /action/unsigned:
+    get:
+      summary: Get link
+      description: ''
+      operationId: getPending
+      tags:
+        - Action
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum:
+              - REQUEST
+              - SEND
+          required: true
+        - in: query
+          name: target
+          schema:
+            type: string
+        - in: query
+          name: source
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pendingActionResponse'
   '/action/{hash}':
     get:
       summary: Sign an iou
@@ -92,7 +179,37 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/getActionResponse'
+    put:
+      summary: Actualiza los labels de un action
+      description: ''
+      operationId: updateActionLabels
+      tags:
+        - action
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: hash
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/genericResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/labelsStatusRequest'
+        required: true
   /action/signed:
     post:
       summary: Sign an iou
@@ -119,19 +236,40 @@ paths:
             schema:
               $ref: '#/components/schemas/createIouRequest'
         required: true
-  /keeper:
-    get:
-      summary: Genera un keeper
+  '/action/{actionid}/signed':
+    post:
+      summary: Sign action
       description: ''
-      operationId: obtenerKeeper
+      operationId: signAction
       tags:
-        - Keeper
+        - action
       parameters:
         - in: header
           name: API_KEY
           schema:
             type: string
           required: true
+        - in: path
+          name: actionid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericResponse'
+  /keeper:
+    get:
+      summary: Genera un keeper
+      description: ''
+      operationId: obtenerKeeper
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Keeper
       responses:
         '200':
           description: Keypair generated
@@ -139,6 +277,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Keeper'
+        '403':
+          description: Forbidden ac
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorForbidden'
   /domain:
     post:
       summary: Genera un domain
@@ -201,6 +345,28 @@ paths:
       responses:
         default:
           description: Default response
+  /signer/{signerAddress}:
+    get:
+      summary: Obtiene un signer por address
+      description: ''
+      operationId: getSignerByAddress
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Signer
+      parameters:
+        - in: path
+          name: signerAddress
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signerResponse'
   /signer:
     get:
       summary: Obtiene un signer
@@ -260,6 +426,66 @@ paths:
       responses:
         default:
           description: Default response
+  '/signer/{solicitanteAddress}/router/{actionId}/status':
+    post:
+      summary: Notify source Bank to execute credit
+      description: ''
+      operationId: notifyStatusToBank
+      tags:
+        - Signer
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: solicitanteAddress
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/signer/{solicitanteAddress}/router/{actionId}/download':
+    post:
+      summary: Notify source Bank to execute credit
+      description: ''
+      operationId: notifySourceBank
+      tags:
+        - Signer
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: solicitanteAddress
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /wallet:
     post:
       summary: Crea un wallet
@@ -280,11 +506,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/walletResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/walletRequest'
+        required: true
+  '/wallet/{solicitadoAlias}/channel/sms':
+    post:
+      summary: Envia sms
+      description: ''
+      operationId: sendSms
+      tags:
+        - Wallet
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: solicitadoAlias
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/smsRequest'
         required: true
   '/wallet/{handle}/balance':
     get:
@@ -435,8 +698,13 @@ paths:
               $ref: '#/components/schemas/transactionRequest'
         required: true
 servers:
-  - url: 'http://192.168.120.173:8080/v1'
+  - url: 'https://achtin-tst.minka.io/v1'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: API_KEY
   schemas:
     Keeper:
       type: object
@@ -463,8 +731,7 @@ components:
           type: object
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     wallet:
       type: object
       properties:
@@ -486,8 +753,7 @@ components:
       properties:
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     publicKeys:
       type: object
       properties:
@@ -502,21 +768,24 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     getWalletResponse:
       type: object
       properties:
+        default:
+          type: string
         wallet_id:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         handle:
           type: string
         id:
           type: string
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     walletResponse:
       type: object
       properties:
@@ -524,10 +793,12 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         handle:
           type: string
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     walletUpdateRequest:
       type: object
       properties:
@@ -544,8 +815,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         handle:
           type: string
         wallet_id:
@@ -556,6 +826,8 @@ components:
             $ref: string
         default:
           type: string
+        error:
+          $ref: '#/components/schemas/ErrorGenerico'
     signerResponse:
       type: object
       properties:
@@ -563,8 +835,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         signer_id:
           type: string
         keeper:
@@ -593,8 +864,7 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     createClaimRequest:
       type: object
       properties:
@@ -640,20 +910,16 @@ components:
       properties:
         hash:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         data:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
         meta:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     balanceResponse:
       type: object
-      additionalProperties:
-        type: object
+      additionalProperties: true
     createActionRequest:
       type: object
       properties:
@@ -667,13 +933,123 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties:
-            type: object
+          additionalProperties: true
     createActionResponse:
       type: object
-      additionalProperties:
-        type: object
+      properties:
+        action_id:
+          type: string
+        source:
+          type: string
+        target:
+          type: string
+        symbol:
+          type: string
+        amount:
+          type: string
+        labels:
+          type: object
+          additionalProperties: true
+        snapshot:
+          type: object
+          additionalProperties: true
+    ErrorForbidden:
+      type: object
+      properties:
+        error:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
+    ErrorGenerico:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    smsRequest:
+      type: object
+      properties:
+        message:
+          type: string
+    labelsStatusRequest:
+      type: object
+      properties:
+        labels:
+          type: object
+          additionalProperties: true
+    createLinkRequest:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        type:
+          enum:
+            - TRUST
+            - BLOCK
+    getLinkResponse:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        type:
+          enum:
+            - TRUST
+            - BLOCK
+    ListLinks:
+      type: array
+      items:
+        $ref: '#/components/schemas/LinkItem'
+
+    LinkItem:
+      type: object
+      properties:
+        id:
+          type: string
+        source:
+          type: string
+        target:
+          type: string
+        created:
+          type: string
+        link_id:
+          type: string
+        'type':
+          type: string
+    getActionResponse:
+      type: object
+      properties:
+        action_id:
+          type: string
+        source:
+          type: string
+        symbol:
+          type: string
+        target:
+          type: string
+        amount:
+          type: string
+        snapshot:
+          type: object
+          additionalProperties: true
+        labels:
+          type: object
+          additionalProperties: true
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
+    pendingActionResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/genericResponse'
     genericResponse:
       type: object
-      additionalProperties:
-        type: object
+      additionalProperties: true

@@ -3,6 +3,7 @@ package com.minka.sdk;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.api.model.Keeper;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.logging.Logger;
@@ -24,8 +25,7 @@ public class KeeperTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-
-        Keeper keeper = sdkApiClient.getKeeper();
+        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
 
         assertNotEquals(null, keeper.getSecret() );
         assertNotEquals(null, keeper.getPublic() );
@@ -46,7 +46,7 @@ public class KeeperTesting {
                 .setClientId(TestingConstants.CLIENT_ID);
 
         try {
-            Keeper keeper = sdkApiClient.getKeeper();
+            io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             int errorCode = exceptionResponseTinApi.getErrorCode();
             String message = exceptionResponseTinApi.getMessage();

@@ -5,6 +5,8 @@ import com.minka.api.model.CreateLinkRequest;
 import com.minka.api.model.ErrorResponse;
 import com.minka.api.model.GetLinkResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.model.LinkItem;
+import io.minka.api.model.ListLinks;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,7 +34,7 @@ public class LinksTesting {
         String source = "$auhxlvsouudtiailkmr";
         String target = "$yuhenntyycupgbubbha";
         try {
-            ErrorResponse link = sdkApiClient.createLink(source, target, CreateLinkRequest.TypeEnum.TRUST);
+            LinkItem link = sdkApiClient.createLink(source, target, io.minka.api.model.CreateLinkRequest.TypeEnum.TRUST);
             System.out.println(link);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
@@ -45,8 +47,21 @@ public class LinksTesting {
         String source = "$auhxlvsouudtiailkmr";
         String target = "$yuhenntyycupgbubbha";
         try {
-            GetLinkResponse link = sdkApiClient.getLink(source, target);
+            LinkItem link = sdkApiClient.getLink(source, target);
             System.out.println(link);
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
+    }
+
+    @Test
+    public void shouldGetAllLinks(){
+        try {
+            ListLinks links = sdkApiClient.getLinks();
+            System.out.println(links.size());
+            for (LinkItem currLink:links) {
+                System.out.println(currLink);
+            }
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
         }
