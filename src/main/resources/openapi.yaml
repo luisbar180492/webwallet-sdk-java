@@ -11,6 +11,8 @@ tags:
     description: ''
   - name: Wallet
     description: ''
+  - name: Transfer
+    description: 'TIN TRANSFER'
   - name: Transaction
     description: ''
   - name: Klemer
@@ -19,6 +21,29 @@ tags:
     description: Enlaces de confianza
 
 paths:
+  /transfer:
+    post:
+      summary: Crea un transferencia
+      description: ''
+      operationId: createTinTransfer
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Transfer
+      requestBody:
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/createTransferRequest'
+              required: true
+      responses:
+        '200':
+          description: Tin transfer creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createTransferResponse'
+
   /link:
     post:
       summary: Crear un link
@@ -58,6 +83,10 @@ paths:
           name: target
           schema:
             type: string
+        - in: query
+          name: type
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -94,6 +123,38 @@ paths:
               $ref: '#/components/schemas/createClaimRequest'
         required: true
   /action:
+    get:
+      summary: Get Actions received
+      description: ''
+      operationId: getTransfer
+      tags:
+        - Action
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum:
+              - REQUEST
+              - SEND
+          required: true
+        - in: query
+          name: target
+          schema:
+            type: string
+        - in: query
+          name: source
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getTransfersResponse'
     post:
       summary: Sign an iou
       description: ''
@@ -126,12 +187,9 @@ paths:
       operationId: getPending
       tags:
         - Action
+      security:
+        - ApiKeyAuth: []
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: query
           name: type
           schema:
@@ -154,6 +212,8 @@ paths:
           content:
             application/json:
               schema:
+#                $ref: '#/components/schemas/genericResponse'
+#
                 $ref: '#/components/schemas/pendingActionResponse'
   '/action/{hash}':
     get:
@@ -1111,13 +1171,55 @@ components:
         labels:
           type: object
           additionalProperties: true
-        error:
-          type: object
-          $ref: '#/components/schemas/ErrorGenerico'
+
+    getTransfersResponse:
+      type: object
+      properties:
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/getActionResponse'
     pendingActionResponse:
       type: array
       items:
-        $ref: '#/components/schemas/genericResponse'
+        $ref: '#/components/schemas/getActionResponse'
     genericResponse:
       type: object
       additionalProperties: true
+
+    createTransferRequest:
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        symbol:
+          type: string
+        amount:
+          type: string
+        labels:
+          type: object
+          additionalProperties: true
+
+    createTransferResponse:
+      type: object
+      properties:
+        action_id:
+          type: string
+        hash:
+          type: string
+        source:
+          type: string
+        target:
+          type: string
+        symbol:
+          type: string
+        amount:
+          type: string
+        labels:
+          type: object
+          additionalProperties: true
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
