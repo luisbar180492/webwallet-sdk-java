@@ -44,6 +44,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
 
+  /link/{link_id}:
+    delete:
+      summary: DELETE link
+      description: ''
+      operationId: deleteLink
+      tags:
+        - Links
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: link_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkItem'
   /link:
     post:
       summary: Crear un link
@@ -215,21 +237,18 @@ paths:
 #                $ref: '#/components/schemas/genericResponse'
 #
                 $ref: '#/components/schemas/pendingActionResponse'
-  '/action/{hash}':
+  '/action/{action_id}':
     get:
-      summary: Sign an iou
+      summary: Obtener action por action_id
       description: ''
-      operationId: getAction
+      operationId: getActionByActionId
       tags:
         - action
+      security:
+        - ApiKeyAuth: []
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: path
-          name: hash
+          name: action_id
           schema:
             type: string
           required: true
@@ -244,16 +263,13 @@ paths:
       summary: Actualiza los labels de un action
       description: ''
       operationId: updateActionLabels
+      security:
+        - ApiKeyAuth: []
       tags:
         - action
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: path
-          name: hash
+          name: action_id
           schema:
             type: string
           required: true
@@ -268,7 +284,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/labelsStatusRequest'
+              $ref: '#/components/schemas/updateActionRequest'
         required: true
   /action/signed:
     post:
@@ -1080,7 +1096,8 @@ components:
           additionalProperties: true
         snapshot:
           type: object
-          additionalProperties: true
+          $ref: '#/components/schemas/Snapshot'
+
     ErrorForbidden:
       type: object
       properties:
@@ -1104,9 +1121,12 @@ components:
       properties:
         message:
           type: string
-    labelsStatusRequest:
+    updateActionRequest:
       type: object
       properties:
+        snapshot:
+          type: object
+          $ref: '#/components/schemas/Snapshot'
         labels:
           type: object
           additionalProperties: true
@@ -1167,7 +1187,7 @@ components:
           type: string
         snapshot:
           type: object
-          additionalProperties: true
+          $ref: '#/components/schemas/Snapshot'
         labels:
           type: object
           additionalProperties: true
@@ -1223,3 +1243,16 @@ components:
         error:
           type: object
           $ref: '#/components/schemas/ErrorGenerico'
+
+    Snapshot:
+      type: object
+      properties:
+        target:
+          type: object
+          additionalProperties: true
+        source:
+          type: object
+          additionalProperties: true
+        symbol:
+          type: object
+          additionalProperties: true

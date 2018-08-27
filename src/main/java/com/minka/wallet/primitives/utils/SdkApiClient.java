@@ -122,7 +122,7 @@ public class SdkApiClient {
     public ListLinks getLinks() throws ExceptionResponseTinApi {
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
-            Object response = api.getLink(null,null);
+            Object response = api.getLink(null,null,null);
             Gson gson = (new GsonBuilder()).create();
             return new Gson().fromJson(gson.toJson(response), ListLinks.class);
         } catch (io.minka.api.handler.ApiException e) {
@@ -133,7 +133,7 @@ public class SdkApiClient {
     public LinkItem getLink(String source, String target) throws ExceptionResponseTinApi {
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
-            Object response = api.getLink(source,target);
+            Object response = api.getLink(source,target, null);
             Gson gson = (new GsonBuilder()).create();
             return new Gson().fromJson(gson.toJson(response), LinkItem.class);
         } catch (io.minka.api.handler.ApiException e) {
@@ -597,11 +597,25 @@ public String confirmTransfer(String handleTargetAddress,
 
     public PendingActionResponse getActionPendings(String alias, AliasType aliasType, ActionType action) {
         ActionApi actionApi = new ActionApi();
+        io.minka.api.handler.ActionApi tempoapi= new io.minka.api.handler.ActionApi(apiClient);
+
         actionApi.getApiClient().setBasePath(url);
         try {
             if (aliasType.getValue().equals(AliasType.SOURCE.getValue())){
+
                 return actionApi.getPending(apiKey, action.getValue(), null, alias);
             }else {
+//                try {
+//                    io.minka.api.model.GenericResponse pending;
+//                    pending = tempoapi.getPending("SEND", "$banco_perros", null);
+//                    System.out.println("=pending=");
+//                    System.out.println(pending);
+//
+//                } catch (io.minka.api.handler.ApiException e) {
+//                    System.out.println(e.getResponseBody());
+//
+////                    e.printStackTrace();
+//                }
                 return actionApi.getPending(apiKey, action.getValue(), alias, null);
             }
         } catch (ApiException e) {
