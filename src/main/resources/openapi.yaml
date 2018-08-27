@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.8
+  version: 0.0.9
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -391,13 +391,10 @@ paths:
       summary: Crea un signer
       description: ''
       operationId: createSigner
+      security:
+            - ApiKeyAuth: []
       tags:
         - Signer
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
       responses:
         '200':
           description: OK
@@ -568,12 +565,8 @@ paths:
       operationId: createWallet
       tags:
         - Wallet
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
+      security:
+        - ApiKeyAuth: []
       responses:
         '200':
           description: OK
@@ -631,12 +624,9 @@ paths:
       operationId: getBalance
       tags:
         - Wallet
+      security:
+        - ApiKeyAuth: []
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: path
           name: handle
           schema:
@@ -661,12 +651,9 @@ paths:
       operationId: updateWallet
       tags:
         - Wallet
+      security:
+        - ApiKeyAuth: []
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: path
           name: handle
           required: true
@@ -688,15 +675,12 @@ paths:
     get:
       summary: Obtiene un wallet
       description: ''
-      operationId: getWallet
+      operationId: getWalletByAlias
       tags:
-        - WalletTempo
+        - Wallet
+      security:
+        - ApiKeyAuth: []
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: path
           name: handle
           schema:
@@ -847,7 +831,11 @@ components:
     getWalletResponse:
       type: object
       properties:
-        default:
+        signer:
+          type: array
+          items:
+            $ref: string
+        'default':
           type: string
         wallet_id:
           type: string
@@ -992,9 +980,14 @@ components:
         meta:
           type: object
           additionalProperties: true
+
     balanceResponse:
       type: object
-      additionalProperties: true
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+
     createActionRequest:
       type: object
       properties:
