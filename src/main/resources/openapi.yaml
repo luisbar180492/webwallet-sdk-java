@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.6
+  version: 0.0.8
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -541,6 +541,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
   /wallet:
+    get:
+      summary: Obtiene un wallet por signer
+      description: ''
+      operationId: getWalletBySigner
+      tags:
+        - Wallet
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: signer
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/walletResponse'
     post:
       summary: Crea un wallet
       description: ''
