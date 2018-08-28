@@ -11,7 +11,6 @@ import com.minka.api.handler.WalletTempoApi;
 import com.minka.api.model.BalanceResponse;
 import com.minka.api.model.CreateActionRequest;
 import com.minka.api.model.CreateActionResponse;
-import com.minka.api.model.CreateLinkRequest;
 import com.minka.api.model.ErrorForbidden;
 import com.minka.api.model.ErrorResponse;
 import com.minka.api.model.GenericResponse;
@@ -29,6 +28,9 @@ import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
 import io.minka.api.handler.ApiClient;
+import io.minka.api.handler.TransferApi;
+import io.minka.api.model.CreateTransferRequest;
+import io.minka.api.model.CreateTransferResponse;
 import io.minka.api.model.LinkItem;
 import io.minka.api.model.ListLinks;
 
@@ -625,5 +627,11 @@ public String confirmTransfer(String handleTargetAddress,
     }
 
 
+    public CreateTransferResponse createTinTransfer(CreateTransferRequest tintransfer )
+            throws io.minka.api.handler.ApiException {
 
+        io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
+
+        return api.createTinTransfer(tintransfer);
+    }
 }
