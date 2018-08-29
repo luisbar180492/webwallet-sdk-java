@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.9
+  version: 0.1.1
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -219,7 +219,6 @@ paths:
             enum:
               - REQUEST
               - SEND
-          required: true
         - in: query
           name: target
           schema:
@@ -234,9 +233,10 @@ paths:
           content:
             application/json:
               schema:
-#                $ref: '#/components/schemas/genericResponse'
-#
-                $ref: '#/components/schemas/pendingActionResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/getActionResponse'
+
   '/action/{action_id}':
     get:
       summary: Obtener action por action_id
@@ -928,6 +928,12 @@ components:
     walletResponse:
       type: object
       properties:
+        signer:
+          type: array
+          items:
+            $ref: string
+        default:
+          type: string
         wallet_id:
           type: string
         labels:
@@ -1173,7 +1179,6 @@ components:
         'type':
           type: string
     getActionResponse:
-      type: object
       properties:
         action_id:
           type: string
