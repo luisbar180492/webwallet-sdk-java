@@ -111,10 +111,9 @@ public class ActionTesting {
     @Test
     public void shouldRejectRequestTransfer(){
         String actionId = "60e34229-5fe4-46a5-9709-208e52bf9877";
-        String address = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
 
         try {
-            sdkApiClient.rejectTransferRequest(address, actionId);
+            sdkApiClient.rejectTransferRequest(actionId);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
         }
@@ -168,11 +167,17 @@ public class ActionTesting {
 
     @Test
     public void shouldGetActionWithFilters() {
+        Map<String, Object> filters;
+        filters = new HashMap<>();
+        filters.put("source", "571234567890");
+        filters.put("labels.type", "SEND");
+
+        sdkApiClient.getActionsFiltered(filters);
 
         GetTransfersResponse actionsFiltered = null;
-        try {
-            actionsFiltered = sdkApiClient.getActionsFiltered();
-            System.out.println(actionsFiltered);
+//        try {
+//            actionsFiltered = sdkApiClient.getActionsFiltered();
+//            System.out.println(actionsFiltered);
 
 //            int size = actionsFiltered.getEntities().size();
 //            if(actionsFiltered.getEntities() != null){
@@ -181,10 +186,10 @@ public class ActionTesting {
 //
 //            System.out.println("Size: " + size);
 
-        } catch (io.minka.api.handler.ApiException e) {
-            System.out.println(e.getResponseBody());
-            e.printStackTrace();
-        }
+//        } catch (io.minka.api.handler.ApiException e) {
+//            System.out.println(e.getResponseBody());
+//            e.printStackTrace();
+//        }
     }
 
     @Test

@@ -561,7 +561,7 @@ public String confirmTransfer(String handleTargetAddress,
         }
     }
 
-    public void rejectTransferRequest(String addressForNotification, String actionId) throws ExceptionResponseTinApi{
+    public void rejectTransferRequest(String actionId) throws ExceptionResponseTinApi{
         ActionApi  api = new ActionApi();
         api.getApiClient().setBasePath(url);
         try {
@@ -660,6 +660,15 @@ public String confirmTransfer(String handleTargetAddress,
 
     public void updateSigner() {
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+
+    }
+
+    public GetTransfersResponse getTransfer(String type, String  target, String  source) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+        return api.getTransfer(type, target, source,null);
+    }
+
+    public void getActionsFiltered(Map<String,Object> filters) {
 
     }
 }

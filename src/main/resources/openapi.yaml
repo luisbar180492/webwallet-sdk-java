@@ -21,6 +21,58 @@ tags:
     description: Enlaces de confianza
 
 paths:
+  '/transfer/{actionid}/reject':
+    post:
+      summary: Reject P2p
+      description: ''
+      operationId: rejectP2Ptranfer
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - transfer
+      parameters:
+        - in: path
+          name: actionid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericResponse'
+
+  '/transfer/{actionid}/accept':
+    post:
+      summary: Reject P2p
+      description: ''
+      operationId: acceptP2Ptranfer
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - transfer
+      parameters:
+        - in: path
+          name: actionid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/acceptTransferRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericResponse'
+
+
   /transfer:
     post:
       summary: Crea un transferencia
@@ -1282,6 +1334,19 @@ components:
         error:
           type: object
           $ref: '#/components/schemas/ErrorGenerico'
+
+    acceptTransferRequest:
+      type: object
+      properties:
+        signer:
+          type: object
+          $ref: '#/components/schemas/signerObject'
+
+    signerObject:
+      type: object
+      properties:
+        handle:
+          type: string
 
     Snapshot:
       type: object
