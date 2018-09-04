@@ -5,11 +5,14 @@ import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.model.SignerResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.model.SignerListResponse;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 public class SignerTesting {
 
@@ -50,6 +53,14 @@ public class SignerTesting {
         }
     }
 
+    @Test
+    public void shouldGetSignersWithPaging() throws io.minka.api.handler.ApiException {
+
+        SignerListResponse signers = sdkApiClient.getSigners(1, 2);
+        System.out.println(signers.size());
+        assertEquals(signers.size(), 3);//BECAUSE OF THE pagesize + 1 error element
+
+    }
 
     @Test
     public void createSignerForOnlineUse(){

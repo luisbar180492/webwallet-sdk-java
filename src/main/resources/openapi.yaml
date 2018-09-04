@@ -447,15 +447,22 @@ paths:
     get:
       summary: Obtiene un signer
       description: ''
-      operationId: getSigner
+      operationId: getSigners
       tags:
         - Signer
+      security:
+        - ApiKeyAuth: []
       parameters:
-        - in: header
-          name: API_KEY
+        - in: query
+          name: pagenum
           schema:
-            type: string
-          required: true
+            type: integer
+          required: false
+        - in: query
+          name: pagesize
+          schema:
+            type: integer
+          required: false
       responses:
         '200':
           description: OK
@@ -617,24 +624,37 @@ paths:
     get:
       summary: Obtiene un wallet por signer
       description: ''
-      operationId: getWalletBySigner
+      operationId: getWallets
       tags:
         - Wallet
       security:
         - ApiKeyAuth: []
       parameters:
         - in: query
+          name: pagenum
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: pagesize
+          schema:
+            type: integer
+          required: false
+        - in: query
           name: signer
           schema:
             type: string
-          required: true
+          required: false
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/walletResponse'
+                oneOf:
+                  - $ref: '#/components/schemas/walletListResponse'
+                  - $ref: '#/components/schemas/walletResponse'
+
     post:
       summary: Crea un wallet
       description: ''
@@ -991,6 +1011,10 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/signerResponse'
+    walletListResponse:
+          type: array
+          items:
+            $ref: '#/components/schemas/walletResponse'
     domainResponse:
       type: string
       properties:

@@ -29,10 +29,7 @@ import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
 import io.minka.api.handler.ApiClient;
 import io.minka.api.handler.TransferApi;
-import io.minka.api.model.CreateTransferRequest;
-import io.minka.api.model.CreateTransferResponse;
-import io.minka.api.model.LinkItem;
-import io.minka.api.model.ListLinks;
+import io.minka.api.model.*;
 
 import java.util.*;
 
@@ -633,5 +630,23 @@ public String confirmTransfer(String handleTargetAddress,
         io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
 
         return api.createTinTransfer(tintransfer);
+    }
+
+    public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+        Object temporal = api.getWallets(pagenum, pagesize, null);
+        Gson gson = (new GsonBuilder()).create();
+        return new Gson().fromJson(gson.toJson(temporal), WalletListResponse.class);
+    }
+    public io.minka.api.model.WalletResponse getWalletBySigner(String signerAddress) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+        Object temporal = api.getWallets(null, null, signerAddress);
+        Gson gson = (new GsonBuilder()).create();
+        return new Gson().fromJson(gson.toJson(temporal), io.minka.api.model.WalletResponse.class);
+    }
+
+    public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.getSigners(pagenum, pagesize);
     }
 }
