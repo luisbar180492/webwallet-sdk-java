@@ -54,6 +54,7 @@ public class SdkApiClient {
      */
     public SdkApiClient(String domain, String apiKey) {
         this.url = "https://" + domain + ".minka.io/v1";
+
         this.apiKey = apiKey;
         apiClient = new ApiClient();
         apiClient.setApiKey(apiKey);
@@ -118,10 +119,10 @@ public class SdkApiClient {
         }
     }
 
-    public ListLinks getLinks() throws ExceptionResponseTinApi {
+    public ListLinks getLinks(String source, String target, String type) throws ExceptionResponseTinApi {
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
-            Object response = api.getLink(null,null,null);
+            Object response = api.getLink(source,target,type);
             Gson gson = (new GsonBuilder()).create();
             return new Gson().fromJson(gson.toJson(response), ListLinks.class);
         } catch (io.minka.api.handler.ApiException e) {
@@ -648,5 +649,17 @@ public String confirmTransfer(String handleTargetAddress,
     public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
         return api.getSigners(pagenum, pagesize);
+    }
+
+
+    public io.minka.api.model.GetWalletResponse getWalletByAlias(String aliasHandle) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+
+        return api.getWalletByAlias(aliasHandle);
+    }
+
+    public void updateSigner() {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+
     }
 }

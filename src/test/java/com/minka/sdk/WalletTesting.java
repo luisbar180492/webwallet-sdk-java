@@ -109,6 +109,13 @@ public class WalletTesting {
         System.out.println(wallets);
     }
 
+
+    @Test
+    public void shouldGetWalletByAlias() throws io.minka.api.handler.ApiException {
+        io.minka.api.model.GetWalletResponse wallets;
+        wallets = sdkApiClient.getWalletByAlias("$usxshvwjoptfixfdakh");
+        System.out.println(wallets);
+    }
     @Test
     public void shouldGetWallets() throws io.minka.api.handler.ApiException {
         WalletListResponse wallets = sdkApiClient.getWallets(1, 3);

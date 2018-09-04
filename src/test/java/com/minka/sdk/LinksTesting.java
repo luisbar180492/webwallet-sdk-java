@@ -34,7 +34,8 @@ public class LinksTesting {
         String source = "$auhxlvsouudtiailkmr";
         String target = "$yuhenntyycupgbubbha";
         try {
-            LinkItem link = sdkApiClient.createLink(source, target, io.minka.api.model.CreateLinkRequest.TypeEnum.TRUST);
+            LinkItem link = sdkApiClient.createLink(source, target,
+                    io.minka.api.model.CreateLinkRequest.TypeEnum.TRUST);
             System.out.println(link);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
@@ -57,7 +58,7 @@ public class LinksTesting {
     @Test
     public void shouldGetAllLinks(){
         try {
-            ListLinks links = sdkApiClient.getLinks();
+            ListLinks links = sdkApiClient.getLinks(null,  "$targetPhone", "TRUST");
             System.out.println(links.size());
             for (LinkItem currLink:links) {
                 System.out.println(currLink);

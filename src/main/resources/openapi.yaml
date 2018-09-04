@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.1.1
+  version: 0.1.2
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -161,7 +161,7 @@ paths:
             enum:
               - REQUEST
               - SEND
-          required: true
+          required: false
         - in: query
           name: target
           schema:
@@ -170,12 +170,22 @@ paths:
           name: source
           schema:
             type: string
+        - in: query
+          name: params
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+          style: form
+          explode: true
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
+#                type: object
+#                additionalProperties: true
                 $ref: '#/components/schemas/getTransfersResponse'
     post:
       summary: Sign an iou

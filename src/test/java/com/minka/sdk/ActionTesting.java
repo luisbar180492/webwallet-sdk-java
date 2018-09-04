@@ -6,6 +6,7 @@ import com.minka.api.model.*;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.model.GetTransfersResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -163,6 +164,27 @@ public class ActionTesting {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void shouldGetActionWithFilters() {
+
+        GetTransfersResponse actionsFiltered = null;
+        try {
+            actionsFiltered = sdkApiClient.getActionsFiltered();
+            System.out.println(actionsFiltered);
+
+//            int size = actionsFiltered.getEntities().size();
+//            if(actionsFiltered.getEntities() != null){
+//                System.out.println(actionsFiltered.getEntities().size());
+//            }
+//
+//            System.out.println("Size: " + size);
+
+        } catch (io.minka.api.handler.ApiException e) {
+            System.out.println(e.getResponseBody());
+            e.printStackTrace();
+        }
     }
 
     @Test
