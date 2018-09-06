@@ -112,9 +112,14 @@ public class WalletTesting {
 
     @Test
     public void shouldGetWalletByAlias() throws io.minka.api.handler.ApiException {
+//        io.minka.api.model.GetWalletResponse wallets;
+//        wallets = sdkApiClient.getWalletByAlias("$usxshvwjoptfixfdakh");
+//        System.out.println(wallets);
+
         io.minka.api.model.GetWalletResponse wallets;
-        wallets = sdkApiClient.getWalletByAlias("$usxshvwjoptfixfdakh");
+        wallets = sdkApiClient.deleteWalletByAlias("$usxshvwjoptfixfdakh");
         System.out.println(wallets);
+
     }
     @Test
     public void shouldGetWallets() throws io.minka.api.handler.ApiException {

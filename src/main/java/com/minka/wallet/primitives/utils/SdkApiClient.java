@@ -651,6 +651,42 @@ public String confirmTransfer(String handleTargetAddress,
         return api.getSigners(pagenum, pagesize);
     }
 
+    public io.minka.api.model.SignerResponse deleteSigner(String signerAddress) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.deleteSignerByAddress(signerAddress);
+    }
+
+
+
+
+    public io.minka.api.model.GenericResponse updateSigner(String signerAddress, io.minka.api.model.SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.updateSigner(signerAddress, updateSignerReq);
+    }
+
+    public io.minka.api.model.SignerResponse getSignerByAddress(String wAddress) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.getSignerByAddress(wAddress);
+    }
+    public io.minka.api.model.GenericResponse updateAction(String actionid, UpdateActionRequest req) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+
+
+        return api.updateActionLabels(actionid, req);
+    }
+    public io.minka.api.model.GenericResponse deleteAction(String actionid) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+
+        return null;
+    }
+
+
+
+    public io.minka.api.model.GetWalletResponse deleteWalletByAlias(String aliasHandle) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+
+        return null;
+    }
 
     public io.minka.api.model.GetWalletResponse getWalletByAlias(String aliasHandle) throws io.minka.api.handler.ApiException {
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
@@ -668,7 +704,8 @@ public String confirmTransfer(String handleTargetAddress,
         return api.getTransfer(type, target, source,null);
     }
 
-    public void getActionsFiltered(Map<String,Object> filters) {
-
+    public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+        return api.getTransfer(null, null, null,null);
     }
 }

@@ -7,6 +7,8 @@ import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.model.GetTransfersResponse;
+import io.minka.api.model.Snapshot;
+import io.minka.api.model.UpdateActionRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,13 +51,21 @@ public class ActionTesting {
 
     @Ignore
     @Test
-    public void shouldAcceptRequestTransfer(){
+    public void shouldAcceptRequestTransfer() throws io.minka.api.handler.ApiException {
         String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String actionRequestId = "dff4423c-8c85-4902-a792-7c5168ba842d";
         String action;
         action = sdkApiClient.acceptTransferRequest(handleTargetAddress, actionRequestId);
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
+
+        UpdateActionRequest req = new UpdateActionRequest();
+        Map<String, Object> labels = new HashMap<>();
+        labels.put("key", "value");
+        req.setLabels(labels);
+        Snapshot snapshot = new Snapshot();
+        req.setSnapshot(snapshot);
+        sdkApiClient.updateAction(actionRequestId,req);
     }
 
     @Ignore
@@ -169,10 +179,8 @@ public class ActionTesting {
     public void shouldGetActionWithFilters() {
         Map<String, Object> filters;
         filters = new HashMap<>();
-        filters.put("source", "571234567890");
-        filters.put("labels.type", "SEND");
 
-        sdkApiClient.getActionsFiltered(filters);
+//        sdkApiClient.getActionsFiltered(filters);
 
         GetTransfersResponse actionsFiltered = null;
 //        try {

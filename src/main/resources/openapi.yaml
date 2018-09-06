@@ -484,6 +484,27 @@ paths:
         default:
           description: Default response
   /signer/{signerAddress}:
+    delete:
+      summary: Delete signer
+      description: ''
+      operationId: deleteSignerByAddress
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Signer
+      parameters:
+        - in: path
+          name: signerAddress
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signerResponse'
     get:
       summary: Obtiene un signer por address
       description: ''
@@ -505,6 +526,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/signerResponse'
+    put:
+      summary: Actualiza un signer
+      description: ''
+      operationId: updateSigner
+      tags:
+        - Signer
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: signerAddress
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signerRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericResponse'
   /signer:
     get:
       summary: Obtiene un signer
@@ -553,21 +600,7 @@ paths:
             schema:
               $ref: '#/components/schemas/signerRequest'
         required: true
-    put:
-      summary: Actualiza un signer
-      description: ''
-      operationId: updateDomain
-      tags:
-        - Signer
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        default:
-          description: Default response
+
   '/signer/{userAddress}/router/{actionId}/action':
     post:
       summary: Call action in user's Bank
