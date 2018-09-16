@@ -3,8 +3,14 @@ package com.minka.sdk;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.model.*;
+import com.minka.api.model.BalanceResponse;
+import com.minka.api.model.ErrorResponse;
+import com.minka.api.model.GetWalletResponse;
+import com.minka.api.model.WalletResponse;
+import com.minka.api.model.WalletUpdateResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
+import io.minka.api.model.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,6 +100,36 @@ public class WalletTesting {
         System.out.println("errorGenerico");
         System.out.println(response);
         assertEquals(TestingConstants.SUCCESS_ERROR_CODE, response.getError().getCode().intValue());
+    }
+
+    @Test
+    public void shouldGetWalletBySigner() throws io.minka.api.handler.ApiException {
+        io.minka.api.model.WalletResponse wallets;
+        wallets = sdkApiClient.getWalletBySigner("wcPVEZ3MkRU4fxseQ3DKTER8ejqFgsk9DN");
+        System.out.println(wallets);
+    }
+
+
+    @Test
+    public void shouldGetWalletByAlias() throws io.minka.api.handler.ApiException {
+//        io.minka.api.model.GetWalletResponse wallets;
+//        wallets = sdkApiClient.getWalletByAlias("$usxshvwjoptfixfdakh");
+//        System.out.println(wallets);
+
+        io.minka.api.model.GetWalletResponse wallets;
+        wallets = sdkApiClient.deleteWalletByAlias("$usxshvwjoptfixfdakh");
+        System.out.println(wallets);
+
+    }
+    @Test
+    public void shouldGetWallets() throws io.minka.api.handler.ApiException {
+        WalletListResponse wallets = sdkApiClient.getWallets(1, 3);
+        System.out.println(wallets.size());
+
+        for (io.minka.api.model.WalletResponse curr: wallets) {
+            System.out.println(curr);
+
+        }
     }
 
     @Test

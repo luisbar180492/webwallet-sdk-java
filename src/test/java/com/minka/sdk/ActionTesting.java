@@ -6,6 +6,9 @@ import com.minka.api.model.*;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.model.GetTransfersResponse;
+import io.minka.api.model.Snapshot;
+import io.minka.api.model.UpdateActionRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,13 +51,21 @@ public class ActionTesting {
 
     @Ignore
     @Test
-    public void shouldAcceptRequestTransfer(){
+    public void shouldAcceptRequestTransfer() throws io.minka.api.handler.ApiException {
         String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String actionRequestId = "dff4423c-8c85-4902-a792-7c5168ba842d";
         String action;
         action = sdkApiClient.acceptTransferRequest(handleTargetAddress, actionRequestId);
         System.out.println("ACTION ID " + action);
         assertNotEquals(null, action);
+
+        UpdateActionRequest req = new UpdateActionRequest();
+        Map<String, Object> labels = new HashMap<>();
+        labels.put("key", "value");
+        req.setLabels(labels);
+        Snapshot snapshot = new Snapshot();
+        req.setSnapshot(snapshot);
+        sdkApiClient.updateAction(actionRequestId,req);
     }
 
     @Ignore
@@ -110,10 +121,9 @@ public class ActionTesting {
     @Test
     public void shouldRejectRequestTransfer(){
         String actionId = "60e34229-5fe4-46a5-9709-208e52bf9877";
-        String address = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
 
         try {
-            sdkApiClient.rejectTransferRequest(address, actionId);
+            sdkApiClient.rejectTransferRequest(actionId);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
         }
@@ -163,6 +173,31 @@ public class ActionTesting {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void shouldGetActionWithFilters() {
+        Map<String, Object> filters;
+        filters = new HashMap<>();
+
+//        sdkApiClient.getActionsFiltered(filters);
+
+        GetTransfersResponse actionsFiltered = null;
+//        try {
+//            actionsFiltered = sdkApiClient.getActionsFiltered();
+//            System.out.println(actionsFiltered);
+
+//            int size = actionsFiltered.getEntities().size();
+//            if(actionsFiltered.getEntities() != null){
+//                System.out.println(actionsFiltered.getEntities().size());
+//            }
+//
+//            System.out.println("Size: " + size);
+
+//        } catch (io.minka.api.handler.ApiException e) {
+//            System.out.println(e.getResponseBody());
+//            e.printStackTrace();
+//        }
     }
 
     @Test

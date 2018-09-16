@@ -1,22 +1,44 @@
 package com.minka.wallet.primitives.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.handler.*;
-import com.minka.api.model.*;
+import com.minka.api.handler.ActionApi;
+import com.minka.api.handler.ApiException;
+import com.minka.api.handler.SignerApi;
+import com.minka.api.handler.WalletApi;
+import com.minka.api.handler.WalletTempoApi;
+import com.minka.api.model.BalanceResponse;
+import com.minka.api.model.CreateActionRequest;
+import com.minka.api.model.CreateActionResponse;
+import com.minka.api.model.ErrorForbidden;
+import com.minka.api.model.ErrorResponse;
+import com.minka.api.model.GenericResponse;
+import com.minka.api.model.GetWalletResponse;
+import com.minka.api.model.LabelsStatusRequest;
+import com.minka.api.model.PendingActionResponse;
+import com.minka.api.model.SignerRequest;
+import com.minka.api.model.SignerResponse;
+import com.minka.api.model.SmsRequest;
+import com.minka.api.model.WalletRequest;
+import com.minka.api.model.WalletResponse;
+import com.minka.api.model.WalletUpdateRequest;
+import com.minka.api.model.WalletUpdateResponse;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
-import java.util.HashMap;
+import io.minka.api.handler.ApiClient;
+import io.minka.api.handler.TransferApi;
+import io.minka.api.model.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /***
  * Cliente para la integración con el servicio WEB de TINAPI de MINKA
  */
 public class SdkApiClient {
 
+    private final ApiClient apiClient;
     private String url;
     private String apiKey;
     private String secret;
@@ -32,7 +54,14 @@ public class SdkApiClient {
      */
     public SdkApiClient(String domain, String apiKey) {
         this.url = "https://" + domain + ".minka.io/v1";
+
         this.apiKey = apiKey;
+        apiClient = new ApiClient();
+        apiClient.setApiKey(apiKey);
+        apiClient.setBasePath(url);
+        if (timeout > 0){
+            apiClient.setConnectTimeout(timeout);
+        }
     }
 
     /**
@@ -71,17 +100,13 @@ public class SdkApiClient {
      * Solicita una pareja de llave privada y pública al Web service de TINAPI
      * @return un objeto con las llaves (privada y pública)
      */
-    public Keeper getKeeper() throws ExceptionResponseTinApi {
-        KeeperApi api = new KeeperApi();
-        api.getApiClient().setBasePath(url);
+    public io.minka.api.model.Keeper getKeeper() throws ExceptionResponseTinApi {
 
-        if (timeout > 0){
-            api.getApiClient().setConnectTimeout(timeout);
-        }
+        io.minka.api.handler.KeeperApi api = new io.minka.api.handler.KeeperApi(apiClient);
 
         try {
-            return api.obtenerKeeper(apiKey);
-        } catch (ApiException e) {
+            return api.obtenerKeeper();
+        } catch (io.minka.api.handler.ApiException e) {
 
             String responseBody = e.getResponseBody();
 
@@ -93,6 +118,43 @@ public class SdkApiClient {
             }
         }
     }
+
+    public ListLinks getLinks(String source, String target, String type) throws ExceptionResponseTinApi {
+        io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
+        try {
+            Object response = api.getLink(source,target,type);
+            Gson gson = (new GsonBuilder()).create();
+            return new Gson().fromJson(gson.toJson(response), ListLinks.class);
+        } catch (io.minka.api.handler.ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
+
+    public LinkItem getLink(String source, String target) throws ExceptionResponseTinApi {
+        io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
+        try {
+            Object response = api.getLink(source,target, null);
+            Gson gson = (new GsonBuilder()).create();
+            return new Gson().fromJson(gson.toJson(response), LinkItem.class);
+        } catch (io.minka.api.handler.ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        }
+    }
+    public LinkItem createLink(String source, String target, io.minka.api.model.CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
+        io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
+
+        io.minka.api.model.CreateLinkRequest req = new io.minka.api.model.CreateLinkRequest();
+        req.setSource(source);
+        req.setTarget(target);
+        req.setType(typeLink);
+        try {
+            return api.createLink(req);
+        } catch (io.minka.api.handler.ApiException e) {
+            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+
+        }
+    }
+
 
     public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws WalletCreationException {
         WalletApi api = new WalletApi();
@@ -499,7 +561,7 @@ public String confirmTransfer(String handleTargetAddress,
         }
     }
 
-    public void rejectTransferRequest(String addressForNotification, String actionId) throws ExceptionResponseTinApi{
+    public void rejectTransferRequest(String actionId) throws ExceptionResponseTinApi{
         ActionApi  api = new ActionApi();
         api.getApiClient().setBasePath(url);
         try {
@@ -532,40 +594,28 @@ public String confirmTransfer(String handleTargetAddress,
 
 
 
-    public ErrorResponse createLink(String source, String target, CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
-        LinksApi api = new LinksApi();
-        api.getApiClient().setBasePath(url);
-
-        CreateLinkRequest req = new CreateLinkRequest();
-        req.setSource(source);
-        req.setTarget(target);
-        req.setType(typeLink);
-        try {
-            ErrorResponse link = api.createLink(apiKey, req);
-            return link;
-        } catch (ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
-
-    public GetLinkResponse getLink(String source, String target) throws ExceptionResponseTinApi {
-        LinksApi api = new LinksApi();
-        api.getApiClient().setBasePath(url);
-        try {
-            return api.getLink(apiKey, source, target);
-        } catch (ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
-
 
     public PendingActionResponse getActionPendings(String alias, AliasType aliasType, ActionType action) {
         ActionApi actionApi = new ActionApi();
+        io.minka.api.handler.ActionApi tempoapi= new io.minka.api.handler.ActionApi(apiClient);
+
         actionApi.getApiClient().setBasePath(url);
         try {
             if (aliasType.getValue().equals(AliasType.SOURCE.getValue())){
+
                 return actionApi.getPending(apiKey, action.getValue(), null, alias);
             }else {
+//                try {
+//                    io.minka.api.model.GenericResponse pending;
+//                    pending = tempoapi.getPending("SEND", "$banco_perros", null);
+//                    System.out.println("=pending=");
+//                    System.out.println(pending);
+//
+//                } catch (io.minka.api.handler.ApiException e) {
+//                    System.out.println(e.getResponseBody());
+//
+////                    e.printStackTrace();
+//                }
                 return actionApi.getPending(apiKey, action.getValue(), alias, null);
             }
         } catch (ApiException e) {
@@ -575,5 +625,87 @@ public String confirmTransfer(String handleTargetAddress,
     }
 
 
+    public CreateTransferResponse createTinTransfer(CreateTransferRequest tintransfer )
+            throws io.minka.api.handler.ApiException {
 
+        io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
+
+        return api.createTinTransfer(tintransfer);
+    }
+
+    public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+        Object temporal = api.getWallets(pagenum, pagesize, null);
+        Gson gson = (new GsonBuilder()).create();
+        return new Gson().fromJson(gson.toJson(temporal), WalletListResponse.class);
+    }
+    public io.minka.api.model.WalletResponse getWalletBySigner(String signerAddress) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+        Object temporal = api.getWallets(null, null, signerAddress);
+        Gson gson = (new GsonBuilder()).create();
+        return new Gson().fromJson(gson.toJson(temporal), io.minka.api.model.WalletResponse.class);
+    }
+
+    public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.getSigners(pagenum, pagesize);
+    }
+
+    public io.minka.api.model.SignerResponse deleteSigner(String signerAddress) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.deleteSignerByAddress(signerAddress);
+    }
+
+
+
+
+    public io.minka.api.model.GenericResponse updateSigner(String signerAddress, io.minka.api.model.SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.updateSigner(signerAddress, updateSignerReq);
+    }
+
+    public io.minka.api.model.SignerResponse getSignerByAddress(String wAddress) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+        return api.getSignerByAddress(wAddress);
+    }
+    public io.minka.api.model.GenericResponse updateAction(String actionid, UpdateActionRequest req) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+
+
+        return api.updateActionLabels(actionid, req);
+    }
+    public io.minka.api.model.GenericResponse deleteAction(String actionid) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+
+        return null;
+    }
+
+
+
+    public io.minka.api.model.GetWalletResponse deleteWalletByAlias(String aliasHandle) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+
+        return null;
+    }
+
+    public io.minka.api.model.GetWalletResponse getWalletByAlias(String aliasHandle) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+
+        return api.getWalletByAlias(aliasHandle);
+    }
+
+    public void updateSigner() {
+        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
+
+    }
+
+    public GetTransfersResponse getTransfer(String type, String  target, String  source) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+        return api.getTransfer(type, target, source,null);
+    }
+
+    public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+        return api.getTransfer(null, null, null,null);
+    }
 }
