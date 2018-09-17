@@ -29,18 +29,18 @@ public class TinTranferTesting {
     @Test
     public void createTransferEnvio() throws ApiException {
 
-        CreateTransferRequest tinTranfer = new CreateTransferRequest();
-        tinTranfer.setSource("wY2gpPNzJy6eudaBXMPpXooyuk523WLhC7");
-        tinTranfer.setTarget("$perro_uno");
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("type", "SEND");
-        labels.put("description", "Description of a transfer");
-        tinTranfer.setLabels(labels);
-        tinTranfer.setAmount("1");
-        tinTranfer.setSymbol("$tin");
-
-        tinTranfer.setLabels(labels);
-        sdkApiClient.createTinTransfer(tinTranfer);
+//        CreateTransferRequest tinTranfer = new CreateTransferRequest();
+//        tinTranfer.setSource("wY2gpPNzJy6eudaBXMPpXooyuk523WLhC7");
+//        tinTranfer.setTarget("$perro_uno");
+//        Map<String, Object> labels = new HashMap<>();
+//        labels.put("type", "SEND");
+//        labels.put("description", "Description of a transfer");
+//        tinTranfer.setLabels(labels);
+//        tinTranfer.setAmount("1");
+//        tinTranfer.setSymbol("$tin");
+//
+//        tinTranfer.setLabels(labels);
+//        sdkApiClient.createTinTransfer(tinTranfer);
 
     }
 }

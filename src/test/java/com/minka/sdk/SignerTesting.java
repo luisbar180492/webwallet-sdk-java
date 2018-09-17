@@ -47,12 +47,12 @@ public class SignerTesting {
     public void shouldNotifyStatusToBank() throws io.minka.api.handler.ApiException {
         String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
         String solicitanteAddress = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
-        try {
-            sdkApiClient.notifyStatusToBank(solicitanteAddress, actionId);
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
-        }
-        io.minka.api.model.SignerResponse waddress = sdkApiClient.deleteSigner("waddress");
+//        try {
+//            sdkApiClient.notifyStatusToBank(solicitanteAddress, actionId);
+//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+//            exceptionResponseTinApi.printStackTrace();
+//        }
+//        io.minka.api.model.SignerResponse waddress = sdkApiClient.deleteSigner("waddress");
     }
 
     @Test
