@@ -1374,12 +1374,38 @@ components:
         signer:
           type: object
           $ref: '#/components/schemas/signerObject'
+        wallet:
+          type: object
+          $ref: '#/components/schemas/walletObject'
+
+    rejectTransferRequest:
+      type: object
+      properties:
+        signer:
+          type: object
+          $ref: '#/components/schemas/signerObject'
+        wallet:
+          type: object
+          $ref: '#/components/schemas/walletObject'
 
     signerObject:
       type: object
       properties:
         handle:
           type: string
+
+    walletObject:
+      type: object
+      properties:
+        handle:
+          type: string
+        signer:
+          type: array
+          items:
+            $ref: string
+        labels:
+          type: object
+          additionalProperties: true
 
     Snapshot:
       type: object
