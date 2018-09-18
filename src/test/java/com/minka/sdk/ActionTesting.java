@@ -232,9 +232,12 @@ public class ActionTesting {
         String addressForNotification= "wQqRaa1fj8xtrMu68zo1vBE5SWaqpvZMda";
         String sendActionId = "d6979617-28bb-40fa-87f3-0c9dfff0bbd5";
         try {
-            sdkApiClient.rejectTransferSend(addressForNotification, sendActionId);
+            RejectTransferRequest req = new RejectTransferRequest();
+            sdkApiClient.rejectTransfer(req, sendActionId);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
+        } catch (io.minka.api.handler.ApiException e) {
+            e.printStackTrace();
         }
     }
 }

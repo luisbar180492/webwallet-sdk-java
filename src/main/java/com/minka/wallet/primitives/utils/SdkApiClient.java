@@ -306,6 +306,15 @@ public CreateTransferResponse acceptTransfer(AcceptTransferRequest  req,
     return transferApi.acceptP2Ptranfer(actionRequestId, req);
 }
 
+
+public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String actionId) throws ExceptionResponseTinApi, io.minka.api.handler.ApiException {
+
+    TransferApi transferApi = new TransferApi(apiClient);
+
+    return transferApi.rejectP2Ptranfer(actionId, req);
+}
+
+
 public String createTransferRequest(String handleTarget, 
                                 String handleSourceAddress,
                                 String amount,
@@ -508,26 +517,6 @@ public String confirmTransfer(String handleTargetAddress,
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
-
-    public void rejectTransferSend(String addressForNotification,String actionId) throws ExceptionResponseTinApi {
-        ActionApi  api = new ActionApi();
-        api.getApiClient().setBasePath(url);
-        try {
-            LabelsStatusRequest labels = new LabelsStatusRequest();
-            Map<String, Object> maps = new HashMap<>();
-            maps.put("status", "REJECTED");
-            labels.setLabels(maps);
-            GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
-            System.out.println(genericResponse);
-//            notifyBankToDownload(addressForNotification, actionId);
-            //TODO notify status reject to solicitado
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-//            exceptionResponseTinApi.printStackTrace();
         }
     }
 
