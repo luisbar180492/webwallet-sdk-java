@@ -299,8 +299,8 @@ public String confirmTransferRequest(String handleSourceAddress,
         }
 }    
     
-public CreateTransferResponse acceptTransferRequest(AcceptTransferRequest  req,
-                                String actionRequestId) throws io.minka.api.handler.ApiException {
+public CreateTransferResponse acceptTransfer(AcceptTransferRequest  req,
+                                             String actionRequestId) throws io.minka.api.handler.ApiException {
 
     TransferApi transferApi = new TransferApi(apiClient);
     return transferApi.acceptP2Ptranfer(actionRequestId, req);

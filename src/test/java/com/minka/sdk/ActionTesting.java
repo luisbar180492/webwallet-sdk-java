@@ -2,7 +2,6 @@ package com.minka.sdk;
 
 import com.minka.api.handler.ApiException;
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.*;
 import com.minka.api.model.CreateActionRequest;
 import com.minka.api.model.CreateActionResponse;
 import com.minka.api.model.GenericResponse;
@@ -76,7 +75,7 @@ public class ActionTesting {
         req.setWallet(walletObject);
 
         CreateTransferResponse response;
-        response = sdkApiClient.acceptTransferRequest(req, actionRequestId);
+        response = sdkApiClient.acceptTransfer(req, actionRequestId);
         System.out.println(response);
 
 //        UpdateActionRequest req = new UpdateActionRequest();
