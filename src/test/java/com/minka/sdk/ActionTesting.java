@@ -3,16 +3,20 @@ package com.minka.sdk;
 import com.minka.api.handler.ApiException;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.api.model.*;
+import com.minka.api.model.CreateActionRequest;
+import com.minka.api.model.CreateActionResponse;
+import com.minka.api.model.GenericResponse;
+import com.minka.api.model.PendingActionResponse;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
-import io.minka.api.model.GetTransfersResponse;
-import io.minka.api.model.Snapshot;
-import io.minka.api.model.UpdateActionRequest;
+import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,20 +56,36 @@ public class ActionTesting {
     @Ignore
     @Test
     public void shouldAcceptRequestTransfer() throws io.minka.api.handler.ApiException {
-        String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
-        String actionRequestId = "dff4423c-8c85-4902-a792-7c5168ba842d";
-        String action;
-        action = sdkApiClient.acceptTransferRequest(handleTargetAddress, actionRequestId);
-        System.out.println("ACTION ID " + action);
-        assertNotEquals(null, action);
 
-        UpdateActionRequest req = new UpdateActionRequest();
+        String actionRequestId = "dff4423c-8c85-4902-a792-7c5168ba842d";
+
+        AcceptTransferRequest req = new AcceptTransferRequest();
+        SignerObject signer = new SignerObject();
+        signer.setHandle("wic6kF3M2Zvy986mByV76YKXDFNY1spa6f");
+        req.setSigner(signer);
+        WalletObject walletObject = new WalletObject();
         Map<String, Object> labels = new HashMap<>();
-        labels.put("key", "value");
-        req.setLabels(labels);
-        Snapshot snapshot = new Snapshot();
-        req.setSnapshot(snapshot);
-        sdkApiClient.updateAction(actionRequestId,req);
+        labels.put("created", "2018-08-29T06:09:35.408Z");
+        labels.put("channelSms", "573185951061");
+
+        walletObject.setLabels(labels);
+        walletObject.setHandle("$573185951061");
+        List<String> signerss = new ArrayList<>();
+        signerss.add("wic6kF3M2Zvy986mByV76YKXDFNY1spa6f");
+        walletObject.setSigner(signerss);
+        req.setWallet(walletObject);
+
+        CreateTransferResponse response;
+        response = sdkApiClient.acceptTransferRequest(req, actionRequestId);
+        System.out.println(response);
+
+//        UpdateActionRequest req = new UpdateActionRequest();
+//        Map<String, Object> labels = new HashMap<>();
+//        labels.put("key", "value");
+//        req.setLabels(labels);
+//        Snapshot snapshot = new Snapshot();
+//        req.setSnapshot(snapshot);
+//        sdkApiClient.updateAction(actionRequestId,req);
     }
 
     @Ignore

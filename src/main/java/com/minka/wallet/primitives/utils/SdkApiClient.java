@@ -299,41 +299,11 @@ public String confirmTransferRequest(String handleSourceAddress,
         }
 }    
     
-public String acceptTransferRequest(String handleTargetAddress, 
-                                String actionRequestId){
-        //read the action 
-        try {
-            GenericResponse actionResponse = getAction(actionRequestId);
-            //get amount data from action
-            String amount =  (String) actionResponse.get("amount");
-            //create upload action with amount from bank to target address 
-            CreateActionRequest req = new CreateActionRequest();
-            Map<String, Object> labels = new HashMap<>();
-            labels.put("type", "UPLOAD");
-            req.setLabels(labels);
-            req.setAmount(amount);
-            req.setSource(this.bankLimitAccountSigner);
-            req.setSymbol("$tin");
-            req.setTarget(handleTargetAddress);
-            CreateActionResponse action = null;
-            action = createAction(req);
-            String action_id =  (String) action.get("action_id");
-            System.out.println(action_id);
-            //sign upload action with amount from bank to target address 
-            GenericResponse genericResponse_upload = signAction(action_id);
-            System.out.println(genericResponse_upload);
-            GenericResponse genericResponse_send = signAction(actionRequestId);
-            //TODO: notify bank with credit download endpoint
-//            notifyStatusToBank(handleTargetAddress, action_id);
-            return (String) genericResponse_send.get("action_id");
-        } catch (ApiException e) {
-            System.out.println("e.getResponseBody()");
-            System.out.println(e.getResponseBody());
-            return null;
-//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-//            exceptionResponseTinApi.printStackTrace();
-//            return null;
-        }
+public CreateTransferResponse acceptTransferRequest(AcceptTransferRequest  req,
+                                String actionRequestId) throws io.minka.api.handler.ApiException {
+
+    TransferApi transferApi = new TransferApi(apiClient);
+    return transferApi.acceptP2Ptranfer(actionRequestId, req);
 }
 
 public String createTransferRequest(String handleTarget, 
@@ -629,6 +599,10 @@ public String confirmTransfer(String handleTargetAddress,
             throws io.minka.api.handler.ApiException {
 
         io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
+
+        System.out.println("api.getApiClient().getBasePath()");
+        System.out.println(api.getApiClient().getBasePath());
+
 
         return api.createTinTransfer(tintransfer);
     }

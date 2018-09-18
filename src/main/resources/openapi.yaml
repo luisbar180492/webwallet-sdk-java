@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.1.2
+  version: 0.1.5
   title: 'TINAPI '
 tags:
   - name: Keeper
@@ -36,13 +36,18 @@ paths:
           schema:
             type: string
           required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/rejectTransferRequest'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/genericResponse'
+                $ref: '#/components/schemas/createTransferResponse'
 
   '/transfer/{actionid}/accept':
     post:
@@ -70,7 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/genericResponse'
+                $ref: '#/components/schemas/createTransferResponse'
 
 
   /transfer:
@@ -398,7 +403,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/genericResponse'
+                $ref: '#/components/schemas/createTransferResponse'
   /keeper:
     get:
       summary: Genera un keeper
@@ -627,7 +632,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/createTransferResponse'
   '/signer/{userAddress}/router/{actionId}/upload':
     post:
       summary: Call debit in user's bank
@@ -654,7 +659,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/createTransferResponse'
+
   '/signer/{solicitanteAddress}/router/{actionId}/status':
     post:
       summary: Notify status
@@ -714,7 +720,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/createTransferResponse'
   /wallet:
     get:
       summary: Obtiene un wallet por signer

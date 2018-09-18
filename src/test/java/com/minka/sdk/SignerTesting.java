@@ -60,16 +60,18 @@ public class SignerTesting {
 
         SignerListResponse signers = sdkApiClient.getSigners(1, 2);
         System.out.println(signers.size());
-        assertEquals(signers.size(), 3);//BECAUSE OF THE pagesize + 1 error element
 
-        io.minka.api.model.SignerResponse wAddress = sdkApiClient.getSignerByAddress("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz");
-        System.out.println(wAddress);
+        System.out.println(signers);
+//        assertEquals(signers.size(), 3);//BECAUSE OF THE pagesize + 1 error element
 
-        SignerRequest req = new SignerRequest();
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("description", "saving");
-        req.setLabels(labels);
-        sdkApiClient.updateSigner("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz", req);
+//        io.minka.api.model.SignerResponse wAddress = sdkApiClient.getSignerByAddress("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz");
+//        System.out.println(wAddress);
+
+//        SignerRequest req = new SignerRequest();
+//        Map<String, Object> labels = new HashMap<>();
+//        labels.put("description", "saving");
+//        req.setLabels(labels);
+//        sdkApiClient.updateSigner("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz", req);
     }
 
     @Test
