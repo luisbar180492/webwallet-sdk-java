@@ -6,6 +6,7 @@ import io.minka.api.model.AcceptTransferRequest;
 import io.minka.api.model.CreateTransferRequest;
 import io.minka.api.model.CreateTransferResponse;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class TinTranferTesting {
         sdkApiClient.setBankLimitParams(TestingConstants.BANK_LIMIT_WALLET, TestingConstants.BANK_LIMIT_ADDRESS);
     }
 
+    @Ignore
     @Test
     public void createTransferEnvio() throws ApiException {
 

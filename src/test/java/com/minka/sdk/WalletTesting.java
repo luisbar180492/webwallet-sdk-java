@@ -11,6 +11,7 @@ import com.minka.api.model.WalletUpdateResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
 import io.minka.api.model.*;
+import io.minka.api.model.WalletUpdateRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -164,7 +165,14 @@ public class WalletTesting {
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 
-        WalletUpdateResponse walletUpdateResponse = sdkApiClient.updateWallet(handle, signers, defaultAddress);
+
+        WalletUpdateRequest req = new WalletUpdateRequest();
+        Map<String, Object> labels = new HashMap<>();
+        labels.put("routerDownload", "testingupdate");
+        req.setLabels(labels);
+        req.setSigner(signers);
+        req.setDefault(defaultAddress);
+        io.minka.api.model.WalletUpdateResponse walletUpdateResponse = sdkApiClient.updateWallet(handle, req);
         System.out.println(walletUpdateResponse);
         assertEquals(walletUpdateResponse.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
     }
@@ -175,7 +183,7 @@ public class WalletTesting {
         String defaultAddress = "!wXK6boH2pLf8raZwpSQH3JRgzW7qH7WyVf";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
-
-            WalletUpdateResponse walletUpdateResponse = sdkApiClient.updateWallet(handle, signers, defaultAddress);
+        WalletUpdateRequest req = new WalletUpdateRequest();
+        io.minka.api.model.WalletUpdateResponse walletUpdateResponse = sdkApiClient.updateWallet(handle, req);
     }
 }

@@ -206,15 +206,13 @@ public class SdkApiClient {
     }
 
 
-    public WalletUpdateResponse updateWallet(String handle, List<String> signers , String defaultAddress) throws ExceptionResponseTinApi {
-        WalletApi walletApi = new WalletApi();
-        walletApi.getApiClient().setBasePath(url);
+    public io.minka.api.model.WalletUpdateResponse updateWallet(String handle, io.minka.api.model.WalletUpdateRequest createUpdateWalletReq) throws ExceptionResponseTinApi {
 
-        WalletUpdateRequest walletUpdateRequest = createUpdateWalletReq(signers, defaultAddress);
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
 
         try {
-            return walletApi.updateWallet(apiKey, handle, walletUpdateRequest);
-        } catch (ApiException e) {
+            return api.updateWallet(handle,  createUpdateWalletReq);
+        } catch (io.minka.api.handler.ApiException e) {
             String responseBody = e.getResponseBody();
             if (e.getCode() == Constants.BAD_REQUEST){
                 WalletUpdateResponse response= new Gson().fromJson(responseBody, WalletUpdateResponse.class);

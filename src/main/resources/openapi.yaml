@@ -1070,6 +1070,9 @@ components:
       properties:
         default:
           type: string
+        labels:
+          type: object
+          additionalProperties: true
         signer:
           type: array
           items:
