@@ -31,8 +31,8 @@ public class LinksTesting {
     @Test
     public void shouldCreateLink(){
 
-        String source = "$auhxlvsouudtiailkmr";
-        String target = "$yuhenntyycupgbubbha";
+        String source = "$5731445678";
+        String target = "$573207246903";
         try {
             LinkItem link = sdkApiClient.createLink(source, target,
                     io.minka.api.model.CreateLinkRequest.TypeEnum.TRUST);

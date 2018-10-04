@@ -1,35 +1,36 @@
 openapi: 3.0.0
 info:
-  version: 0.1.5
+  version: 0.2.0
   title: 'TINAPI '
 tags:
-  - name: Keeper
-    description: Endpoint to get keypairs
+  - name: Action
+    description: 'Endpoint related to actions (transactions) in TIN platform'
   - name: Domain
-    description: ''
-  - name: Signer
-    description: ''
-  - name: Wallet
-    description: ''
-  - name: Transfer
-    description: 'TIN TRANSFER'
-  - name: Transaction
-    description: ''
+    description: 'Endpoint related to domains in TIN platform'
+  - name: Keeper
+    description: 'Endpoint to create keypairs in TIn platform'
   - name: Klemer
-    description: ''
+    description: 'Endpoint related to transpilation of actions to addresses in Tin platform'
   - name: Links
-    description: Enlaces de confianza
+    description: 'Endpoint related to trust links in Tin platform'
+  - name: Signer
+    description: 'Endpoint related to addresses in TIN platform'
+  - name: Wallet
+    description: 'Endpoint related to wallets as entities in Tin platform'
+  - name: Transfer
+    description: 'Endpoint related to transfers in Tin platform'
+
 
 paths:
   '/transfer/{actionid}/reject':
     post:
-      summary: Reject P2p
+      summary: Reject a P2P transfer
       description: ''
       operationId: rejectP2Ptranfer
       security:
         - ApiKeyAuth: []
       tags:
-        - transfer
+        - Transfer
       parameters:
         - in: path
           name: actionid
@@ -43,21 +44,39 @@ paths:
               $ref: '#/components/schemas/rejectTransferRequest'
       responses:
         '200':
-          description: OK
+          description: Succesful Rejection of a transfer
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
+        '400':
+          description: Transfer error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   '/transfer/{actionid}/accept':
     post:
-      summary: Reject P2p
+      summary: Reject a P2p transfer
       description: ''
       operationId: acceptP2Ptranfer
       security:
         - ApiKeyAuth: []
       tags:
-        - transfer
+        - Transfer
       parameters:
         - in: path
           name: actionid
@@ -71,16 +90,79 @@ paths:
               $ref: '#/components/schemas/acceptTransferRequest'
       responses:
         '200':
-          description: OK
+          description: Succesful ACCeptance of a transfer
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
+        '400':
+          description: Transfer error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
+  '/transfer/{actionid}/continue':
+    post:
+      summary: Continue async a P2p transfer
+      description: ''
+      operationId: contiueP2Ptranfer
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: actionid
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/actionSigned'
+      responses:
+        '200':
+          description: Succesful ACCeptance of a transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getActionResponse'
+        '400':
+          description: Transfer error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /transfer:
     post:
-      summary: Crea un transferencia
+      summary: Create a P2P transfer
       description: ''
       operationId: createTinTransfer
       security:
@@ -95,15 +177,33 @@ paths:
               required: true
       responses:
         '200':
-          description: Tin transfer creado
+          description: P2P TIN transfer created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
+        '400':
+          description: Transfer error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /link/{link_id}:
     delete:
-      summary: DELETE link
+      summary: Delete a link
       description: ''
       operationId: deleteLink
       tags:
@@ -118,14 +218,32 @@ paths:
           required: true
       responses:
         '200':
-          description: OK
+          description: Succesfull deletion of a link
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LinkItem'
+        '400':
+          description: Link error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /link:
     post:
-      summary: Crear un link
+      summary: Create a link
       description: ''
       operationId: createLink
       tags:
@@ -134,11 +252,35 @@ paths:
         - ApiKeyAuth: []
       responses:
         '200':
-          description: Link creado exitosamente
+          description: Succesful creation of a Link
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LinkItem'
+        '400':
+          description: Link error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '104':
+          description: Invalid handle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -146,7 +288,7 @@ paths:
               $ref: '#/components/schemas/createLinkRequest'
         required: true
     get:
-      summary: Get link
+      summary: Get a link
       description: ''
       operationId: getLink
       tags:
@@ -168,16 +310,32 @@ paths:
             type: string
       responses:
         '200':
-          description: OK
+          description: Succesful get of a link
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/ListLinks'
-                  - $ref: '#/components/schemas/LinkItem'
+                  $ref: '#/components/schemas/LinkItem'
+        '400':
+          description: Link error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '104':
+          description: Invalid handle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /klemer:
     post:
-      summary: Crea un wallet
+      summary: create a claim for core
       description: ''
       operationId: createClaim
       tags:
@@ -190,11 +348,29 @@ paths:
           required: true
       responses:
         '200':
-          description: OK
+          description: Succesful creation of a claim
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/createClaimResponse'
+        '400':
+          description: klemer error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -237,19 +413,37 @@ paths:
           explode: true
       responses:
         '200':
-          description: OK
+          description: succesful get of an action
           content:
             application/json:
               schema:
 #                type: object
 #                additionalProperties: true
                 $ref: '#/components/schemas/getTransfersResponse'
+        '400':
+          description: Action error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '115':
+          description: Invalid action hash
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     post:
-      summary: Sign an iou
+      summary: Create an action
       description: ''
       operationId: createAction
       tags:
-        - action
+        - Action
       parameters:
         - in: header
           name: API_KEY
@@ -258,11 +452,77 @@ paths:
           required: true
       responses:
         '200':
-          description: OK
+          description: Succesful creation of an action
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/createActionResponse'
+        '400':
+          description: Action error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '106':
+          description: Invalid source
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '107':
+          description: Invalid destination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '108':
+          description: Invalid symbol
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '109':
+          description: Invalid amount
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '110':
+          description: Unsupported action type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '111':
+          description: Rejection reason not defined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '112':
+          description: Not enough balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '113':
+          description: Keys are not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -271,7 +531,7 @@ paths:
         required: true
   /action/unsigned:
     get:
-      summary: Get link
+      summary: Get unsigned actions
       description: ''
       operationId: getPending
       tags:
@@ -296,21 +556,39 @@ paths:
             type: string
       responses:
         '200':
-          description: OK
+          description: Succesful get of unsigned action(s)
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/getActionResponse'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   '/action/{action_id}':
     get:
-      summary: Obtener action por action_id
+      summary: Get an action by action_id
       description: ''
       operationId: getActionByActionId
       tags:
-        - action
+        - Action
       security:
         - ApiKeyAuth: []
       parameters:
@@ -321,19 +599,37 @@ paths:
           required: true
       responses:
         '200':
-          description: OK
+          description: Succesful get of an action
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/getActionResponse'
+        '400':
+          description: Action error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
-      summary: Actualiza los labels de un action
+      summary: Update labels of an action
       description: ''
       operationId: updateActionLabels
       security:
         - ApiKeyAuth: []
       tags:
-        - action
+        - Action
       parameters:
         - in: path
           name: action_id
@@ -347,6 +643,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/genericResponse'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '115':
+          description: Invalid action hash
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '116':
+          description: Field is not allowed to be changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -359,7 +685,7 @@ paths:
       description: ''
       operationId: createClaim
       tags:
-        - SignerTemporal
+        - Action
       parameters:
         - in: header
           name: API_KEY
@@ -373,6 +699,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/iouSigned'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -385,7 +729,7 @@ paths:
       description: ''
       operationId: signAction
       tags:
-        - action
+        - Action
       parameters:
         - in: header
           name: API_KEY
@@ -404,6 +748,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  '/action/{actionid}/sendit':
+    post:
+      summary: Send action
+      description: ''
+      operationId: sendAction
+      tags:
+        - Action
+      parameters:
+        - in: header
+          name: API_KEY
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: actionid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createActionResponse'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/iouSigned'
   /keeper:
     get:
       summary: Genera un keeper
@@ -420,12 +831,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Keeper'
-        '403':
+        '400':
           description: Forbidden ac
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorForbidden'
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /domain:
     post:
       summary: Genera un domain
@@ -441,17 +864,29 @@ paths:
           required: true
       responses:
         '200':
-          description: Domain generated
+          description: Domain retrieved
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/domainResponse'
         '400':
-          description: Domain generated
+          description: Domain error message
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/domainResponse'
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -471,8 +906,30 @@ paths:
             type: string
           required: true
       responses:
-        default:
-          description: Default response
+        '200':
+          description: Domain generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/domainRequest'
+        '400':
+          description: Domain generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       summary: Edita un domain
       description: ''
@@ -486,8 +943,30 @@ paths:
             type: string
           required: true
       responses:
-        default:
-          description: Default response
+        '200':
+          description: Domain retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/domainResponse'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /signer/{signerAddress}:
     delete:
       summary: Delete signer
@@ -510,6 +989,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/signerResponse'
+        '100':
+          description: You don't have permissions to access this method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '104':
+          description: Invalid handle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     get:
       summary: Obtiene un signer por address
       description: ''
@@ -531,6 +1022,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/signerResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       summary: Actualiza un signer
       description: ''
@@ -557,6 +1060,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/genericResponse'
+        '100':
+          description: You don't have permissions to access this method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /signer:
     get:
       summary: Obtiene un signer
@@ -584,6 +1099,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/signerListResponse'
+        '100':
+          description: You don't have permissions to access this method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '104':
+          description: Invalid handle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       summary: Crea un signer
       description: ''
@@ -599,6 +1126,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/signerResponse'
+        '100':
+          description: You don't have permissions to access this method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -633,6 +1166,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   '/signer/{userAddress}/router/{actionId}/upload':
     post:
       summary: Call debit in user's bank
@@ -660,7 +1205,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
-
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   '/signer/{solicitanteAddress}/router/{actionId}/status':
     post:
       summary: Notify status
@@ -691,9 +1247,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   '/signer/{solicitanteAddress}/router/{actionId}/download':
     post:
-      summary: Notify bank
+      summary: Call credit in user's bank
       description: ''
       operationId: callDownload
       tags:
@@ -721,9 +1289,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/createTransferResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /wallet:
     get:
-      summary: Obtiene un wallet por signer
+      summary: Get a wallet by signer
       description: ''
       operationId: getWallets
       tags:
@@ -741,23 +1321,27 @@ paths:
           schema:
             type: integer
           required: false
-        - in: query
-          name: signer
-          schema:
-            type: string
-          required: false
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/walletListResponse'
-                  - $ref: '#/components/schemas/walletResponse'
-
+                $ref: '#/components/schemas/WalletListResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '104':
+          description: Invalid handle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     post:
-      summary: Crea un wallet
+      summary: Create a wallet
       description: ''
       operationId: createWallet
       tags:
@@ -771,6 +1355,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/walletResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '104':
+          description: Invalid handle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '400':
           description: Bad Request
           content:
@@ -785,7 +1387,7 @@ paths:
         required: true
   '/wallet/{solicitadoAlias}/channel/sms':
     post:
-      summary: Envia sms
+      summary: Send sms
       description: ''
       operationId: sendSms
       tags:
@@ -808,6 +1410,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -816,7 +1430,7 @@ paths:
         required: true
   '/wallet/{handle}/balance':
     get:
-      summary: Obtiene el balance
+      summary: Get default account  balance of a wallet
       description: ''
       operationId: getBalance
       tags:
@@ -841,9 +1455,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/balanceResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   '/wallet/{handle}':
     put:
-      summary: Edita un wallet
+      summary: Edit a wallet
       description: ''
       operationId: updateWallet
       tags:
@@ -863,6 +1489,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/walletUpdateResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       requestBody:
         content:
           application/json:
@@ -870,7 +1508,7 @@ paths:
               $ref: '#/components/schemas/walletUpdateRequest'
         required: true
     get:
-      summary: Obtiene un wallet
+      summary: Get a wallet
       description: ''
       operationId: getWalletByAlias
       tags:
@@ -890,69 +1528,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/getWalletResponse'
-  /action/stored:
-    post:
-      summary: Create an action store
-      description: ''
-      operationId: createActionStore
-      tags:
-        - store
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/createActionStoreRequest'
-        required: true
-      responses:
-        default:
-          description: Default response
-  /transaction:
-    get:
-      summary: obtiene todos los transfers
-      description: ''
-      operationId: listTransactions
-      tags:
-        - Transaction
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        default:
-          description: Default response
-    post:
-      summary: Crea un transfer
-      description: ''
-      operationId: createTransfer
-      tags:
-        - Transaction
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: OK
+        '100':
+          description: You don't have permissions to access this method
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/transactionRequest'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/transactionRequest'
-        required: true
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 servers:
   - url: 'https://achtin-tst.minka.io/v1'
 components:
@@ -980,14 +1568,6 @@ components:
           type: string
         labels:
           type: object
-    transactionRequest:
-      type: object
-      properties:
-        iou:
-          type: object
-        labels:
-          type: object
-          additionalProperties: true
     wallet:
       type: object
       properties:
@@ -1009,7 +1589,49 @@ components:
       properties:
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            description:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+            mobile:
+              type: string
+            identification:
+              type: string
+            proprietary:
+              type: string
+            countryOfResidence:
+              type: string
+            sourceChannel:
+              type: string
+            bankAccountNumber:
+              type: string
+            bankAccountType:
+              type: string
+            bankBicfi:
+              type: string
+            bankName:
+              type: string
+            routerReference:
+              type: string
+            routerUpload:
+              type: string
+            routerDownload:
+              type: string
+            routerAction:
+              type: string
+            routerStatus:
+              type: string
+            routerAuthMethod:
+              type: string
+            routerAuthParams:
+              type: string
+            routerFormat:
+              type: string
     publicKeys:
       type: object
       properties:
@@ -1024,7 +1646,25 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            chanelSms:
+              type: string
+            routerUpload:
+              type: string
+            routerDownload:
+              type: string
+            routerAction:
+              type: string
+            routerStatus:
+              type: string
+            routerAuthMethod:
+              type: string
+            routerAuthParams:
+              type: string
+            routerFormat:
+              type: string
     getWalletResponse:
       type: object
       properties:
@@ -1038,7 +1678,25 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            chanelSms:
+              type: string
+            routerUpload:
+              type: string
+            routerDownload:
+              type: string
+            routerAction:
+              type: string
+            routerStatus:
+              type: string
+            routerAuthMethod:
+              type: string
+            routerAuthParams:
+              type: string
+            routerFormat:
+              type: string
         handle:
           type: string
         id:
@@ -1059,7 +1717,25 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            chanelSms:
+              type: string
+            routerUpload:
+              type: string
+            routerDownload:
+              type: string
+            routerAction:
+              type: string
+            routerStatus:
+              type: string
+            routerAuthMethod:
+              type: string
+            routerAuthParams:
+              type: string
+            routerFormat:
+              type: string
         handle:
           type: string
         error:
@@ -1070,9 +1746,6 @@ components:
       properties:
         default:
           type: string
-        labels:
-          type: object
-          additionalProperties: true
         signer:
           type: array
           items:
@@ -1084,7 +1757,25 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            chanelSms:
+              type: string
+            routerUpload:
+              type: string
+            routerDownload:
+              type: string
+            routerAction:
+              type: string
+            routerStatus:
+              type: string
+            routerAuthMethod:
+              type: string
+            routerAuthParams:
+              type: string
+            routerFormat:
+              type: string
         handle:
           type: string
         wallet_id:
@@ -1102,15 +1793,14 @@ components:
       properties:
         handle:
           type: string
-        labels:
-          type: object
-          additionalProperties: true
         signer_id:
           type: string
         keeper:
           type: array
           items:
             $ref: '#/components/schemas/publicKeys'
+        labels:
+          $ref: '#/components/schemas/signerRequest'
     signerListResponse:
       type: array
       items:
@@ -1120,7 +1810,7 @@ components:
           items:
             $ref: '#/components/schemas/walletResponse'
     domainResponse:
-      type: string
+      type: object
       properties:
         domain_id:
           type: string
@@ -1211,7 +1901,33 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            tx_id:
+              type: string
+            tx_ref:
+              type: string
+            status:
+              type: string
+            created:
+              type: string
+            sourceCreated:
+              type: string
+            targetUpdated:
+              type: string
+            description:
+              type: string
+            type:
+              type: string
+            rejectSource:
+              type: string
+            rejectDescription:
+              type: string
+            transactionPurpose:
+              type: string
+            numberOftransactions:
+              type: string
+            deviceFingerPrint:
+              type: string
     createActionResponse:
       type: object
       properties:
@@ -1325,6 +2041,27 @@ components:
           type: object
           additionalProperties: true
 
+    actionSigned:
+      properties:
+        action_id:
+          type: string
+        source:
+          type: string
+        symbol:
+          type: string
+        target:
+          type: string
+        amount:
+          type: string
+        snapshot:
+          type: object
+          $ref: '#/components/schemas/Snapshot'
+        labels:
+          type: object
+          properties:
+            hash:
+              type: string
+
     getTransfersResponse:
       type: object
       properties:
@@ -1360,8 +2097,6 @@ components:
       properties:
         action_id:
           type: string
-        hash:
-          type: string
         source:
           type: string
         target:
@@ -1370,9 +2105,21 @@ components:
           type: string
         amount:
           type: string
+        snapshot:
+          type: object
+          $ref: '#/components/schemas/Snapshot'
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            tx_ref:
+              type: string
+            created:
+              type: string
+            type:
+              type: string
+            hash:
+              type: string
+
         error:
           type: object
           $ref: '#/components/schemas/ErrorGenerico'
@@ -1421,10 +2168,44 @@ components:
       properties:
         target:
           type: object
-          additionalProperties: true
+          properties:
+            wallet:
+              type: object
+              properties:
+                labels:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    chanelSms:
+                      type: string
+                handle:
+                  type: string
+            signer:
+              type: object
+              properties:
+                handle:
+                  type: string
         source:
           type: object
-          additionalProperties: true
+          properties:
+            wallet:
+              type: object
+              properties:
+                labels:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    chanelSms:
+                      type: string
+                handle:
+                  type: string
+            signer:
+              type: object
+              properties:
+                handle:
+                  type: string
         symbol:
           type: object
           additionalProperties: true

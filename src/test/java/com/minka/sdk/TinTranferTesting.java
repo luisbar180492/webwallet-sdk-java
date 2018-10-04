@@ -2,9 +2,7 @@ package com.minka.sdk;
 
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
-import io.minka.api.model.AcceptTransferRequest;
-import io.minka.api.model.CreateTransferRequest;
-import io.minka.api.model.CreateTransferResponse;
+import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,6 +24,8 @@ public class TinTranferTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
+        sdkApiClient.setTimeout(20);
+
         sdkApiClient.setBankLimitParams(TestingConstants.BANK_LIMIT_WALLET, TestingConstants.BANK_LIMIT_ADDRESS);
     }
 
@@ -34,30 +34,40 @@ public class TinTranferTesting {
     public void createTransferEnvio() throws ApiException {
 
         CreateTransferRequest tinTranfer = new CreateTransferRequest();
-        tinTranfer.setSource("wM9kx8Bzsp51TRefSccAhH57KU4a2rfS5y");
-        tinTranfer.setTarget("$573004431529");
+        tinTranfer.setSource("wSgbrTTUxZnRAt58KGwjknnZ3LtPH5bdJL");
+        tinTranfer.setTarget("$573207246903");
         Map<String, Object> labels = new HashMap<>();
         labels.put("type", "SEND");
         labels.put("description", "Description of a transfer");
         tinTranfer.setLabels(labels);
-        tinTranfer.setAmount("1");
+        tinTranfer.setAmount("101");
         tinTranfer.setSymbol("$tin");
 
         tinTranfer.setLabels(labels);
-        CreateTransferResponse tinTransfer = sdkApiClient.createTinTransfer(tinTranfer);
+        CreateTransferResponse tinTransfer =
+                sdkApiClient.createTinTransfer(tinTranfer);
 
         System.out.println(tinTransfer);
 
     }
 
+    @Ignore
     @Test
     public void acceptTransfer() throws ApiException {
 
-//        String actionRequestId = "f146e76a-8566-4691-9d90-2209a856ca5c";
-//        String action;
-//        action = sdkApiClient.rejectTransfer(req, actionRequestId);
-//        System.out.println("ACTION ID " + action);
+        String actionRequestId = "ebb01a55-0465-4d1f-a92c-5a430368f972";
 
+        AcceptTransferRequest req =new AcceptTransferRequest();
+        WalletObject wallet = new WalletObject();
+        wallet.setHandle("$573207246903");
+        req.setWallet(wallet);
+        SignerObject signer = new SignerObject();
+        signer.setHandle("wLwiQuJa7hN1Q77tmaof2YHP5oaZbJd8Eh");
+        req.setSigner(signer);
+        CreateTransferResponse createTransferResponse =
+                sdkApiClient.acceptTransfer(req, actionRequestId);
+
+        System.out.println(createTransferResponse);
     }
 
 

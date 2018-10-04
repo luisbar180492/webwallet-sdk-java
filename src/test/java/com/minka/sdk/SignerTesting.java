@@ -78,11 +78,18 @@ public class SignerTesting {
     public void createSignerForOnlineUse(){
 
         Map<String, Object> labels = new HashMap<>();
+        labels.put("router_reference", "$davjuliandiaz");
 
+        labels.put("routerDownload", "https://c66584bd.ngrok.io/v1/credit");
+labels.put("routerUpload", "https://c66584bd.ngrok.io/v1/debit");
+labels.put("routerStatus", "https://c66584bd.ngrok.io/v1/status");
+labels.put("routerAction", "https://c66584bd.ngrok.io/v1/action");
 
         try {
             SignerResponse signer = sdkApiClient.createSigner(labels);
             System.out.println(signer);
+            System.out.println(signer.getHandle());//address
+
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
         }

@@ -103,6 +103,7 @@ public class WalletTesting {
         assertEquals(TestingConstants.SUCCESS_ERROR_CODE, response.getError().getCode().intValue());
     }
 
+    /*
     @Test
     public void shouldGetWalletBySigner() throws io.minka.api.handler.ApiException {
         io.minka.api.model.WalletResponse wallets;
@@ -110,11 +111,13 @@ public class WalletTesting {
         System.out.println(wallets);
     }
 
-
+    */
     @Test
     public void shouldGetWalletByAlias() throws io.minka.api.handler.ApiException {
         io.minka.api.model.GetWalletResponse wallets;
-        wallets = sdkApiClient.getWalletByAlias("$usxshvwjoptfixfdakh");
+        wallets =
+                sdkApiClient.getWalletByAlias("" +
+                        "$573207246903");
         System.out.println(wallets);
 
 //        io.minka.api.model.GetWalletResponse wallets;
@@ -122,6 +125,7 @@ public class WalletTesting {
 //        System.out.println(wallets);
 
     }
+
     @Test
     public void shouldGetWallets() throws io.minka.api.handler.ApiException {
         WalletListResponse wallets = sdkApiClient.getWallets(1, 3);
@@ -160,8 +164,8 @@ public class WalletTesting {
 
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$okuhytjsgexzniqnnyo";
-        String defaultAddress = "whhmBt66ZynrnQcVgp1cLFfZJ3zbqWMEEH";
+        String handle = "$573207246903";
+        String defaultAddress = "wLwiQuJa7hN1Q77tmaof2YHP5oaZbJd8Eh";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 
@@ -169,10 +173,11 @@ public class WalletTesting {
         WalletUpdateRequest req = new WalletUpdateRequest();
         Map<String, Object> labels = new HashMap<>();
         labels.put("routerDownload", "testingupdate");
-        req.setLabels(labels);
+        //req.setLabels(labels);
         req.setSigner(signers);
         req.setDefault(defaultAddress);
-        io.minka.api.model.WalletUpdateResponse walletUpdateResponse = sdkApiClient.updateWallet(handle, req);
+        io.minka.api.model.WalletUpdateResponse walletUpdateResponse
+                = sdkApiClient.updateWallet(handle, req);
         System.out.println(walletUpdateResponse);
         assertEquals(walletUpdateResponse.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
     }

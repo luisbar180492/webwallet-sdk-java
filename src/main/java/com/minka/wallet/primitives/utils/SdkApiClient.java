@@ -552,30 +552,19 @@ public String confirmTransfer(String handleTargetAddress,
 
 
 
-    public PendingActionResponse getActionPendings(String alias, AliasType aliasType, ActionType action) {
-        ActionApi actionApi = new ActionApi();
+    public List<GetActionResponse> getActionPendings(String alias, AliasType aliasType, ActionType action) {
         io.minka.api.handler.ActionApi tempoapi= new io.minka.api.handler.ActionApi(apiClient);
 
-        actionApi.getApiClient().setBasePath(url);
+        tempoapi.getApiClient().setBasePath(url);
         try {
             if (aliasType.getValue().equals(AliasType.SOURCE.getValue())){
 
-                return actionApi.getPending(apiKey, action.getValue(), null, alias);
+                return tempoapi.getPending( action.getValue(), null, alias);
             }else {
-//                try {
-//                    io.minka.api.model.GenericResponse pending;
-//                    pending = tempoapi.getPending("SEND", "$banco_perros", null);
-//                    System.out.println("=pending=");
-//                    System.out.println(pending);
-//
-//                } catch (io.minka.api.handler.ApiException e) {
-//                    System.out.println(e.getResponseBody());
-//
-////                    e.printStackTrace();
-//                }
-                return actionApi.getPending(apiKey, action.getValue(), alias, null);
+
+                return tempoapi.getPending(action.getValue(), alias, null);
             }
-        } catch (ApiException e) {
+        } catch (io.minka.api.handler.ApiException e) {
             e.printStackTrace();
         }
         return null;
@@ -593,18 +582,11 @@ public String confirmTransfer(String handleTargetAddress,
 
         return api.createTinTransfer(tintransfer);
     }
-
     public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
-        Object temporal = api.getWallets(pagenum, pagesize, null);
-        Gson gson = (new GsonBuilder()).create();
-        return new Gson().fromJson(gson.toJson(temporal), WalletListResponse.class);
-    }
-    public io.minka.api.model.WalletResponse getWalletBySigner(String signerAddress) throws io.minka.api.handler.ApiException {
-        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
-        Object temporal = api.getWallets(null, null, signerAddress);
-        Gson gson = (new GsonBuilder()).create();
-        return new Gson().fromJson(gson.toJson(temporal), io.minka.api.model.WalletResponse.class);
+        WalletListResponse temporal = api.getWallets(pagenum, pagesize);
+
+        return temporal;
     }
 
     public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {

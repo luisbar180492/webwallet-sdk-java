@@ -221,9 +221,12 @@ public class ActionTesting {
 
     @Test
     public void shouldGetPendingActions(){
-        String source = "$3104845181";
-        PendingActionResponse genericResponse = sdkApiClient.getActionPendings(source, AliasType.TARGET, ActionType.REQUEST);
-        System.out.println(genericResponse.size());
+        String handle = "$573207246903";
+        List<GetActionResponse> genericResponse = sdkApiClient.getActionPendings(
+                handle, AliasType.TARGET, ActionType.SEND);
+
+        System.out.println(genericResponse);
+
 
     }
 
