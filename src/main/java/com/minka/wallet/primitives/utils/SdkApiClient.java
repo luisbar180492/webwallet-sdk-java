@@ -100,7 +100,7 @@ public class SdkApiClient {
      * Solicita una pareja de llave privada y pública al Web service de TINAPI
      * @return un objeto con las llaves (privada y pública)
      */
-    public io.minka.api.model.Keeper getKeeper() throws ExceptionResponseTinApi {
+    public io.minka.api.model.Keeper getKeeper(boolean offline) throws ExceptionResponseTinApi {
 
         io.minka.api.handler.KeeperApi api = new io.minka.api.handler.KeeperApi(apiClient);
 
