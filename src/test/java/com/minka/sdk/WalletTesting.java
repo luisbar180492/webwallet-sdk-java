@@ -164,8 +164,8 @@ public class WalletTesting {
 
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$573207246903";
-        String defaultAddress = "wLwiQuJa7hN1Q77tmaof2YHP5oaZbJd8Eh";
+        String handle = "$3004431529";
+        String defaultAddress = "wPJPYFG2nyXvpacwLdnc9fYRKyiWqdEqbP";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 

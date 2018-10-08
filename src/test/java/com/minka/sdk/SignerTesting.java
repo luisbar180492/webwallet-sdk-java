@@ -5,8 +5,7 @@ import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.model.SignerResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
-import io.minka.api.model.SignerListResponse;
-import io.minka.api.model.SignerRequest;
+import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,6 +73,25 @@ public class SignerTesting {
 //        sdkApiClient.updateSigner("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz", req);
     }
 
+
+    @Test
+    public void createSignerForOfflineUse() throws io.minka.api.handler.ApiException, ExceptionResponseTinApi {
+
+        Keeper offlineKeypair = sdkApiClient.getKeeper(true);
+
+        SignerRequestLabels labels = new SignerRequestLabels();
+
+        io.minka.api.model.SignerResponse signerOfflineSigning;
+        PublicKeys publickey = new PublicKeys();
+        publickey.setPublic(offlineKeypair.getPublic());
+
+        signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
+
+        System.out.println(signerOfflineSigning);
+
+    }
+
+
     @Test
     public void createSignerForOnlineUse(){
 
@@ -81,9 +99,9 @@ public class SignerTesting {
         labels.put("router_reference", "$davjuliandiaz");
 
         labels.put("routerDownload", "https://c66584bd.ngrok.io/v1/credit");
-labels.put("routerUpload", "https://c66584bd.ngrok.io/v1/debit");
-labels.put("routerStatus", "https://c66584bd.ngrok.io/v1/status");
-labels.put("routerAction", "https://c66584bd.ngrok.io/v1/action");
+        labels.put("routerUpload", "https://c66584bd.ngrok.io/v1/debit");
+        labels.put("routerStatus", "https://c66584bd.ngrok.io/v1/status");
+        labels.put("routerAction", "https://c66584bd.ngrok.io/v1/action");
 
         try {
             SignerResponse signer = sdkApiClient.createSigner(labels);

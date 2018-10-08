@@ -444,12 +444,8 @@ paths:
       operationId: createAction
       tags:
         - Action
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
+      security:
+              - ApiKeyAuth: []
       responses:
         '200':
           description: Succesful creation of an action
@@ -529,6 +525,7 @@ paths:
             schema:
               $ref: '#/components/schemas/createActionRequest'
         required: true
+
   /action/unsigned:
     get:
       summary: Get unsigned actions
@@ -769,17 +766,14 @@ paths:
 
   '/action/{actionid}/sendit':
     post:
-      summary: Send action
+      summary: Sign offline
       description: ''
-      operationId: sendAction
+      operationId: signOffline
+      security:
+        - ApiKeyAuth: []
       tags:
         - Action
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: path
           name: actionid
           schema:
@@ -791,7 +785,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createActionResponse'
+                $ref: '#/components/schemas/createTransferResponse'
         '400':
           description: Domain error message
           content:
@@ -814,7 +808,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/iouSigned'
+              $ref: '#/components/schemas/offlineSigningKeys'
+        required: true
+
   /keeper:
     get:
       summary: Genera un keeper
@@ -1584,9 +1580,22 @@ components:
           type: string
         labels:
           type: object
+
+    offlineSigningKeys:
+      type: object
+      properties:
+        keeper:
+          type: array
+          items:
+            $ref: '#/components/schemas/publicKeys'
+
     signerRequest:
       type: object
       properties:
+        keeper:
+          type: array
+          items:
+            $ref: '#/components/schemas/publicKeys'
         labels:
           type: object
           properties:
@@ -1632,6 +1641,7 @@ components:
               type: string
             routerFormat:
               type: string
+
     publicKeys:
       type: object
       properties:
@@ -1639,6 +1649,9 @@ components:
           type: string
         secret:
           type: string
+        scheme:
+          type: string
+
     walletRequest:
       type: object
       properties:
