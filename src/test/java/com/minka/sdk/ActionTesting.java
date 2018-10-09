@@ -2,14 +2,12 @@ package com.minka.sdk;
 
 import com.minka.api.handler.ApiException;
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.CreateActionRequest;
-import com.minka.api.model.CreateActionResponse;
 import com.minka.api.model.GenericResponse;
-import com.minka.api.model.PendingActionResponse;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.model.*;
+import io.minka.api.model.PublicKeys;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,9 +45,9 @@ public class ActionTesting {
         String handleTargetAddress = "wTEro49jTuEDmbsqKvehY2Khv533cnG6jA";
         String actionRequestId = "213e5f57-be2b-421e-ae45-ea908c8ef0bd";
         String action;
-        action = sdkApiClient.confirmTransferRequest(handleTargetAddress, actionRequestId);
-        System.out.println("ACTION ID " + action);
-        assertNotEquals(null, action);
+//        action = sdkApiClient.confirmTransferRequest(handleTargetAddress, actionRequestId);
+//        System.out.println("ACTION ID " + action);
+//        assertNotEquals(null, action);
     }
 
     @Ignore
@@ -95,9 +93,9 @@ public class ActionTesting {
         String amount = "1";
         String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String action;
-        action = sdkApiClient.createTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
-        System.out.println("ACTION ID " + action);
-        assertNotEquals(null, action);
+//        action = sdkApiClient.createTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
+//        System.out.println("ACTION ID " + action);
+//        assertNotEquals(null, action);
     }
 
     @Ignore
@@ -108,8 +106,8 @@ public class ActionTesting {
         String amount = "1";
         String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String action;
-        action = sdkApiClient.createNoTrustedTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
-        System.out.println("ACTION ID " + action);
+//        action = sdkApiClient.createNoTrustedTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
+//        System.out.println("ACTION ID " + action);
     }
     
     @Ignore
@@ -118,9 +116,9 @@ public class ActionTesting {
         String handleTargetAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String actionRequestId = "49528514-48a4-4e8a-8111-92ea1e54abe4";
         String action;
-        action = sdkApiClient.confirmTransfer(handleTargetAddress, actionRequestId);
-        System.out.println("ACTION ID " + action);
-        assertNotEquals(null, action);
+//        action = sdkApiClient.confirmTransfer(handleTargetAddress, actionRequestId);
+//        System.out.println("ACTION ID " + action);
+//        assertNotEquals(null, action);
     }
     
     @Ignore
@@ -131,9 +129,9 @@ public class ActionTesting {
         String amount = "1";
         String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk   ";
         String action;
-        action = sdkApiClient.createTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
-        System.out.println("ACTION ID " + action);
-        assertNotEquals(null, action);
+//        action = sdkApiClient.createTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
+//        System.out.println("ACTION ID " + action);
+//        assertNotEquals(null, action);
     }
     
 
@@ -148,27 +146,27 @@ public class ActionTesting {
         }
 
     }
-    @Ignore
-    @Test
-    public void shouldCreateAction(){
-        CreateActionRequest req = new CreateActionRequest();
-        Map<String, Object> labels = new HashMap<>();
 
+    @Test
+    public void shouldCreateAction() throws  io.minka.api.handler.ApiException {
+        io.minka.api.model.CreateActionRequest req = new io.minka.api.model.CreateActionRequest();
+
+        CreateActionRequestLabels labels = new CreateActionRequestLabels();
         req.setLabels(labels);
-        req.setAmount("1");
-        req.setSource("$tin");
+        req.setAmount("8");
+        req.setSource("$ivanchonline");
         req.setSymbol("$tin");
-        req.setTarget("$bh2nx6xx4");
+        req.setTarget("$tin");
         System.out.println(req);
 
-        CreateActionResponse action = null;
-        try {
-            action = sdkApiClient.createAction(req);
-        } catch (ApiException e) {
-            System.out.println("e.getResponseBody()");
-            System.out.println(e.getResponseBody());
-//            e.printStackTrace();
-        }
+        io.minka.api.model.CreateActionResponse action = null;
+//        try {
+        action = sdkApiClient.createAction(req);
+//        } catch (ApiException e) {
+//            System.out.println("e.getResponseBody()");
+//            System.out.println(e.getResponseBody());
+////            e.printStackTrace();
+//        }
         System.out.println(action);
     }
 
@@ -185,10 +183,21 @@ public class ActionTesting {
     @Ignore
     @Test
     public void shouldSignAction(){
+
         try {
-            GenericResponse genericResponse = sdkApiClient.signAction("580ef951-f2f4-45ad-9646-bb471dceca8b");
+            String actionId = "7abe3ffb-a7ca-43b4-b994-fefeb35c352d";
+            OfflineSigningKeys keys = new OfflineSigningKeys();
+            List<PublicKeys> keepers = new ArrayList<>();
+            io.minka.api.model.PublicKeys currKeeper = new PublicKeys();
+            currKeeper.setScheme("ed25519");
+            currKeeper.setSecret("069976466bbae2180db0d61c3bbbbbbe54f61385c364e24de4bd0ce607d94d9a");
+            currKeeper.setPublic("0445d1e984ba787e960f28e70fcfabd61cc7dda45d9ae94de0cec7daa0e91da7be161d39451024c2a4f1998877819038f607d9c2016250b58e6b463344e051bb01");
+            keepers.add(currKeeper);
+            keys.setKeeper(keepers);
+            CreateTransferResponse genericResponse = sdkApiClient.signActionOffline(actionId, keys);
+
             System.out.println(genericResponse);
-        } catch (ApiException e) {
+        } catch (io.minka.api.handler.ApiException e) {
             e.printStackTrace();
         }
 

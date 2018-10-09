@@ -2,6 +2,7 @@ package com.minka;
 
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import org.spongycastle.util.encoders.Hex;
@@ -19,7 +20,7 @@ public class SignatureUtil {
             Signature sgr;
             sgr = new EdDSAEngine(MessageDigest.getInstance(spec.getHashAlgorithm()));
             sgr.initSign(privateKey);
-            sgr.update(hashMessageExample.getBytes());
+            sgr.update(Utils.hexToBytes(hashMessageExample));
             byte[] sign = sgr.sign();
             return Hex.toHexString(sign);
         } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {

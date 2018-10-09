@@ -117,7 +117,7 @@ public class WalletTesting {
         io.minka.api.model.GetWalletResponse wallets;
         wallets =
                 sdkApiClient.getWalletByAlias("" +
-                        "$573207246903");
+                        "$ivanchoffline");
         System.out.println(wallets);
 
 //        io.minka.api.model.GetWalletResponse wallets;
@@ -154,9 +154,9 @@ public class WalletTesting {
 
     @Test
     public void shouldGetWalletBalance(){
-        existingHandle = "$usxshvwjoptfixfdakh";
+//        existingHandle = "$usxshvwjoptfixfdakh";
 
-        String bankName = "$yourbankname1221";
+        String bankName = "$ivanchonline";
         String currency = "$tin";
         BalanceResponse balance = sdkApiClient.getBalance(bankName, currency);
         System.out.println(balance);
@@ -164,8 +164,8 @@ public class WalletTesting {
 
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$573207246903";
-        String defaultAddress = "wLwiQuJa7hN1Q77tmaof2YHP5oaZbJd8Eh";
+        String handle = "$3004431529";
+        String defaultAddress = "wPJPYFG2nyXvpacwLdnc9fYRKyiWqdEqbP";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 

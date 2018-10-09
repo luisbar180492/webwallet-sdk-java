@@ -25,7 +25,7 @@ public class KeeperTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
+        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper(true);
 
         assertNotEquals(null, keeper.getSecret() );
         assertNotEquals(null, keeper.getPublic() );
@@ -46,7 +46,7 @@ public class KeeperTesting {
                 .setClientId(TestingConstants.CLIENT_ID);
 
         try {
-            io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
+            io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper(false);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             int errorCode = exceptionResponseTinApi.getErrorCode();
             String message = exceptionResponseTinApi.getMessage();
