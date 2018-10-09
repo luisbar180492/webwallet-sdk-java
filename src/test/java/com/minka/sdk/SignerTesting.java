@@ -85,6 +85,7 @@ public class SignerTesting {
         PublicKeys publickey = new PublicKeys();
         publickey.setPublic(offlineKeypair.getPublic());
 
+        publickey.setScheme(offlineKeypair.getScheme());
         signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
 
         System.out.println(signerOfflineSigning);

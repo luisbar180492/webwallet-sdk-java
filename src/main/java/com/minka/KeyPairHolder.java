@@ -4,7 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.minka.wallet.SignatureDto;
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.KeyPairGenerator;
+import net.i2p.crypto.eddsa.Utils;
+import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
+import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
+import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
+import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 import org.spongycastle.util.encoders.Hex;
 
 import java.security.KeyPair;
@@ -17,7 +24,22 @@ import java.security.PublicKey;
 public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
 
     private PublicKey publicKey;
+    private String seed;
     private PrivateKey secret;
+    private String groupA;
+
+    private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+
+    public KeyPairHolder(String privateKeyHex){
+        byte[] privateKey = Utils.hexToBytes(privateKeyHex);
+        EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(privateKey, ed25519);
+        secret = new EdDSAPrivateKey(key);
+        seed = privateKeyHex;
+        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(key.getA(), ed25519);
+        groupA = Utils.bytesToHex(pubKey.getA().toByteArray());
+
+        publicKey = new EdDSAPublicKey(pubKey);
+    }
 
     public KeyPairHolder(){
 
@@ -28,8 +50,8 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
     }
 
     public String getPublicKey() {
-        byte[] encoded = publicKey.getEncoded();
-        return Hex.toHexString(encoded);
+        byte[] encoded = this.publicKey.getEncoded();
+        return groupA;
     }
 
     public PublicKey getPublicKeyOriginal(){
@@ -42,7 +64,7 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
 
     @Override
     public String getScheme() {
-        return "ed25519";
+        return "eddsa-ed25519";
     }
 
     @Override
@@ -63,7 +85,7 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
     public SignatureDto getBasicSignatureDto(String signerAddress){
         SignatureDto signatureDto = new SignatureDto();
         signatureDto.setPublic(this.getPublicKey());
-        signatureDto.setScheme("ed25519");
+        signatureDto.setScheme("eddsa-ed25519");
         signatureDto.setSigner(signerAddress);
         return signatureDto;
     }
@@ -114,7 +136,7 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
 
     public KeyPairHolderDto getDtoForJson() {
         KeyPairHolderDto keyPairHolderDto = new KeyPairHolderDto();
-        keyPairHolderDto.setScheme("ed25519");
+        keyPairHolderDto.setScheme("eddsa-ed25519");
         keyPairHolderDto.setPublico(this.getPublicKey());
         keyPairHolderDto.setSecret(this.getSecretInHexString());
         return keyPairHolderDto;

@@ -20,6 +20,8 @@ public class IOUTesting {
 
 
     static final Logger logger = Logger.getLogger(String.valueOf(IOUTesting.class));
+    private static final String PRIV_KEY = "4aea0e61c029e600d1ca36d6b50bc974a2001574a80ac69997c4b2a04997b884";
+    private static final String PUB_KEY =  "6a35efbef9eaad6b486a1f5d52aed18260e06339e2182056ea060bd26d4b4a8a";
 
     private Gson gson;
 
@@ -30,72 +32,38 @@ public class IOUTesting {
 
     }
 
-    @Ignore
     @Test
-    public void iou() throws MissingRequiredParameterIOUCreation {
-        IouParamsDto iouParamsDto;
-        String domain = "www";
-        KeyPairHolder sourceKeys = new KeyPairHolder();
-        String source = (sourceKeys).getPublicKey();
-        System.out.println("source:" + source);
-        String target= (new KeyPairHolder()).getPublicKey();
-        BigDecimal amount = new BigDecimal(100);
-        BigDecimal credit = new BigDecimal(0);
-
-        String symbol = source;
-        Date active = new Date();
-        Date expire = DateUtils.addDays(active,4);
-
-//        iouParamsDto = new IouParamsDto(domain, source,target, amount, credit,
-//                                        symbol, null,active, expire);
-//
-//
-//        IouUtil iouUtil = new IouUtil();
-//        IOU theIou = iouUtil.write(iouParamsDto);
-
-//        List<PrivateKey> privatekeys = new ArrayList<>();
-//        privatekeys.add(sourceKeys.getPrivateKey());
-//        theIou.sign(privatekeys);
-//        //IMPRIMIR JSON
-//        String theIouJson = theIou.toString();
-//
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        Gson gson = gsonBuilder.create();
-//
-//
-//        System.out.println(gson.toJson(theIou));
-
-    }
-
-    @Test
-    public void iouEjemplo() throws MissingRequiredParameterIOUCreation, DecoderException, NoSuchAlgorithmException {
+    public void iouEjemplo() throws MissingRequiredParameterIOUCreation,
+                                        DecoderException, NoSuchAlgorithmException {
 
         logger.info("Fist we generate a key-pair using the Ed25519");
-        KeyPairHolder sourcekeyPairHolder = new KeyPairHolder();
+        KeyPairHolder sourcekeyPairHolder = new KeyPairHolder(PRIV_KEY);
+
         KeyPairHolder.KeyPairHolderDto keypairDto = sourcekeyPairHolder.getDtoForJson();
         logger.info(gson.toJson(keypairDto));
+
         logger.info("Now we generate an address");
 
         Address address = new Address(keypairDto.getPublico());
-        String sourceAddress = address.generate().getValue();
+        String sourceAddress = "wQStXD7irdnGjGZVJ99mZ25vbZeXamCGFi";
         logger.info("addressGenerated : " + sourceAddress);
 
         IouParamsDto iouParamsDto;
-        String domain = "domain";
+        String domain = "localhost";
 
-        String source = "wRLdAFjt8rbHWVzvXkAJB68YPwYRWjvkCj";
-        String target = "wVA63LTkhiVfc2fhN7iU6xvmTanp9y9qbU";
+        String source = "wQStXD7irdnGjGZVJ99mZ25vbZeXamCGFi";
+        String target = "wT99yCRnoYrN3KvTte3XhkUzjB9naFbwHo";
         String symbol = source;
-        String random = "2eeff2202dc8c7f1db50";
+        String random = "d7fa72c397477797c487";
 
         logger.info("source:" + source);
         BigDecimal amount = new BigDecimal(100);
-        BigDecimal credit = new BigDecimal(0);
+        BigDecimal credit = null;
         logger.info("We convert the java date to ISO FORMAT");
-        String expiry = IouUtil.convertToIsoFormat(new Date());
+        String expiry = "2018-10-05T22:41:05.061Z";
 
         iouParamsDto = new IouParamsDto(domain,
-                source, target, amount.toString(), credit.toString(),
+                source, target, amount.toString(), null,
                 symbol, random, null, expiry);
 
         IouUtil iouUtil = new IouUtil();
@@ -113,9 +81,9 @@ public class IOUTesting {
         logger.info("Printing Raw JSON ");
         logger.info(theIou.toRawJson());
 
-        logger.info("Printing pretty JSON for the FORMAT V022");
-        logger.info(theIou.toPrettyJsonV022());
-        logger.info("Printing raw JSON for the FORMAT V022");
-        logger.info(theIou.toRawJsonV022());
+//        logger.info("Printing pretty JSON for the FORMAT V022");
+//        logger.info(theIou.toPrettyJsonV022());
+//        logger.info("Printing raw JSON for the FORMAT V022");
+//        logger.info(theIou.toRawJsonV022());
     }
 }
