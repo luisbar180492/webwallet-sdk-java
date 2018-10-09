@@ -153,10 +153,10 @@ public class ActionTesting {
 
         CreateActionRequestLabels labels = new CreateActionRequestLabels();
         req.setLabels(labels);
-        req.setAmount("1");
+        req.setAmount("8");
         req.setSource("$ivanchonline");
         req.setSymbol("$tin");
-        req.setTarget("$ivanchoffline");
+        req.setTarget("$tin");
         System.out.println(req);
 
         io.minka.api.model.CreateActionResponse action = null;
