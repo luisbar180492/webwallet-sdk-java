@@ -3,6 +3,7 @@ package com.minka.wallet.primitives.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.ExceptionResponseTinApi;
+import com.minka.KeyPairHolder;
 import com.minka.api.handler.ActionApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.handler.SignerApi;
@@ -27,6 +28,7 @@ import com.minka.utils.Constants;
 import io.minka.api.handler.ApiClient;
 import io.minka.api.handler.TransferApi;
 import io.minka.api.model.*;
+import io.minka.api.model.Keeper;
 import io.minka.api.model.SignerListResponse;
 import io.minka.api.model.SignerRequest;
 import io.minka.api.model.WalletUpdateResponse;
@@ -97,7 +99,8 @@ public class SdkApiClient {
     }
 
     /**
-     * Solicita una pareja de llave privada y pública al Web service de TINAPI
+     * Solicita una pareja de llave privada y pública al Web service de TINAPI o
+     * la genera localmente para el flag offline.
      * @return un objeto con las llaves (privada y pública)
      */
     public io.minka.api.model.Keeper getKeeper(boolean offline) throws ExceptionResponseTinApi {
@@ -105,7 +108,18 @@ public class SdkApiClient {
         io.minka.api.handler.KeeperApi api = new io.minka.api.handler.KeeperApi(apiClient);
 
         try {
-            return api.obtenerKeeper();
+            Keeper keeperGenerated;
+            if (offline){
+                keeperGenerated = new Keeper();
+                KeyPairHolder sourcekeyPairHolder = new KeyPairHolder();
+                keeperGenerated.setPublic(sourcekeyPairHolder.getPublicKey());
+                keeperGenerated.setSecret(sourcekeyPairHolder.getSecretSeed());
+                keeperGenerated.setScheme(sourcekeyPairHolder.getScheme());
+
+            } else {
+                keeperGenerated = api.obtenerKeeper();
+            }
+            return keeperGenerated;
         } catch (io.minka.api.handler.ApiException e) {
 
             String responseBody = e.getResponseBody();
