@@ -1,9 +1,9 @@
 package com.minka.sdk;
 
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.Keeper;
 import com.minka.wallet.primitives.utils.SdkApiClient;
-import org.junit.Before;
+import io.minka.api.handler.ApiException;
+import io.minka.api.model.TokenResponse;
 import org.junit.Test;
 
 import java.util.logging.Logger;
@@ -25,7 +25,7 @@ public class KeeperTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper(true);
+        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper(false);
 
         assertNotEquals(null, keeper.getSecret() );
         assertNotEquals(null, keeper.getPublic() );
@@ -35,6 +35,28 @@ public class KeeperTesting {
 
     }
 
+
+    @Test
+    public void shouldGetHelloWorldOauth() {
+
+        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
+                TestingConstants.API_KEY);
+
+        sdkApiClient
+                .setSecret(TestingConstants.SECRET)
+                .setClientId(TestingConstants.CLIENT_ID);
+
+        try {
+            TokenResponse ping = sdkApiClient.getToken();
+            System.out.println(ping);
+
+        } catch (ApiException e) {
+            e.printStackTrace();
+            System.out.print(e.getCode());
+
+            System.out.print(e.getResponseBody());
+        }
+    }
     @Test
     public void shouldFail() {
 

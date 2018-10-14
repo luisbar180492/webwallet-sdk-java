@@ -377,6 +377,29 @@ paths:
             schema:
               $ref: '#/components/schemas/createClaimRequest'
         required: true
+  /oauth/token:
+    post:
+      summary: Retrieve token
+      description: ''
+      operationId: getToken
+      tags:
+        - Token
+      security:
+        - BasicAuth: []
+      responses:
+        '200':
+          description: Token fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenResponse'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/tokenRequest'
+        required: true
+
   /action:
     get:
       summary: Get Actions received
@@ -1541,10 +1564,20 @@ servers:
   - url: 'https://achtin-tst.minka.io/v1'
 components:
   securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
     ApiKeyAuth:
       type: apiKey
       in: header
       name: API_KEY
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: Simple credentials
+      flows:
+        clientCredentials:
+          tokenUrl: https://achtin-stg.minka.io/oauth/token
+          scopes: {} # tin ach does not use scopes
   schemas:
     Keeper:
       type: object
@@ -2136,6 +2169,26 @@ components:
         error:
           type: object
           $ref: '#/components/schemas/ErrorGenerico'
+
+    tokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+        client_id:
+          type: string
+        client_secret:
+          type: string
+
+    tokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        expires_in:
+          type: integer
+        token_type:
+          type: string
 
     acceptTransferRequest:
       type: object

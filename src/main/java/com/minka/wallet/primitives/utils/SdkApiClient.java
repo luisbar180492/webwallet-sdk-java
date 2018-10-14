@@ -11,13 +11,10 @@ import com.minka.api.handler.WalletApi;
 import com.minka.api.handler.WalletTempoApi;
 import com.minka.api.model.*;
 import com.minka.api.model.BalanceResponse;
-import com.minka.api.model.CreateActionRequest;
-import com.minka.api.model.CreateActionResponse;
 import com.minka.api.model.ErrorForbidden;
 import com.minka.api.model.ErrorResponse;
 import com.minka.api.model.GenericResponse;
 import com.minka.api.model.GetWalletResponse;
-import com.minka.api.model.PublicKeys;
 import com.minka.api.model.SmsRequest;
 import com.minka.api.model.WalletRequest;
 import com.minka.api.model.WalletResponse;
@@ -26,11 +23,11 @@ import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
 import io.minka.api.handler.ApiClient;
+import io.minka.api.handler.TokenApi;
 import io.minka.api.handler.TransferApi;
 import io.minka.api.model.*;
 import io.minka.api.model.Keeper;
 import io.minka.api.model.SignerListResponse;
-import io.minka.api.model.SignerRequest;
 import io.minka.api.model.WalletUpdateResponse;
 
 import java.util.*;
@@ -41,13 +38,12 @@ import java.util.*;
 public class SdkApiClient {
 
     private final ApiClient apiClient;
+    private final String domain;
     private String url;
     private String apiKey;
     private String secret;
     private String clientId;
     private int timeout;
-    private String bankLimitAccountWallet;
-    private String bankLimitAccountSigner;
 
     /**
      *
@@ -55,12 +51,13 @@ public class SdkApiClient {
      * @param apiKey
      */
     public SdkApiClient(String domain, String apiKey) {
+        this.domain = domain;
         this.url = "https://" + domain + ".minka.io/v1";
-
         this.apiKey = apiKey;
         apiClient = new ApiClient();
         apiClient.setApiKey(apiKey);
         apiClient.setBasePath(url);
+
         if (timeout > 0){
             apiClient.setConnectTimeout(timeout);
         }
@@ -83,13 +80,6 @@ public class SdkApiClient {
      */
     public SdkApiClient setClientId(String clientId){
         this.clientId = clientId;
-        return this;
-    }
-
-    public SdkApiClient setBankLimitParams(String bankLimitAccountWallet,
-                                            String bankLimitAccountSigner){
-        this.bankLimitAccountWallet = bankLimitAccountWallet;
-        this.bankLimitAccountSigner = bankLimitAccountSigner;
         return this;
     }
     
@@ -279,7 +269,11 @@ public class SdkApiClient {
     }
 
     public CreateTransferResponse signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
+
+
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+
+        GetActionResponse actionByActionId = api.getActionByActionId(actionId);
 
         return api.signOffline(actionId, keys);
     }
@@ -683,4 +677,16 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
         return api.getTransfer(null, null, null,null);
     }
+
+
+    public TokenResponse getToken() throws io.minka.api.handler.ApiException {
+
+        ApiClient apiClientToken = new ApiClient();
+        apiClientToken.setUsername(clientId);
+        apiClientToken.setPassword(secret);
+        apiClientToken.setBasePath("https://" + domain + ".minka.io");
+        TokenApi api = new TokenApi(apiClientToken);
+        return api.getToken("client_credentials", clientId, secret);
+    }
+
 }
