@@ -9,6 +9,7 @@ import com.minka.api.handler.ApiException;
 import com.minka.api.handler.SignerApi;
 import com.minka.api.handler.WalletApi;
 import com.minka.api.handler.WalletTempoApi;
+import com.minka.api.handler.auth.OAuth;
 import com.minka.api.model.*;
 import com.minka.api.model.BalanceResponse;
 import com.minka.api.model.ErrorForbidden;
@@ -25,6 +26,7 @@ import com.minka.utils.Constants;
 import io.minka.api.handler.ApiClient;
 import io.minka.api.handler.TokenApi;
 import io.minka.api.handler.TransferApi;
+import io.minka.api.handler.auth.OAuthFlow;
 import io.minka.api.model.*;
 import io.minka.api.model.Keeper;
 import io.minka.api.model.SignerListResponse;
@@ -60,6 +62,21 @@ public class SdkApiClient {
 
         if (timeout > 0){
             apiClient.setConnectTimeout(timeout);
+        }
+    }
+
+    private void refreshToken() {
+        if (secret != null && clientId != null){
+            TokenResponse token = null;
+            try {
+                token = getToken();
+                io.minka.api.handler.auth.OAuth oAuth2ClientCredentials;
+                oAuth2ClientCredentials = (io.minka.api.handler.auth.OAuth)
+                        apiClient.getAuthentication("oAuth2ClientCredentials");
+                oAuth2ClientCredentials.setAccessToken(token.getAccessToken());
+            } catch (io.minka.api.handler.ApiException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -108,22 +125,14 @@ public class SdkApiClient {
      * la genera localmente para el flag offline.
      * @return un objeto con las llaves (privada y pública)
      */
-    public io.minka.api.model.Keeper getKeeper(boolean offline) throws ExceptionResponseTinApi {
+    public io.minka.api.model.Keeper getKeeper() throws ExceptionResponseTinApi {
+        refreshToken();
 
         io.minka.api.handler.KeeperApi api = new io.minka.api.handler.KeeperApi(apiClient);
 
         try {
             Keeper keeperGenerated;
-            if (offline){
-                keeperGenerated = new Keeper();
-                KeyPairHolder sourcekeyPairHolder = new KeyPairHolder();
-                keeperGenerated.setPublic(sourcekeyPairHolder.getPublicKey());
-                keeperGenerated.setSecret(sourcekeyPairHolder.getSecretSeed());
-                keeperGenerated.setScheme(sourcekeyPairHolder.getScheme());
-
-            } else {
-                keeperGenerated = api.obtenerKeeper();
-            }
+            keeperGenerated = api.obtenerKeeper();
             return keeperGenerated;
         } catch (io.minka.api.handler.ApiException e) {
 
@@ -132,7 +141,7 @@ public class SdkApiClient {
             if (e.getCode() == Constants.FORBIDDEN){
                 ErrorForbidden errorForbidden = new Gson().fromJson(responseBody, ErrorForbidden.class);
                 throw new ExceptionResponseTinApi(e.getCode(), errorForbidden.getError());
-            } else{
+            } else {
                 throw new ExceptionResponseTinApi(e.getCode(), "Error inesperado");
             }
         }
@@ -248,7 +257,6 @@ public class SdkApiClient {
                 throw new ExceptionResponseTinApi(response.getError().getCode(),response.getError().getMessage());
             }else{
                 System.out.println( e.getCode() );
-
                 System.out.println( e.getResponseBody() );
                 throw new ExceptionResponseTinApi(Constants.UNEXPECTED_ERROR ,Constants.UNEXPECTED_ERROR_MESSAGE);
             }
