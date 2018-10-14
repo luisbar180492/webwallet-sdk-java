@@ -46,6 +46,7 @@ public class SdkApiClient {
     private String secret;
     private String clientId;
     private int timeout;
+    private boolean oauth2;
 
     /**
      *
@@ -66,7 +67,7 @@ public class SdkApiClient {
     }
 
     private void refreshToken() {
-        if (secret != null && clientId != null){
+        if (oauth2){
             TokenResponse token = null;
             try {
                 token = getToken();
@@ -713,4 +714,11 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
         return api.getToken("client_credentials", clientId, secret);
     }
 
+    public void setOauth2On() {
+        oauth2 = true;
+    }
+
+    public void setOauthOff() {
+        oauth2 = false;
+    }
 }

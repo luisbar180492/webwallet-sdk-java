@@ -24,6 +24,7 @@ public class SignerTesting {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
                 TestingConstants.API_KEY);
+        sdkApiClient.setOauthOff();
 
     }
 

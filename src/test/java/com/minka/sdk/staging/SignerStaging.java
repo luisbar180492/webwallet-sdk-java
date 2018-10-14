@@ -1,17 +1,11 @@
 package com.minka.sdk.staging;
 
 
-import com.minka.ExceptionResponseTinApi;
-import com.minka.api.handler.ApiException;
-import com.minka.api.model.SignerResponse;
 import com.minka.sdk.TestingConstants;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,7 +23,7 @@ public class SignerStaging {
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
-
+        sdkApiClient.setOauth2On();
     }
 
 
