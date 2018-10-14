@@ -89,6 +89,21 @@ public class SdkApiClient {
     }
 
     /**
+     * Returna una llave generado offline localmente para firmar IOUs.
+     * @return
+     */
+    public io.minka.api.model.Keeper getKeeperForOfflineSigning(){
+
+        Keeper keeperGenerated;
+        keeperGenerated = new Keeper();
+        KeyPairHolder sourcekeyPairHolder = new KeyPairHolder();
+        keeperGenerated.setPublic(sourcekeyPairHolder.getPublicKey());
+        keeperGenerated.setSecret(sourcekeyPairHolder.getSecretSeed());
+        keeperGenerated.setScheme(sourcekeyPairHolder.getScheme());
+        return keeperGenerated;
+    }
+
+    /**
      * Solicita una pareja de llave privada y pública al Web service de TINAPI o
      * la genera localmente para el flag offline.
      * @return un objeto con las llaves (privada y pública)

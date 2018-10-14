@@ -3,6 +3,7 @@ package com.minka.sdk;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
+import io.minka.api.model.Keeper;
 import io.minka.api.model.TokenResponse;
 import org.junit.Test;
 
@@ -58,7 +59,7 @@ public class KeeperTesting {
         }
     }
     @Test
-    public void shouldFail() {
+    public void shouldGenerateOfflineSigningKeypair() {
 
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
                 TestingConstants.API_KEY + "WRONG");
@@ -67,18 +68,10 @@ public class KeeperTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        try {
-            io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper(false);
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            int errorCode = exceptionResponseTinApi.getErrorCode();
-            String message = exceptionResponseTinApi.getMessage();
-            logger.info("errorCode");
-            logger.info(String.valueOf(errorCode));
-            logger.info("message");
-            logger.info(message);
+        Keeper keypair = sdkApiClient.getKeeperForOfflineSigning();
 
-        }
-
-
+        assertNotEquals(keypair.getPublic(), null);
+        assertNotEquals(keypair.getScheme(), null);
+        assertNotEquals(keypair.getSecret(), null);
     }
 }
