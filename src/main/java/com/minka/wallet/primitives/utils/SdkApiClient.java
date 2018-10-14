@@ -225,12 +225,12 @@ public class SdkApiClient {
     }
 
 
-    public com.minka.api.model.SignerResponse createSigner(Map<String, Object> labels) throws ApiException {
-        com.minka.api.model.SignerRequest signerRequest = new com.minka.api.model.SignerRequest();
+    public io.minka.api.model.SignerResponse createSigner(SignerRequestLabels labels) throws io.minka.api.handler.ApiException {
+        refreshToken();
+        io.minka.api.model.SignerRequest signerRequest = new io.minka.api.model.SignerRequest();
         signerRequest.setLabels(labels);
-        SignerApi signerApi = new SignerApi();
-        signerApi.getApiClient().setBasePath(url);
-        return signerApi.createSigner (signerRequest, apiKey);
+        io.minka.api.handler.SignerApi signerApi = new io.minka.api.handler.SignerApi(apiClient);
+        return signerApi.createSigner(signerRequest);
     }
 
     public io.minka.api.model.SignerResponse createSignerOfflineSigning(SignerRequestLabels labels, io.minka.api.model.PublicKeys publicKey) throws io.minka.api.handler.ApiException {
@@ -639,6 +639,7 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
     }
 
     public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
+        refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
         return api.getSigners(pagenum, pagesize);
     }

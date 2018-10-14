@@ -377,6 +377,23 @@ paths:
             schema:
               $ref: '#/components/schemas/createClaimRequest'
         required: true
+  /:
+      post:
+        summary:
+        description: ''
+        operationId: ping
+        tags:
+          - Ping
+        security:
+          - oAuth2ClientCredentials: []
+        responses:
+          '200':
+            description: Token fetched
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/genericResponse'
+
   /oauth/token:
     post:
       summary: Retrieve token
@@ -841,6 +858,7 @@ paths:
       operationId: obtenerKeeper
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       tags:
         - Keeper
       responses:
@@ -1100,6 +1118,7 @@ paths:
         - Signer
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: query
           name: pagenum
@@ -1136,6 +1155,7 @@ paths:
       operationId: createSigner
       security:
             - ApiKeyAuth: []
+            - oAuth2ClientCredentials: []
       tags:
         - Signer
       responses:

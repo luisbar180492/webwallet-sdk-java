@@ -1,9 +1,10 @@
-package com.minka.sdk;
+package com.minka.sdk.staging;
 
 
 import com.minka.ExceptionResponseTinApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.model.SignerResponse;
+import com.minka.sdk.TestingConstants;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.model.*;
 import org.junit.Before;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class SignerTesting {
+public class SignerStaging {
 
 
     SdkApiClient sdkApiClient;
@@ -22,19 +23,28 @@ public class SignerTesting {
     @Before
     public void prepare(){
 
-        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
                 TestingConstants.API_KEY);
+
+        sdkApiClient
+                .setSecret(TestingConstants.SECRET)
+                .setClientId(TestingConstants.CLIENT_ID);
 
     }
 
 
     @Test
-    public void shouldGetSignersWithPaging() throws io.minka.api.handler.ApiException {
+    public void shouldGetSignersWithPaging() {
 
-        SignerListResponse signers = sdkApiClient.getSigners(1, 2);
-        System.out.println(signers.size());
+        SignerListResponse signers = null;
+        try {
+            signers = sdkApiClient.getSigners(1, 2);
+            System.out.println(signers.size());
+            System.out.println(signers);
+        } catch (io.minka.api.handler.ApiException e) {
+            System.out.println(e.getResponseBody());
+        }
 
-        System.out.println(signers);
 //        assertEquals(signers.size(), 3);//BECAUSE OF THE pagesize + 1 error element
 
 //        io.minka.api.model.SignerResponse wAddress = sdkApiClient.getSignerByAddress("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz");
@@ -48,26 +58,26 @@ public class SignerTesting {
     }
 
 
-    @Test
-    public void createSignerForOfflineUse() throws io.minka.api.handler.ApiException, ExceptionResponseTinApi {
-
-        Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
-
-        SignerRequestLabels labels = new SignerRequestLabels();
-
-        System.out.println("offlineKeypair.getSecret()");
-
-        System.out.println(offlineKeypair.getSecret());
-        io.minka.api.model.SignerResponse signerOfflineSigning;
-        PublicKeys publickey = new PublicKeys();
-        publickey.setPublic(offlineKeypair.getPublic());
-
-        publickey.setScheme(offlineKeypair.getScheme());
-        signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
-
-        System.out.println(signerOfflineSigning);
-
-    }
+//    @Test
+//    public void createSignerForOfflineUse() throws io.minka.api.handler.ApiException, ExceptionResponseTinApi {
+//
+//        Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
+//
+//        SignerRequestLabels labels = new SignerRequestLabels();
+//
+//        System.out.println("offlineKeypair.getSecret()");
+//
+//        System.out.println(offlineKeypair.getSecret());
+//        io.minka.api.model.SignerResponse signerOfflineSigning;
+//        PublicKeys publickey = new PublicKeys();
+//        publickey.setPublic(offlineKeypair.getPublic());
+//
+//        publickey.setScheme(offlineKeypair.getScheme());
+//        signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
+//
+//        System.out.println(signerOfflineSigning);
+//
+//    }
 
 
     @Test
