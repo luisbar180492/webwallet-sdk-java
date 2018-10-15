@@ -8,17 +8,11 @@ import com.minka.api.handler.ActionApi;
 import com.minka.api.handler.ApiException;
 import com.minka.api.handler.SignerApi;
 import com.minka.api.handler.WalletApi;
-import com.minka.api.handler.WalletTempoApi;
-import com.minka.api.handler.auth.OAuth;
 import com.minka.api.model.*;
-import com.minka.api.model.BalanceResponse;
 import com.minka.api.model.ErrorForbidden;
 import com.minka.api.model.ErrorResponse;
 import com.minka.api.model.GenericResponse;
-import com.minka.api.model.GetWalletResponse;
 import com.minka.api.model.SmsRequest;
-import com.minka.api.model.WalletRequest;
-import com.minka.api.model.WalletResponse;
 import com.minka.api.model.WalletUpdateRequest;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
@@ -26,10 +20,10 @@ import com.minka.utils.Constants;
 import io.minka.api.handler.ApiClient;
 import io.minka.api.handler.TokenApi;
 import io.minka.api.handler.TransferApi;
-import io.minka.api.handler.auth.OAuthFlow;
 import io.minka.api.model.*;
 import io.minka.api.model.Keeper;
 import io.minka.api.model.SignerListResponse;
+import io.minka.api.model.WalletRequest;
 import io.minka.api.model.WalletUpdateResponse;
 
 import java.util.*;
@@ -185,42 +179,26 @@ public class SdkApiClient {
     }
 
 
-    public WalletResponse createWallet(String handle, Map<String, Object> labelsWallet) throws WalletCreationException {
-        WalletApi api = new WalletApi();
+    public io.minka.api.model.WalletResponse createWallet(WalletRequest walletRequest)
+            throws WalletCreationException {
+        refreshToken();
 
-        api.getApiClient().setBasePath(url);
-
-        if (timeout > 0){
-            api.getApiClient().setConnectTimeout(timeout);
-        }
-
-        WalletRequest walletRe = new WalletRequest();
-        walletRe.setHandle(handle);
-        walletRe.setLabels(labelsWallet);
+        io.minka.api.handler.WalletApi walletApi;
+        walletApi = new io.minka.api.handler.WalletApi(apiClient);
         try {
-            return api.createWallet(apiKey, walletRe);
-        } catch (ApiException e) {
-
-            if (e.getCode() == Constants.BAD_REQUEST){
-                ErrorResponse errorGenerico = new Gson().fromJson(e.getResponseBody(), ErrorResponse.class);
-                throw new WalletCreationException(errorGenerico.getError().getCode(), errorGenerico.getError().getMessage());
-            } else{
+            return walletApi.createWallet(walletRequest);
+        } catch (io.minka.api.handler.ApiException e) {
                 throw new WalletCreationException(Constants.UNEXPECTED_ERROR,Constants.UNEXPECTED_ERROR_MESSAGE);
-            }
         }
     }
 
-
-    public GetWalletResponse getWallet(String handle) throws ExceptionResponseTinApi {
-        WalletTempoApi api = new WalletTempoApi();
-        api.getApiClient().setBasePath(url);
-        if (timeout > 0){
-            api.getApiClient().setConnectTimeout(timeout);
-        }
-
+    public io.minka.api.model.GetWalletResponse getWallet(String handle)
+            throws ExceptionResponseTinApi {
+        refreshToken();
+        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
         try {
-            return api.getWallet(apiKey, handle);
-        } catch (ApiException e) {
+            return api.getWalletByAlias( handle);
+        } catch (io.minka.api.handler.ApiException e) {
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
         }
     }
@@ -271,14 +249,15 @@ public class SdkApiClient {
         return updateWalletReq;
     }
 
-    public BalanceResponse getBalance(String bankName, String currency)  {
-        WalletApi walletApi = new WalletApi();
-        walletApi.getApiClient().setBasePath(url);
+    public io.minka.api.model.BalanceResponse getBalance(String bankName, String currency)  {
+        refreshToken();
+        io.minka.api.handler.WalletApi walletApi;
+        walletApi = new io.minka.api.handler.WalletApi(apiClient);
 
-        BalanceResponse balance = null;
+        io.minka.api.model.BalanceResponse balance = null;
         try {
-            balance = walletApi.getBalance(apiKey, bankName, currency);
-        } catch (ApiException e) {
+            balance = walletApi.getBalance( bankName, currency);
+        } catch (io.minka.api.handler.ApiException e) {
             e.printStackTrace();
         }
         return balance;
@@ -633,6 +612,7 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
         return api.createTinTransfer(tintransfer);
     }
     public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
+        refreshToken();
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
         WalletListResponse temporal = api.getWallets(pagenum, pagesize);
 
@@ -682,8 +662,11 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
         return null;
     }
 
-    public io.minka.api.model.GetWalletResponse getWalletByAlias(String aliasHandle) throws io.minka.api.handler.ApiException {
-        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
+    public io.minka.api.model.GetWalletResponse getWalletByAlias(String aliasHandle)
+            throws io.minka.api.handler.ApiException {
+        refreshToken();
+        io.minka.api.handler.WalletApi api;
+        api = new io.minka.api.handler.WalletApi(apiClient);
 
         return api.getWalletByAlias(aliasHandle);
     }

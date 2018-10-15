@@ -1342,13 +1342,14 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
   /wallet:
     get:
-      summary: Get a wallet by signer
+      summary: Get wallets
       description: ''
       operationId: getWallets
       tags:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: query
           name: pagenum
@@ -1387,6 +1388,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       responses:
         '200':
           description: OK
@@ -1476,6 +1478,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: path
           name: handle
@@ -1515,6 +1518,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: path
           name: handle
@@ -1554,6 +1558,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: path
           name: handle
