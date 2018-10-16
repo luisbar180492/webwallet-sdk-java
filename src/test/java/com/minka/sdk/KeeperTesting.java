@@ -5,6 +5,7 @@ import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.Keeper;
 import io.minka.api.model.TokenResponse;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.logging.Logger;
@@ -16,14 +17,28 @@ public class KeeperTesting {
 
     private Logger logger = Logger.getLogger(KeeperTesting.class.getName());
 
+    SdkApiClient sdkApiClient;
+
+    @Before
+    public void prepare(){
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
+                TestingConstants.API_KEY);
+
+        sdkApiClient
+                .setSecret(TestingConstants.SECRET)
+                .setClientId(TestingConstants.CLIENT_ID);
+
+        sdkApiClient.setOauth2Off();
+
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        }
+
+    }
+
     @Test
     public void shouldReturnKeypairTesting() throws ExceptionResponseTinApi, ApiException {
 
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
-
-
-        sdkApiClient.setOauthOff();
         io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
 
         assertNotEquals(null, keeper.getSecret() );
@@ -32,55 +47,6 @@ public class KeeperTesting {
         logger.info(keeper.toString());
 
 
-    }
-
-    @Test
-    public void shouldReturnKeypair() throws ExceptionResponseTinApi, ApiException {
-
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                                                    TestingConstants.API_KEY);
-
-        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
-
-        sdkApiClient
-                .setSecret(TestingConstants.SECRET)
-                .setClientId(TestingConstants.CLIENT_ID);
-
-        sdkApiClient.setOauth2On();
-        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
-
-        assertNotEquals(null, keeper.getSecret() );
-        assertNotEquals(null, keeper.getPublic() );
-
-        logger.info(keeper.toString());
-
-
-    }
-
-
-    @Test
-    public void shouldGetHelloWorldOauth() throws ApiException {
-
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                TestingConstants.API_KEY);
-
-        sdkApiClient
-                .setSecret(TestingConstants.SECRET)
-                .setClientId(TestingConstants.CLIENT_ID);
-
-        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
-
-        sdkApiClient.setOauth2On();
-        try {
-            TokenResponse ping = sdkApiClient.getToken();
-            System.out.println(ping);
-
-        } catch (ApiException e) {
-            e.printStackTrace();
-            System.out.print(e.getCode());
-
-            System.out.print(e.getResponseBody());
-        }
     }
 
     @Test
