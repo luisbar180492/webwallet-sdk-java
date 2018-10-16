@@ -1,9 +1,6 @@
 package com.minka.sdk.staging;
 
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.BalanceResponse;
-import com.minka.api.model.ErrorResponse;
-import com.minka.api.model.GetWalletResponse;
 import com.minka.sdk.TestingConstants;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
@@ -39,6 +36,8 @@ public class WalletStaging {
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
+
+        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
 
         sdkApiClient.setOauth2On();
     }
@@ -82,25 +81,6 @@ public class WalletStaging {
 
     }
 
-    @Ignore
-    @Test
-    public void sendSms(){
-
-        ErrorResponse response = sdkApiClient.sendSms("$3104845181", "SMS de prueba desde junit!");
-        System.out.println("errorGenerico");
-        System.out.println(response);
-        assertEquals(TestingConstants.SUCCESS_ERROR_CODE, response.getError().getCode().intValue());
-    }
-
-    /*
-    @Test
-    public void shouldGetWalletBySigner() throws io.minka.api.handler.ApiException {
-        io.minka.api.model.WalletResponse wallets;
-        wallets = sdkApiClient.getWalletBySigner("wcPVEZ3MkRU4fxseQ3DKTER8ejqFgsk9DN");
-        System.out.println(wallets);
-    }
-
-    */
     @Test
     public void shouldGetWalletByAlias()
             throws io.minka.api.handler.ApiException {
@@ -109,10 +89,6 @@ public class WalletStaging {
         wallets =
                 sdkApiClient.getWalletByAlias("$qmblkkdzkwbgepdinyr");
         System.out.println(wallets);
-
-//        io.minka.api.model.GetWalletResponse wallets;
-//        wallets = sdkApiClient.deleteWalletByAlias("$usxshvwjoptfixfdakh");
-//        System.out.println(wallets);
 
     }
 
@@ -153,14 +129,12 @@ public class WalletStaging {
         System.out.println(balance);
     }
 
-    @Ignore
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$offlinedemoath";
-        String defaultAddress = "weyFqsN2ogzFadsXDzEwXNNWDiDLy5yUjv";
+        String handle = "$qmblkkdzkwbgepdinyr";
+        String defaultAddress = "weRqeZF3aZfrGdTE58rZywXAG6nXzmo5kP";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
-
 
         WalletUpdateRequest req = new WalletUpdateRequest();
         Map<String, Object> labels = new HashMap<>();

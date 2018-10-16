@@ -24,6 +24,7 @@ public class SignerStaging {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
         sdkApiClient.setOauth2On();
+        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
     }
 
 

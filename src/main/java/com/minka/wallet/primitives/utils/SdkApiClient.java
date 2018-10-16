@@ -4,28 +4,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.KeyPairHolder;
-import com.minka.api.handler.ActionApi;
-import com.minka.api.handler.ApiException;
-import com.minka.api.handler.SignerApi;
-import com.minka.api.handler.WalletApi;
-import com.minka.api.model.*;
-import com.minka.api.model.ErrorForbidden;
-import com.minka.api.model.ErrorResponse;
-import com.minka.api.model.GenericResponse;
-import com.minka.api.model.SmsRequest;
-import com.minka.api.model.WalletUpdateRequest;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
-import io.minka.api.handler.ApiClient;
-import io.minka.api.handler.TokenApi;
-import io.minka.api.handler.TransferApi;
+import io.minka.api.handler.*;
 import io.minka.api.model.*;
 import io.minka.api.model.Keeper;
 import io.minka.api.model.SignerListResponse;
 import io.minka.api.model.WalletRequest;
 import io.minka.api.model.WalletUpdateResponse;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.util.*;
 
 /***
@@ -41,6 +32,7 @@ public class SdkApiClient {
     private String clientId;
     private int timeout;
     private boolean oauth2;
+    private Proxy proxy;
 
     /**
      *
@@ -58,6 +50,13 @@ public class SdkApiClient {
         if (timeout > 0){
             apiClient.setConnectTimeout(timeout);
         }
+    }
+
+    public SdkApiClient setProxy(String host, int port){
+        SocketAddress socketAddress = new InetSocketAddress(host, port);
+        this.proxy = new Proxy(Proxy.Type.HTTP, socketAddress);
+        this.apiClient.getHttpClient().setProxy(proxy);
+        return this;
     }
 
     private void refreshToken() {
@@ -137,6 +136,7 @@ public class SdkApiClient {
                 ErrorForbidden errorForbidden = new Gson().fromJson(responseBody, ErrorForbidden.class);
                 throw new ExceptionResponseTinApi(e.getCode(), errorForbidden.getError());
             } else {
+                e.printStackTrace();
                 throw new ExceptionResponseTinApi(e.getCode(), "Error inesperado");
             }
         }
@@ -224,7 +224,7 @@ public class SdkApiClient {
 
 
     public io.minka.api.model.WalletUpdateResponse updateWallet(String handle, io.minka.api.model.WalletUpdateRequest createUpdateWalletReq) throws ExceptionResponseTinApi {
-
+        refreshToken();
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
 
         try {
@@ -242,14 +242,7 @@ public class SdkApiClient {
         }
     }
 
-    private WalletUpdateRequest createUpdateWalletReq(List<String> signers , String defaultAddress) {
-        WalletUpdateRequest updateWalletReq = new WalletUpdateRequest();
-        updateWalletReq.setDefault(defaultAddress);
-        updateWalletReq.setSigner(signers);
-        return updateWalletReq;
-    }
-
-    public io.minka.api.model.BalanceResponse getBalance(String bankName, String currency)  {
+     public io.minka.api.model.BalanceResponse getBalance(String bankName, String currency)  {
         refreshToken();
         io.minka.api.handler.WalletApi walletApi;
         walletApi = new io.minka.api.handler.WalletApi(apiClient);
@@ -263,8 +256,6 @@ public class SdkApiClient {
         return balance;
     }
 
-
-
     public io.minka.api.model.CreateActionResponse createAction(io.minka.api.model.CreateActionRequest actionReq )
             throws io.minka.api.handler.ApiException {
         io.minka.api.handler.ActionApi actionApi = new io.minka.api.handler.ActionApi(apiClient);
@@ -273,59 +264,26 @@ public class SdkApiClient {
 
     public CreateTransferResponse signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
 
-
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
         GetActionResponse actionByActionId = api.getActionByActionId(actionId);
 
         return api.signOffline(actionId, keys);
     }
-    public GenericResponse signAction( String actionId) throws ApiException {
-        ActionApi actionApi = new ActionApi();
-        actionApi.getApiClient().setBasePath(url);
-        return actionApi.signAction(apiKey, actionId);
+
+
+    public CreateTransferResponse signAction(String actionId) throws ApiException {
+        ActionApi actionApi = new ActionApi(apiClient);
+        return actionApi.signAction(actionId);
     }
 
-    public GenericResponse getAction(String hashValue) throws ApiException {
+    public GetActionResponse getAction(String hashValue) throws ApiException {
         ActionApi actionApi = new ActionApi();
         actionApi.getApiClient().setBasePath(url);
-        return actionApi.getAction(apiKey, hashValue);
+        return actionApi.getActionByActionId(hashValue);
     }
 
-//public String confirmTransferRequest(String handleSourceAddress,
-//                                String actionRequestId
-//                                ){
-//    try {
-//            GenericResponse actionResponse = getAction(actionRequestId);
-//            //get amount data from action
-//            String amount =  (String) actionResponse.get("amount");
-//            //create upload action with amount from bank to target address
-//            CreateActionRequest req = new CreateActionRequest();
-//            Map<String, Object> labels = new HashMap<>();
-//            labels.put("type", "DOWNLOAD");
-//            req.setLabels(labels);
-//            req.setAmount(amount);
-//            req.setSource(handleSourceAddress);
-//            req.setSymbol("$tin");
-//            req.setTarget(this.bankLimitAccountSigner);
-//            CreateActionResponse action = null;
-//            action = createAction(req);
-//            String action_id =  (String) action.get("action_id");
-//            System.out.println(action_id);
-//            //sign upload action with amount from bank to target address
-//            GenericResponse genericResponse_download = signAction(action_id);
-//            //TODO: notify bank status endpoint source
-////            notifyStatusToBank(handleSourceAddress, action_id);
-//            return (String) genericResponse_download.get("action_id");
-//        } catch (ApiException e) {
-//            System.out.println("e.getResponseBody()");
-//            System.out.println(e.getResponseBody());
-//            return null;
-////        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-////            return null;
-//        }
-//}
-    
+
 public CreateTransferResponse acceptTransfer(AcceptTransferRequest  req,
                                              String actionRequestId) throws io.minka.api.handler.ApiException {
 
@@ -340,245 +298,6 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
 
     return transferApi.rejectP2Ptranfer(actionId, req);
 }
-
-
-//public String createTransferRequest(String handleTarget,
-//                                String handleSourceAddress,
-//                                String amount,
-//                                String smsMessage){
-//        CreateActionRequest req = new CreateActionRequest();
-//        Map<String, Object> labels = new HashMap<>();
-//        labels.put("type", "REQUEST");
-//        req.setLabels(labels);
-//        req.setAmount(amount);
-//        req.setSource(handleTarget);
-//        req.setSymbol("$tin");
-//        req.setTarget(handleSourceAddress);
-//        System.out.println(req);
-//
-//        CreateActionResponse action = null;
-//        try {
-//            action = createAction(req);
-//            String action_id = (String) action.get("action_id");
-//            System.out.println(action_id);
-//            ErrorResponse sendSms = sendSms(handleTarget, smsMessage);
-//            if (sendSms != null){
-//                if (sendSms.getError().getCode() == 0){
-//                    return (String) action.get("action_id");
-//                }
-//            }
-//            return null;
-//        } catch (ApiException e) {
-//            System.out.println("e.getResponseBody()");
-//            System.out.println(e.getResponseBody());
-////            e.printStackTrace();
-//            return null;
-//        }
-//
-//   }
-
-//public String createNoTrustedTransfer(String handleTarget,
-//                             String handleSourceAddress,
-//                             String amount,
-//                             String smsMessage){
-//        //read the action
-//        try {
-//            //upload
-//            CreateActionRequest req_upload = new CreateActionRequest();
-//            Map<String, Object> labels_upload = new HashMap<>();
-//            labels_upload.put("type", "UPLOAD");
-//            req_upload.setLabels(labels_upload);
-//            req_upload.setAmount(amount);
-//            req_upload.setSource(this.bankLimitAccountSigner);
-//            req_upload.setSymbol("$tin");
-//            req_upload.setTarget(handleSourceAddress);
-//            CreateActionResponse action_upload = null;
-//            action_upload = createAction(req_upload);//call to aPi
-//            String action_id_upload =  (String) action_upload.get("action_id");
-//            System.out.println(action_id_upload);
-//            //sign upload action with amount from bank to target address
-//            GenericResponse genericResponse_upload = signAction(action_id_upload);
-//            System.out.println(genericResponse_upload);
-//            //send
-//            CreateActionRequest req_send = new CreateActionRequest();
-//            Map<String, Object> labels_send = new HashMap<>();
-//            labels_send.put("type", "SEND");
-//            req_send.setLabels(labels_send);
-//            req_send.setAmount(amount);
-//            req_send.setSource(handleSourceAddress);
-//            req_send.setSymbol("$tin");
-//            req_send.setTarget(handleTarget);
-//            CreateActionResponse action_send = null;
-//            action_send = createAction(req_send);//call api
-//            String action_id_send =  (String) action_send.get("action_id");
-//            System.out.println(action_id_send);
-//            //GenericResponse genericResponse_send = signAction(action_id_send);
-//            //sms
-//            ErrorResponse sendSms = sendSms(handleTarget, smsMessage);
-//            if (sendSms != null){
-//                if (sendSms.getError().getCode() == 0){
-//                   //notify target user to download transfer
-//                    return (String) action_send.get("action_id");
-//                }
-//            }
-//            return null;
-//        } catch (ApiException e) {
-//            System.out.println("e.getResponseBody()");
-//            System.out.println(e.getResponseBody());
-//            return null;
-//        }
-//   }
-
-//public String createTransfer(String handleTarget,
-//                             String handleSourceAddress,
-//                             String amount,
-//                             String smsMessage){
-//        //read the action
-//        try {
-//            //upload
-//            CreateActionRequest req_upload = new CreateActionRequest();
-//            Map<String, Object> labels_upload = new HashMap<>();
-//            labels_upload.put("type", "UPLOAD");
-//            req_upload.setLabels(labels_upload);
-//            req_upload.setAmount(amount);
-//            req_upload.setSource(this.bankLimitAccountSigner);
-//            req_upload.setSymbol("$tin");
-//            req_upload.setTarget(handleSourceAddress);
-//            CreateActionResponse action_upload = null;
-//            action_upload = createAction(req_upload);//call to aPi
-//            String action_id_upload =  (String) action_upload.get("action_id");
-//            System.out.println(action_id_upload);
-//            //sign upload action with amount from bank to target address
-//            GenericResponse genericResponse_upload = signAction(action_id_upload);
-//            System.out.println(genericResponse_upload);
-//            //send
-//            CreateActionRequest req_send = new CreateActionRequest();
-//            Map<String, Object> labels_send = new HashMap<>();
-//            labels_send.put("type", "SEND");
-//            req_send.setLabels(labels_send);
-//            req_send.setAmount(amount);
-//            req_send.setSource(handleSourceAddress);
-//            req_send.setSymbol("$tin");
-//            req_send.setTarget(handleTarget);
-//            CreateActionResponse action_send = null;
-//            action_send = createAction(req_send);//call api
-//            String action_id_send =  (String) action_send.get("action_id");
-//            System.out.println(action_id_send);
-//            GenericResponse genericResponse_send = signAction(action_id_send);
-//            //sms
-//            ErrorResponse sendSms = sendSms(handleTarget, smsMessage);
-//            if (sendSms != null){
-//                if (sendSms.getError().getCode() == 0){
-//                   //TODO: notify bank with credit download endpoint
-////                    notifyBankToDownload(handleSourceAddress, action_id_send );
-//                    return (String) genericResponse_send.get("action_id");
-//                }
-//            }
-//            return null;
-//        } catch (ApiException e) {
-//            System.out.println("e.getResponseBody()");
-//            System.out.println(e.getResponseBody());
-//            return null;
-////        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-////            exceptionResponseTinApi.printStackTrace();
-////            return null;
-//        }
-//}
-
-//public String confirmTransfer(String handleTargetAddress,
-//                                String actionRequestId
-//                                ){
-//    try {
-//            GenericResponse actionResponse = getAction(actionRequestId);
-//            //get amount data from action
-//            String amount =  (String) actionResponse.get("amount");
-//            //create upload action with amount from bank to target address
-//            CreateActionRequest req = new CreateActionRequest();
-//            Map<String, Object> labels = new HashMap<>();
-//            labels.put("type", "DOWNLOAD");
-//            req.setLabels(labels);
-//            req.setAmount(amount);
-//            req.setSource(handleTargetAddress);
-//            req.setSymbol("$tin");
-//            req.setTarget(this.bankLimitAccountSigner);
-//            CreateActionResponse action = null;
-//            action = createAction(req);
-//            String action_id =  (String) action.get("action_id");
-//            System.out.println(action_id);
-//            //sign upload action with amount from bank to target address
-//            GenericResponse genericResponse_download = signAction(action_id);
-//            //TODO: notify bank status endpoint source
-//            String action_id_final = (String) genericResponse_download.get("action_id");
-////            notifyStatusToBank(handleTargetAddress, action_id_final);
-//            return action_id_final;
-//        } catch (ApiException e) {
-//            System.out.println("e.getResponseBody()");
-//            System.out.println(e.getResponseBody());
-//            return null;
-////        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-////            exceptionResponseTinApi.printStackTrace();
-////            return null;
-//        }
-//}
-
-    public ErrorResponse sendSms(String solicitadoAlias, String message){
-        WalletApi walletApi = new WalletApi();
-        walletApi.getApiClient().setBasePath(url);
-
-        try {
-            SmsRequest req = new SmsRequest();
-            req.setMessage(message);
-            return walletApi.sendSms(apiKey, solicitadoAlias , req);
-        } catch (ApiException e) {
-            return null;
-        }
-    }
-
-    public void notifyBankToDownload(String solicitanteaddress, String actionid) throws ExceptionResponseTinApi {
-        SignerApi signerApi = new SignerApi();
-        signerApi.getApiClient().setBasePath(url);
-
-        try {
-            ErrorResponse errorResponse = signerApi.notifySourceBank(apiKey, solicitanteaddress, actionid);
-            System.out.println(errorResponse);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
-
-    public void rejectTransferRequest(String actionId) throws ExceptionResponseTinApi{
-        ActionApi  api = new ActionApi();
-        api.getApiClient().setBasePath(url);
-        try {
-            LabelsStatusRequest labels = new LabelsStatusRequest();
-            Map<String, Object> maps = new HashMap<>();
-            maps.put("status", "REJECTED");
-            labels.setLabels(maps);
-            GenericResponse genericResponse = api.updateActionLabels(apiKey, actionId, labels);
-            System.out.println(genericResponse);
-//            notifyStatusToBank(addressForNotification, actionId);
-            //TODO notify status reject to solicitado
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
-
-    public void notifyStatusToBank(String solicitanteAddress, String actionId) throws ExceptionResponseTinApi {
-        SignerApi signerApi = new SignerApi();
-        signerApi.getApiClient().setBasePath(url);
-
-        try {
-            ErrorResponse errorResponse = signerApi.notifyStatusToBank(apiKey,solicitanteAddress, actionId);
-            System.out.println(errorResponse);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-        }
-    }
-
-
 
 
     public List<GetActionResponse> getActionPendings(String alias, AliasType aliasType, ActionType action) {
@@ -688,8 +407,11 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
 
 
     public TokenResponse getToken() throws io.minka.api.handler.ApiException {
-
         ApiClient apiClientToken = new ApiClient();
+
+        if (proxy != null){
+            apiClientToken.getHttpClient().setProxy(proxy);
+        }
         apiClientToken.setUsername(clientId);
         apiClientToken.setPassword(secret);
         apiClientToken.setBasePath("https://" + domain + ".minka.io");

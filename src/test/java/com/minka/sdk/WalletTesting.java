@@ -1,10 +1,6 @@
 package com.minka.sdk;
 
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.BalanceResponse;
-import com.minka.api.model.ErrorResponse;
-import com.minka.api.model.GetWalletResponse;
-import com.minka.api.model.WalletResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
 import io.minka.api.model.*;
@@ -92,16 +88,6 @@ public class WalletTesting {
             exceptionResponseTinApi.printStackTrace();
         }
 
-    }
-
-    @Ignore
-    @Test
-    public void sendSms(){
-
-        ErrorResponse response = sdkApiClient.sendSms("$3104845181", "SMS de prueba desde junit!");
-        System.out.println("errorGenerico");
-        System.out.println(response);
-        assertEquals(TestingConstants.SUCCESS_ERROR_CODE, response.getError().getCode().intValue());
     }
 
     /*

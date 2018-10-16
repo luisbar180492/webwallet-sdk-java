@@ -22,6 +22,7 @@ public class KeeperTesting {
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
                 TestingConstants.API_KEY);
 
+
         sdkApiClient.setOauthOff();
         io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
 
@@ -38,6 +39,8 @@ public class KeeperTesting {
 
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
                                                     TestingConstants.API_KEY);
+
+        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
@@ -64,6 +67,8 @@ public class KeeperTesting {
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
+
+        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
 
         sdkApiClient.setOauth2On();
         try {

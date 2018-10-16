@@ -135,33 +135,6 @@
             </executions>
         </plugin>
 
-        <plugin>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-codegen-maven-plugin</artifactId>
-            <version>2.2.2</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>generate</goal>
-                    </goals>
-                    <configuration>
-                        <inputSpec>${project.basedir}/src/main/resources/swagger.yaml</inputSpec>
-                        <language>java</language>
-                        <configOptions>
-                            <!--<sourceFolder>src/gen/java/main</sourceFolder>-->
-                            <generateApiTests>false</generateApiTests>
-
-                        </configOptions>
-                        <apiPackage>com.minka.api.handler</apiPackage>
-                        <modelPackage>com.minka.api.model</modelPackage>
-                        <invokerPackage>com.minka.api.handler</invokerPackage>
-                        <!--<output>${project.basedir}/src/main/java/com/minka/api/</output>-->
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-
-
         <!-- any other plugins -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>

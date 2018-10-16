@@ -765,14 +765,11 @@ paths:
       summary: Sign action
       description: ''
       operationId: signAction
+      security:
+        - ApiKeyAuth: []
       tags:
         - Action
       parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
         - in: path
           name: actionid
           schema:

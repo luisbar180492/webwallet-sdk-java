@@ -1,11 +1,10 @@
 package com.minka.sdk;
 
-import com.minka.api.handler.ApiException;
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.GenericResponse;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import io.minka.api.model.PublicKeys;
 import org.junit.Before;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.junit.Assert.assertNotEquals;
 import org.junit.Ignore;
 
 public class ActionTesting {
@@ -35,7 +33,6 @@ public class ActionTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        sdkApiClient.setBankLimitParams(TestingConstants.BANK_LIMIT_WALLET, TestingConstants.BANK_LIMIT_ADDRESS);
     }
 
 
@@ -135,16 +132,18 @@ public class ActionTesting {
     }
     
 
+    @Ignore
     @Test
     public void shouldRejectRequestTransfer(){
         String actionId = "60e34229-5fe4-46a5-9709-208e52bf9877";
 
+        /*
         try {
             sdkApiClient.rejectTransferRequest(actionId);
         } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
             exceptionResponseTinApi.printStackTrace();
         }
-
+        */
     }
 
     @Test
@@ -174,10 +173,10 @@ public class ActionTesting {
     @Test
     public void getActionByActionId(){
         try {
-            GenericResponse actionResponse = sdkApiClient.getAction("e3979875-45ac-424e-bf23-3c50409437b2");
+            GetActionResponse actionResponse = sdkApiClient.getAction("e3979875-45ac-424e-bf23-3c50409437b2");
             System.out.println(actionResponse);
-        } catch (ApiException ex) {
-            Logger.getLogger(ActionTesting.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ApiException e) {
+            Logger.getLogger(ActionTesting.class.getName()).log(Level.SEVERE, null, e);
         }
     }
     @Ignore

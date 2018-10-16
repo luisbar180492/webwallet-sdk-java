@@ -2,8 +2,6 @@ package com.minka.sdk;
 
 
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.handler.ApiException;
-import com.minka.api.model.SignerResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.model.*;
 import org.junit.Before;

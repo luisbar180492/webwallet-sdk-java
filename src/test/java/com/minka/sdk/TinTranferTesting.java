@@ -26,7 +26,6 @@ public class TinTranferTesting {
 
         sdkApiClient.setTimeout(20);
 
-        sdkApiClient.setBankLimitParams(TestingConstants.BANK_LIMIT_WALLET, TestingConstants.BANK_LIMIT_ADDRESS);
     }
 
     @Ignore
