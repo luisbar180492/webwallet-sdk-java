@@ -267,7 +267,7 @@ public class SdkApiClient {
         return actionApi.createAction(actionReq);
     }
 
-    public CreateActionResponse signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
+    public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
 
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
@@ -279,11 +279,10 @@ public class SdkApiClient {
     }
 
 
-    public CreateTransferResponse signAction(String actionId) throws ApiException {
+    public ActionSigned signAction(String actionId, ActionSignedLabels actionLabels ) throws ApiException {
         refreshToken();
         ActionApi actionApi = new ActionApi(apiClient);
-        ActionSignedLabels actionLabels = new ActionSignedLabels(); //TODO
-        return actionApi.signAction(actionId, actionLabels);
+            return actionApi.signAction(actionId, actionLabels);
     }
 
     public GetActionResponse getAction(String hashValue) throws ApiException {

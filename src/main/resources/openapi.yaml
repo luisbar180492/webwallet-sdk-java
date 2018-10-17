@@ -723,7 +723,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createTransferResponse'
+                $ref: '#/components/schemas/actionSigned'
         '400':
           description: Domain error message
           content:
@@ -769,7 +769,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createActionResponse'
+                $ref: '#/components/schemas/actionSigned'
         '400':
           description: Domain error message
           content:

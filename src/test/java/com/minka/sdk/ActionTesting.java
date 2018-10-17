@@ -47,6 +47,7 @@ public class ActionTesting {
         req.setLabels(labels);
         req.setAmount("1");
         req.setSource("$offline");
+        //req.setSource("$tin");
         req.setSymbol("$tin");
         req.setTarget("$ivanchonline");
         System.out.println(req);
@@ -71,10 +72,11 @@ public class ActionTesting {
 
     @Test
     public void shouldSignActionOnline(){
-        String actionId = "be15350f-e785-400d-8b14-25a91873aae5";
+        String actionId = "512884a6-5f94-4678-a1c3-226621275dce";
         try {
-            CreateTransferResponse createTransferResponse = sdkApiClient.signAction(actionId);
-            System.out.println(createTransferResponse);
+            ActionSignedLabels signedLabels = new ActionSignedLabels();
+            ActionSigned actionSigned = sdkApiClient.signAction(actionId, signedLabels);
+            System.out.println(actionSigned);
         } catch (ApiException e) {
             e.printStackTrace();
         }
@@ -82,7 +84,7 @@ public class ActionTesting {
 
     @Test
     public void shouldSignActionOffline(){
-        String actionId = "c5a113d7-5a03-42d6-805b-6fe5964e3c2a";
+        String actionId = "a3d0d6d2-6600-414f-b192-9b3fa3a3afe4";
 
         try {
             OfflineSigningKeys keys = new OfflineSigningKeys();
@@ -93,9 +95,9 @@ public class ActionTesting {
             theKeys.setSecret("0b311a83c863f8dd28f0b35be84b7bc3affc4b95e30bdfcc59ec7f23c389ba7c");
             keeper.add(theKeys);
             keys.setKeeper(keeper);
-            CreateActionResponse createActionResponse = sdkApiClient.signActionOffline(actionId, keys);
+            ActionSigned actionSigned = sdkApiClient.signActionOffline(actionId, keys);
 
-            System.out.println( createActionResponse );
+            System.out.println( actionSigned );
 
         } catch (ApiException e) {
             e.printStackTrace();

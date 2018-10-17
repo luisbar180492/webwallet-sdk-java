@@ -70,7 +70,7 @@ public class ActionStaging {
     public void shouldSignActionOnline(){
         String actionId = "bd8518df-67c2-4598-b9fb-97b06c35c03e";
         try {
-            sdkApiClient.signAction(actionId);
+            sdkApiClient.signAction(actionId, new ActionSignedLabels());
         } catch (ApiException e) {
             e.printStackTrace();
         }
