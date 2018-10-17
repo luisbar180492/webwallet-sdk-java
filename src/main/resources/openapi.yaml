@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.2.0
+  version: 0.2.3
   title: 'TINAPI '
 tags:
   - name: Action
@@ -377,22 +377,7 @@ paths:
             schema:
               $ref: '#/components/schemas/createClaimRequest'
         required: true
-  /:
-      post:
-        summary:
-        description: ''
-        operationId: ping
-        tags:
-          - Ping
-        security:
-          - oAuth2ClientCredentials: []
-        responses:
-          '200':
-            description: Token fetched
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/genericResponse'
+
 
   /oauth/token:
     post:
@@ -716,50 +701,7 @@ paths:
             schema:
               $ref: '#/components/schemas/updateActionRequest'
         required: true
-  /action/signed:
-    post:
-      summary: Sign an iou
-      description: ''
-      operationId: createClaim
-      tags:
-        - Action
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/iouSigned'
-        '400':
-          description: Domain error message
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '100':
-          description: You don't have permissions to access this method
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '102':
-          description: Invalid labels
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/createIouRequest'
-        required: true
+
   '/action/{actionid}/signed':
     post:
       summary: Sign action
@@ -769,7 +711,7 @@ paths:
         - ApiKeyAuth: []
       tags:
         - Action
-      parameters:
+      parameters:   
         - in: path
           name: actionid
           schema:
@@ -800,6 +742,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/actionSignedLabels'
 
   '/action/{actionid}/sendit':
     post:
@@ -822,7 +769,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createTransferResponse'
+                $ref: '#/components/schemas/createActionResponse'
         '400':
           description: Domain error message
           content:
@@ -845,7 +792,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/offlineSigningKeys'
+              $ref: '#/components/schemas/iouSigned'
         required: true
 
   /keeper:
@@ -1364,7 +1311,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WalletListResponse'
+                $ref: '#/components/schemas/walletListResponse'
         '100':
           description: You don't have permissions to access this method
           content:
@@ -1733,6 +1680,8 @@ components:
               type: string
             routerFormat:
               type: string
+
+
     getWalletResponse:
       type: object
       properties:
@@ -1941,20 +1890,61 @@ components:
       properties:
         hash:
           type: object
-          additionalProperties: true
+          properties:
+            amount:
+              type: string
+            domain:
+              type: string
+            expiry:
+              type: string
+            random:
+              type: string
+            source:
+              type: string
+            symbol:
+              type: string
+            target:
+              type: string
         data:
           type: object
-          additionalProperties: true
+          properties:
+            types:
+              type: string
+            steps:
+              type: string
+            value:
+              type: string
         meta:
           type: object
-          additionalProperties: true
+          properties:
+            signatures:
+              type: array
+              items:
+                $ref: '#/components/schemas/Signatures'
+    Signatures:
+      type: object
+      properties:
+        scheme:
+          type: string
+        signer:
+          type: string
+        public:
+          type: string
+        string:
+          type: string
 
     balanceResponse:
       type: object
       properties:
-        data:
+        amount:
+          type: string
+        error:
           type: object
-          additionalProperties: true
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
 
     createActionRequest:
       type: object
@@ -1995,7 +1985,10 @@ components:
             numberOftransactions:
               type: string
             deviceFingerPrint:
-              type: string
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
+
+
     createActionResponse:
       type: object
       properties:
@@ -2010,8 +2003,36 @@ components:
         amount:
           type: string
         labels:
-          type: object
-          additionalProperties: true
+            type: object
+            properties:
+              tx_id:
+                type: string
+              tx_ref:
+                type: string
+              status:
+                type: string
+              created:
+                type: string
+              sourceCreated:
+                type: string
+              targetUpdated:
+                type: string
+              description:
+                type: string
+              type:
+                type: string
+              rejectSource:
+                type: string
+              rejectDescription:
+                type: string
+              transactionPurpose:
+                type: string
+              numberOftransactions:
+                type: string
+              deviceFingerPrint:
+                type: object
+                $ref: '#/components/schemas/deviceFingerPrint'
+
         snapshot:
           type: object
           $ref: '#/components/schemas/Snapshot'
@@ -2107,7 +2128,67 @@ components:
           $ref: '#/components/schemas/Snapshot'
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            tx_id:
+              type: string
+            tx_ref:
+              type: string
+            status:
+              type: string
+            created:
+              type: string
+            sourceCreated:
+              type: string
+            targetUpdated:
+              type: string
+            description:
+              type: string
+            type:
+              type: string
+            rejectSource:
+              type: string
+            rejectDescription:
+              type: string
+            transactionPurpose:
+              type: string
+            numberOftransactions:
+              type: string
+            deviceFingerPrint:
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
+
+    actionSignedLabels:
+      properties:
+        labels:
+          type: object
+          properties:
+            tx_id:
+              type: string
+            tx_ref:
+              type: string
+            status:
+              type: string
+            created:
+              type: string
+            sourceCreated:
+              type: string
+            targetUpdated:
+              type: string
+            description:
+              type: string
+            type:
+              type: string
+            rejectSource:
+              type: string
+            rejectDescription:
+              type: string
+            transactionPurpose:
+              type: string
+            numberOftransactions:
+              type: string
+            deviceFingerPrint:
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
 
     actionSigned:
       properties:
@@ -2158,7 +2239,12 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            deviceFingerPrint:
+              $ref: '#/components/schemas/deviceFingerPrint'
+
 
     createTransferResponse:
       type: object
@@ -2249,7 +2335,11 @@ components:
             $ref: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            chanelSms:
+              type: string
 
     Snapshot:
       type: object
@@ -2296,4 +2386,41 @@ components:
                   type: string
         symbol:
           type: object
-          additionalProperties: true
+          properties:
+            wallet:
+              type: object
+              properties:
+                handle:
+                  type: string
+                labels:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+            signer:
+              type: object
+              properties:
+                handle:
+                  type: string
+
+    deviceFingerPrint:
+      type: object
+      properties:
+        hash:
+          type: string
+        ipAddress:
+          type: string
+        geolocation:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        mobileDevice:
+          type: string
+        SIMCardId:
+          type: string
+        model:
+          type: string
+        operator:
+          type: string

@@ -13,5 +13,6 @@ public class TestingConstants {
 
     public static String PROXY_HOST = "199.14.10.66";
     public static int PROXY_PORT = 8080;
+    public static boolean proxy = false;
 
 }

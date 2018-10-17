@@ -38,11 +38,11 @@ public class TinTranferTesting {
         Map<String, Object> labels = new HashMap<>();
         labels.put("type", "SEND");
         labels.put("description", "Description of a transfer");
-        tinTranfer.setLabels(labels);
+        //   tinTranfer.setLabels(labels);
         tinTranfer.setAmount("101");
         tinTranfer.setSymbol("$tin");
 
-        tinTranfer.setLabels(labels);
+        //  tinTranfer.setLabels(labels);
         CreateTransferResponse tinTransfer =
                 sdkApiClient.createTinTransfer(tinTranfer);
 

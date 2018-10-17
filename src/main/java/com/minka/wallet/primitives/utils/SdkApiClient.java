@@ -143,6 +143,7 @@ public class SdkApiClient {
     }
 
     public ListLinks getLinks(String source, String target, String type) throws ExceptionResponseTinApi {
+        refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
             Object response = api.getLink(source,target,type);
@@ -154,6 +155,7 @@ public class SdkApiClient {
     }
 
     public LinkItem getLink(String source, String target) throws ExceptionResponseTinApi {
+        refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
             Object response = api.getLink(source,target, null);
@@ -164,6 +166,7 @@ public class SdkApiClient {
         }
     }
     public LinkItem createLink(String source, String target, io.minka.api.model.CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
+        refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
 
         io.minka.api.model.CreateLinkRequest req = new io.minka.api.model.CreateLinkRequest();
@@ -213,6 +216,7 @@ public class SdkApiClient {
     }
 
     public io.minka.api.model.SignerResponse createSignerOfflineSigning(SignerRequestLabels labels, io.minka.api.model.PublicKeys publicKey) throws io.minka.api.handler.ApiException {
+        refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
 
         io.minka.api.model.SignerRequest signerRequest = new io.minka.api.model.SignerRequest();
@@ -258,42 +262,47 @@ public class SdkApiClient {
 
     public io.minka.api.model.CreateActionResponse createAction(io.minka.api.model.CreateActionRequest actionReq )
             throws io.minka.api.handler.ApiException {
+        refreshToken();
         io.minka.api.handler.ActionApi actionApi = new io.minka.api.handler.ActionApi(apiClient);
         return actionApi.createAction(actionReq);
     }
 
-    public CreateTransferResponse signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
+    public CreateActionResponse signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
 
+        refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
         GetActionResponse actionByActionId = api.getActionByActionId(actionId);
 
-        return api.signOffline(actionId, keys);
+        IouSigned iouSigned  = new IouSigned();//TODO
+        return api.signOffline(actionId, iouSigned);
     }
 
 
     public CreateTransferResponse signAction(String actionId) throws ApiException {
+        refreshToken();
         ActionApi actionApi = new ActionApi(apiClient);
-        return actionApi.signAction(actionId);
+        ActionSignedLabels actionLabels = new ActionSignedLabels(); //TODO
+        return actionApi.signAction(actionId, actionLabels);
     }
 
     public GetActionResponse getAction(String hashValue) throws ApiException {
-        ActionApi actionApi = new ActionApi();
-        actionApi.getApiClient().setBasePath(url);
+        refreshToken();
+        ActionApi actionApi = new ActionApi(apiClient);
         return actionApi.getActionByActionId(hashValue);
     }
 
 
 public CreateTransferResponse acceptTransfer(AcceptTransferRequest  req,
                                              String actionRequestId) throws io.minka.api.handler.ApiException {
-
+    refreshToken();
     TransferApi transferApi = new TransferApi(apiClient);
     return transferApi.acceptP2Ptranfer(actionRequestId, req);
 }
 
 
 public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String actionId) throws ExceptionResponseTinApi, io.minka.api.handler.ApiException {
-
+    refreshToken();
     TransferApi transferApi = new TransferApi(apiClient);
 
     return transferApi.rejectP2Ptranfer(actionId, req);
@@ -301,9 +310,9 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
 
 
     public List<GetActionResponse> getActionPendings(String alias, AliasType aliasType, ActionType action) {
+        refreshToken();
         io.minka.api.handler.ActionApi tempoapi= new io.minka.api.handler.ActionApi(apiClient);
 
-        tempoapi.getApiClient().setBasePath(url);
         try {
             if (aliasType.getValue().equals(AliasType.SOURCE.getValue())){
 
@@ -322,6 +331,7 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
     public CreateTransferResponse createTinTransfer(CreateTransferRequest tintransfer )
             throws io.minka.api.handler.ApiException {
 
+        refreshToken();
         io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
 
         System.out.println("api.getApiClient().getBasePath()");
@@ -401,6 +411,7 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
     }
 
     public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
+        refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
         return api.getTransfer(null, null, null,null);
     }
@@ -423,7 +434,7 @@ public CreateTransferResponse rejectTransfer(RejectTransferRequest req , String 
         oauth2 = true;
     }
 
-    public void setOauthOff() {
+    public void setOauth2Off() {
         oauth2 = false;
     }
 }

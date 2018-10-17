@@ -1,6 +1,8 @@
-package com.minka.sdk;
+package com.minka.sdk.staging;
 
 import com.minka.ExceptionResponseTinApi;
+import com.minka.sdk.ActionTesting;
+import com.minka.sdk.TestingConstants;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
@@ -18,8 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Ignore;
 
-public class ActionTesting {
-
+public class ActionStaging {
 
     SdkApiClient sdkApiClient;
 
@@ -80,7 +81,7 @@ public class ActionTesting {
         String handle = "$573207246903";
         List<GetActionResponse> genericResponse =
                 sdkApiClient.getActionPendings(
-                handle, AliasType.TARGET, ActionType.SEND);
+                        handle, AliasType.TARGET, ActionType.SEND);
 
         System.out.println(genericResponse.size());
     }

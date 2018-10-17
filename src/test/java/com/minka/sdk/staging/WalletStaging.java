@@ -132,10 +132,11 @@ public class WalletStaging {
         System.out.println(balance);
     }
 
+    @Ignore
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$qmblkkdzkwbgepdinyr";
-        String defaultAddress = "weRqeZF3aZfrGdTE58rZywXAG6nXzmo5kP";
+        String handle = "$cofptfyhpngqgedhrqc";
+        String defaultAddress = "whYQRj4djgw32wuwwCGQfvrLhXyiNrjzUL";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 
@@ -151,6 +152,7 @@ public class WalletStaging {
         assertEquals(walletUpdateResponse.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
     }
 
+   @Ignore
    @Test(expected = ExceptionResponseTinApi.class)
     public void shouldNotUpdateWallet() throws ExceptionResponseTinApi {
         String handle = "$1serphonenumber1";
