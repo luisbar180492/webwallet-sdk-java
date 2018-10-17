@@ -7,9 +7,6 @@ import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 
 public class SignerTesting {
@@ -22,7 +19,9 @@ public class SignerTesting {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
                 TestingConstants.API_KEY);
-        sdkApiClient.setOauthOff();
+
+        sdkApiClient.setOauth2Off();
+
 
     }
 

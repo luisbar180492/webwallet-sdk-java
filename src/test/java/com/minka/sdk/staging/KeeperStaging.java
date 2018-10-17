@@ -17,8 +17,9 @@ public class KeeperStaging {
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
                 TestingConstants.API_KEY);
 
-        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
-
+        if (TestingConstants.proxy) {
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        }
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
@@ -42,7 +43,9 @@ public class KeeperStaging {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        }
 
         sdkApiClient.setOauth2On();
         try {

@@ -33,7 +33,12 @@ public class WalletTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        sdkApiClient.setOauthOff();
+        sdkApiClient.setOauth2Off();
+
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        }
+
     }
 
     @Test
@@ -44,7 +49,10 @@ public class WalletTesting {
             WalletRequest walletReq  = new WalletRequest();
             walletReq.setHandle(handle);
             WalletRequestLabels labelsReq = new WalletRequestLabels();
-            labelsReq.setChanelSms("573004431529");
+            labelsReq.setType("TROUPE");
+            labelsReq.setRouterAction("https://api.bank.com/v1/action");
+            labelsReq.setRouterDownload("");
+
             walletReq.setLabels(labelsReq);
             io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(walletReq);
             System.out.println(wallet);
@@ -90,15 +98,6 @@ public class WalletTesting {
 
     }
 
-    /*
-    @Test
-    public void shouldGetWalletBySigner() throws io.minka.api.handler.ApiException {
-        io.minka.api.model.WalletResponse wallets;
-        wallets = sdkApiClient.getWalletBySigner("wcPVEZ3MkRU4fxseQ3DKTER8ejqFgsk9DN");
-        System.out.println(wallets);
-    }
-
-    */
     @Test
     public void shouldGetWalletByAlias() throws io.minka.api.handler.ApiException {
         io.minka.api.model.GetWalletResponse wallets;

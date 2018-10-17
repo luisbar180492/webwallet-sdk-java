@@ -37,7 +37,10 @@ public class WalletStaging {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST,
+                    TestingConstants.PROXY_PORT);
+        }
 
         sdkApiClient.setOauth2On();
     }
@@ -148,8 +151,7 @@ public class WalletStaging {
         assertEquals(walletUpdateResponse.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
     }
 
-    @Ignore
-    @Test(expected = ExceptionResponseTinApi.class)
+   @Test(expected = ExceptionResponseTinApi.class)
     public void shouldNotUpdateWallet() throws ExceptionResponseTinApi {
         String handle = "$1serphonenumber1";
         String defaultAddress = "!wXK6boH2pLf8raZwpSQH3JRgzW7qH7WyVf";
