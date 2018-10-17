@@ -274,8 +274,8 @@ public class SdkApiClient {
 
         GetActionResponse actionByActionId = api.getActionByActionId(actionId);
 
-        IouSigned iouSigned  = new IouSigned();//TODO
-        return api.signOffline(actionId, iouSigned);
+        IouSigned iouSigned  = new IouSigned();//TODO switch to OFFLINE
+        return api.signOffline(actionId, keys);
     }
 
 

@@ -792,7 +792,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/iouSigned'
+              #$ref: '#/components/schemas/iouSigned' TODO SWITCH
+              $ref: '#/components/schemas/offlineSigningKeys'
         required: true
 
   /keeper:

@@ -33,6 +33,10 @@ public class ActionTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST,
+                    TestingConstants.PROXY_PORT);
+        }
     }
 
     @Test
@@ -41,10 +45,10 @@ public class ActionTesting {
 
         CreateActionRequestLabels labels = new CreateActionRequestLabels();
         req.setLabels(labels);
-        req.setAmount("8");
-        req.setSource("$ivanchonline");
+        req.setAmount("1");
+        req.setSource("$offline");
         req.setSymbol("$tin");
-        req.setTarget("$tin");
+        req.setTarget("$ivanchonline");
         System.out.println(req);
 
         io.minka.api.model.CreateActionResponse action = null;
@@ -67,14 +71,40 @@ public class ActionTesting {
 
     @Test
     public void shouldSignActionOnline(){
-        String actionId = "bd8518df-67c2-4598-b9fb-97b06c35c03e";
+        String actionId = "be15350f-e785-400d-8b14-25a91873aae5";
         try {
-            sdkApiClient.signAction(actionId);
+            CreateTransferResponse createTransferResponse = sdkApiClient.signAction(actionId);
+            System.out.println(createTransferResponse);
         } catch (ApiException e) {
             e.printStackTrace();
         }
     }
 
+    @Test
+    public void shouldSignActionOffline(){
+        String actionId = "c5a113d7-5a03-42d6-805b-6fe5964e3c2a";
+
+        try {
+            OfflineSigningKeys keys = new OfflineSigningKeys();
+            List<PublicKeys> keeper = new ArrayList<>();
+            PublicKeys theKeys = new PublicKeys();
+            theKeys.setPublic("0407605f6a4a7b16784418c428ffcbc010ac703e0a92b104f7ed7eaa82ae64648b245ef22efa9919bf3f628d785552cb65faecd7332a383d0063506dc34ca79634");
+            theKeys.setScheme("ed25519");
+            theKeys.setSecret("0b311a83c863f8dd28f0b35be84b7bc3affc4b95e30bdfcc59ec7f23c389ba7c");
+            keeper.add(theKeys);
+            keys.setKeeper(keeper);
+            CreateActionResponse createActionResponse = sdkApiClient.signActionOffline(actionId, keys);
+
+            System.out.println( createActionResponse );
+
+        } catch (ApiException e) {
+            e.printStackTrace();
+            System.out.println(e.getResponseBody());
+            System.out.println(e.getCode());
+
+        }
+
+    }
     @Test
     public void shouldGetPendingActions(){
         String handle = "$573207246903";

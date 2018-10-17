@@ -22,7 +22,10 @@ public class SignerTesting {
 
         sdkApiClient.setOauth2Off();
 
-
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST,
+                    TestingConstants.PROXY_PORT);
+        }
     }
 
 
