@@ -47,11 +47,18 @@ public class KeyPairHolder implements com.minka.wallet.primitives.KeyPair{
         KeyPair keyPair = generatorWithEd25519.generateKeyPair();
         publicKey = keyPair.getPublic();
         secret = keyPair.getPrivate();
+        EdDSAPrivateKey secretPrivate = (EdDSAPrivateKey) this.secret;
+        seed = Utils.bytesToHex(secretPrivate.getSeed());
+        EdDSAPublicKey publicKeyEd = (EdDSAPublicKey) this.publicKey;
+        groupA = Utils.bytesToHex(publicKeyEd.getA().toByteArray());
     }
 
     public String getPublicKey() {
         byte[] encoded = this.publicKey.getEncoded();
         return groupA;
+    }
+    public String getSecretSeed() {
+        return seed;
     }
 
     public PublicKey getPublicKeyOriginal(){

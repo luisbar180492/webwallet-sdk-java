@@ -1,8 +1,10 @@
 package com.minka.sdk;
 
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.Keeper;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.handler.ApiException;
+import io.minka.api.model.Keeper;
+import io.minka.api.model.TokenResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,17 +17,29 @@ public class KeeperTesting {
 
     private Logger logger = Logger.getLogger(KeeperTesting.class.getName());
 
-    @Test
-    public void shouldReturnKeypair() throws ExceptionResponseTinApi {
+    SdkApiClient sdkApiClient;
 
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                                                    TestingConstants.API_KEY);
+    @Before
+    public void prepare(){
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
+                TestingConstants.API_KEY);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper(true);
+        sdkApiClient.setOauth2Off();
+
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        }
+
+    }
+
+    @Test
+    public void shouldReturnKeypairTesting() throws ExceptionResponseTinApi, ApiException {
+
+        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
 
         assertNotEquals(null, keeper.getSecret() );
         assertNotEquals(null, keeper.getPublic() );
@@ -36,27 +50,15 @@ public class KeeperTesting {
     }
 
     @Test
-    public void shouldFail() {
+    public void shouldGenerateOfflineSigningKeypair() throws ApiException {
 
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY + "WRONG");
+                TestingConstants.API_KEY);
 
-        sdkApiClient
-                .setSecret(TestingConstants.SECRET)
-                .setClientId(TestingConstants.CLIENT_ID);
-
-        try {
-            io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper(false);
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            int errorCode = exceptionResponseTinApi.getErrorCode();
-            String message = exceptionResponseTinApi.getMessage();
-            logger.info("errorCode");
-            logger.info(String.valueOf(errorCode));
-            logger.info("message");
-            logger.info(message);
-
-        }
-
-
+        Keeper keypair = sdkApiClient.getKeeperForOfflineSigning();
+        System.out.println(keypair);
+        assertNotEquals(keypair.getPublic(), null);
+        assertNotEquals(keypair.getScheme(), null);
+        assertNotEquals(keypair.getSecret(), null);
     }
 }

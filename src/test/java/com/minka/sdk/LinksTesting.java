@@ -1,9 +1,6 @@
 package com.minka.sdk;
 
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.model.CreateLinkRequest;
-import com.minka.api.model.ErrorResponse;
-import com.minka.api.model.GetLinkResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.model.LinkItem;
 import io.minka.api.model.ListLinks;

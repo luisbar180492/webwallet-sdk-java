@@ -2,15 +2,10 @@ package com.minka.sdk;
 
 
 import com.minka.ExceptionResponseTinApi;
-import com.minka.api.handler.ApiException;
-import com.minka.api.model.SignerResponse;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,34 +20,14 @@ public class SignerTesting {
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
                 TestingConstants.API_KEY);
 
-        sdkApiClient
-                .setSecret(TestingConstants.SECRET)
-                .setClientId(TestingConstants.CLIENT_ID);
+        sdkApiClient.setOauth2Off();
 
-    }
-
-    @Test
-    public void shouldNotifyBank(){
-        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
-        String solicitanteAddress = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
-        try {
-            sdkApiClient.notifyBankToDownload(solicitanteAddress, actionId);
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST,
+                    TestingConstants.PROXY_PORT);
         }
     }
 
-    @Test
-    public void shouldNotifyStatusToBank() throws io.minka.api.handler.ApiException {
-        String actionId = "ab8d135f-736a-4a0f-bea3-ad38c3f75267";
-        String solicitanteAddress = "wd9jHDRK6AEmczb8n99QftrJTzDRMMitGq";
-//        try {
-//            sdkApiClient.notifyStatusToBank(solicitanteAddress, actionId);
-//        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-//            exceptionResponseTinApi.printStackTrace();
-//        }
-//        io.minka.api.model.SignerResponse waddress = sdkApiClient.deleteSigner("waddress");
-    }
 
     @Test
     public void shouldGetSignersWithPaging() throws io.minka.api.handler.ApiException {
@@ -77,10 +52,13 @@ public class SignerTesting {
     @Test
     public void createSignerForOfflineUse() throws io.minka.api.handler.ApiException, ExceptionResponseTinApi {
 
-        Keeper offlineKeypair = sdkApiClient.getKeeper(true);
+        Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
 
         SignerRequestLabels labels = new SignerRequestLabels();
 
+        System.out.println("offlineKeypair.getSecret()");
+
+        System.out.println(offlineKeypair.getSecret());
         io.minka.api.model.SignerResponse signerOfflineSigning;
         PublicKeys publickey = new PublicKeys();
         publickey.setPublic(offlineKeypair.getPublic());
@@ -96,20 +74,14 @@ public class SignerTesting {
     @Test
     public void createSignerForOnlineUse(){
 
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("router_reference", "$davjuliandiaz");
-
-        labels.put("routerDownload", "https://c66584bd.ngrok.io/v1/credit");
-        labels.put("routerUpload", "https://c66584bd.ngrok.io/v1/debit");
-        labels.put("routerStatus", "https://c66584bd.ngrok.io/v1/status");
-        labels.put("routerAction", "https://c66584bd.ngrok.io/v1/action");
-
         try {
-            SignerResponse signer = sdkApiClient.createSigner(labels);
+            SignerRequestLabels labels = new SignerRequestLabels();
+            labels.setRouterReference("$davjuliandiaz");
+            io.minka.api.model.SignerResponse signer = sdkApiClient.createSigner(labels);
             System.out.println(signer);
             System.out.println(signer.getHandle());//address
 
-        } catch (ApiException e) {
+        } catch (io.minka.api.handler.ApiException e) {
             System.out.println(e.getResponseBody());
         }
     }

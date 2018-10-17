@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.2.0
+  version: 0.2.3
   title: 'TINAPI '
 tags:
   - name: Action
@@ -377,6 +377,31 @@ paths:
             schema:
               $ref: '#/components/schemas/createClaimRequest'
         required: true
+
+
+  /oauth/token:
+    post:
+      summary: Retrieve token
+      description: ''
+      operationId: getToken
+      tags:
+        - Token
+      security:
+        - BasicAuth: []
+      responses:
+        '200':
+          description: Token fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenResponse'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/tokenRequest'
+        required: true
+
   /action:
     get:
       summary: Get Actions received
@@ -676,16 +701,19 @@ paths:
             schema:
               $ref: '#/components/schemas/updateActionRequest'
         required: true
-  /action/signed:
+
+  '/action/{actionid}/signed':
     post:
-      summary: Sign an iou
+      summary: Sign action
       description: ''
-      operationId: createClaim
+      operationId: signAction
+      security:
+        - ApiKeyAuth: []
       tags:
         - Action
-      parameters:
-        - in: header
-          name: API_KEY
+      parameters:   
+        - in: path
+          name: actionid
           schema:
             type: string
           required: true
@@ -695,7 +723,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/iouSigned'
+                $ref: '#/components/schemas/actionSigned'
         '400':
           description: Domain error message
           content:
@@ -718,51 +746,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createIouRequest'
-        required: true
-  '/action/{actionid}/signed':
-    post:
-      summary: Sign action
-      description: ''
-      operationId: signAction
-      tags:
-        - Action
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-        - in: path
-          name: actionid
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/createTransferResponse'
-        '400':
-          description: Domain error message
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '100':
-          description: You don't have permissions to access this method
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '102':
-          description: Invalid labels
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+              $ref: '#/components/schemas/actionSignedLabels'
 
   '/action/{actionid}/sendit':
     post:
@@ -785,7 +769,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/createTransferResponse'
+                $ref: '#/components/schemas/actionSigned'
         '400':
           description: Domain error message
           content:
@@ -808,6 +792,7 @@ paths:
         content:
           application/json:
             schema:
+              #$ref: '#/components/schemas/iouSigned' TODO SWITCH
               $ref: '#/components/schemas/offlineSigningKeys'
         required: true
 
@@ -818,6 +803,7 @@ paths:
       operationId: obtenerKeeper
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       tags:
         - Keeper
       responses:
@@ -1077,6 +1063,7 @@ paths:
         - Signer
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: query
           name: pagenum
@@ -1113,6 +1100,7 @@ paths:
       operationId: createSigner
       security:
             - ApiKeyAuth: []
+            - oAuth2ClientCredentials: []
       tags:
         - Signer
       responses:
@@ -1299,13 +1287,14 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
   /wallet:
     get:
-      summary: Get a wallet by signer
+      summary: Get wallets
       description: ''
       operationId: getWallets
       tags:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: query
           name: pagenum
@@ -1323,7 +1312,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WalletListResponse'
+                $ref: '#/components/schemas/walletListResponse'
         '100':
           description: You don't have permissions to access this method
           content:
@@ -1344,6 +1333,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       responses:
         '200':
           description: OK
@@ -1433,6 +1423,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: path
           name: handle
@@ -1472,6 +1463,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: path
           name: handle
@@ -1511,6 +1503,7 @@ paths:
         - Wallet
       security:
         - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
       parameters:
         - in: path
           name: handle
@@ -1541,10 +1534,20 @@ servers:
   - url: 'https://achtin-tst.minka.io/v1'
 components:
   securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
     ApiKeyAuth:
       type: apiKey
       in: header
       name: API_KEY
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: Simple credentials
+      flows:
+        clientCredentials:
+          tokenUrl: https://achtin-stg.minka.io/oauth/token
+          scopes: {} # tin ach does not use scopes
   schemas:
     Keeper:
       type: object
@@ -1678,6 +1681,8 @@ components:
               type: string
             routerFormat:
               type: string
+
+
     getWalletResponse:
       type: object
       properties:
@@ -1886,20 +1891,61 @@ components:
       properties:
         hash:
           type: object
-          additionalProperties: true
+          properties:
+            amount:
+              type: string
+            domain:
+              type: string
+            expiry:
+              type: string
+            random:
+              type: string
+            source:
+              type: string
+            symbol:
+              type: string
+            target:
+              type: string
         data:
           type: object
-          additionalProperties: true
+          properties:
+            types:
+              type: string
+            steps:
+              type: string
+            value:
+              type: string
         meta:
           type: object
-          additionalProperties: true
+          properties:
+            signatures:
+              type: array
+              items:
+                $ref: '#/components/schemas/Signatures'
+    Signatures:
+      type: object
+      properties:
+        scheme:
+          type: string
+        signer:
+          type: string
+        public:
+          type: string
+        string:
+          type: string
 
     balanceResponse:
       type: object
       properties:
-        data:
+        amount:
+          type: string
+        error:
           type: object
-          additionalProperties: true
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
 
     createActionRequest:
       type: object
@@ -1940,7 +1986,10 @@ components:
             numberOftransactions:
               type: string
             deviceFingerPrint:
-              type: string
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
+
+
     createActionResponse:
       type: object
       properties:
@@ -1955,8 +2004,36 @@ components:
         amount:
           type: string
         labels:
-          type: object
-          additionalProperties: true
+            type: object
+            properties:
+              tx_id:
+                type: string
+              tx_ref:
+                type: string
+              status:
+                type: string
+              created:
+                type: string
+              sourceCreated:
+                type: string
+              targetUpdated:
+                type: string
+              description:
+                type: string
+              type:
+                type: string
+              rejectSource:
+                type: string
+              rejectDescription:
+                type: string
+              transactionPurpose:
+                type: string
+              numberOftransactions:
+                type: string
+              deviceFingerPrint:
+                type: object
+                $ref: '#/components/schemas/deviceFingerPrint'
+
         snapshot:
           type: object
           $ref: '#/components/schemas/Snapshot'
@@ -2052,7 +2129,67 @@ components:
           $ref: '#/components/schemas/Snapshot'
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            tx_id:
+              type: string
+            tx_ref:
+              type: string
+            status:
+              type: string
+            created:
+              type: string
+            sourceCreated:
+              type: string
+            targetUpdated:
+              type: string
+            description:
+              type: string
+            type:
+              type: string
+            rejectSource:
+              type: string
+            rejectDescription:
+              type: string
+            transactionPurpose:
+              type: string
+            numberOftransactions:
+              type: string
+            deviceFingerPrint:
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
+
+    actionSignedLabels:
+      properties:
+        labels:
+          type: object
+          properties:
+            tx_id:
+              type: string
+            tx_ref:
+              type: string
+            status:
+              type: string
+            created:
+              type: string
+            sourceCreated:
+              type: string
+            targetUpdated:
+              type: string
+            description:
+              type: string
+            type:
+              type: string
+            rejectSource:
+              type: string
+            rejectDescription:
+              type: string
+            transactionPurpose:
+              type: string
+            numberOftransactions:
+              type: string
+            deviceFingerPrint:
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
 
     actionSigned:
       properties:
@@ -2103,7 +2240,12 @@ components:
           type: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            deviceFingerPrint:
+              $ref: '#/components/schemas/deviceFingerPrint'
+
 
     createTransferResponse:
       type: object
@@ -2136,6 +2278,26 @@ components:
         error:
           type: object
           $ref: '#/components/schemas/ErrorGenerico'
+
+    tokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+        client_id:
+          type: string
+        client_secret:
+          type: string
+
+    tokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        expires_in:
+          type: integer
+        token_type:
+          type: string
 
     acceptTransferRequest:
       type: object
@@ -2174,7 +2336,11 @@ components:
             $ref: string
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            type:
+              type: string
+            chanelSms:
+              type: string
 
     Snapshot:
       type: object
@@ -2221,4 +2387,41 @@ components:
                   type: string
         symbol:
           type: object
-          additionalProperties: true
+          properties:
+            wallet:
+              type: object
+              properties:
+                handle:
+                  type: string
+                labels:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+            signer:
+              type: object
+              properties:
+                handle:
+                  type: string
+
+    deviceFingerPrint:
+      type: object
+      properties:
+        hash:
+          type: string
+        ipAddress:
+          type: string
+        geolocation:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        mobileDevice:
+          type: string
+        SIMCardId:
+          type: string
+        model:
+          type: string
+        operator:
+          type: string
