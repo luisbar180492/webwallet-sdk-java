@@ -182,13 +182,17 @@ public class SdkApiClient {
     }
 
 
-    public io.minka.api.model.WalletResponse createWallet(WalletRequest walletRequest)
+    public io.minka.api.model.WalletResponse createWallet(String handle, Map<String, Object> labelsWallet)
             throws WalletCreationException {
         refreshToken();
-
         io.minka.api.handler.WalletApi walletApi;
         walletApi = new io.minka.api.handler.WalletApi(apiClient);
         try {
+            WalletRequest walletRequest = new WalletRequest();
+            walletRequest.setHandle(handle);
+            WalletLabels labels = new WalletLabels();
+            labels.putAll(labelsWallet);
+            walletRequest.setLabels(labels);
             return walletApi.createWallet(walletRequest);
         } catch (io.minka.api.handler.ApiException e) {
                 throw new WalletCreationException(Constants.UNEXPECTED_ERROR,Constants.UNEXPECTED_ERROR_MESSAGE);

@@ -20,9 +20,9 @@ import org.junit.Ignore;
 
 public class WalletTesting {
 
-    private static final int LENGTH_HANDLE = 10;
-    SdkApiClient sdkApiClient;
-    String existingHandle;
+    private static final int MAX_LENGTH_HANDLE = 20;
+    private SdkApiClient sdkApiClient;
+    private String existingHandle;
 
     @Before
     public void prepare(){
@@ -42,23 +42,27 @@ public class WalletTesting {
     }
 
     @Test
-    public void createWalletProperly() {
-        String handle = "$" + RandomStringUtils.randomAlphabetic(19).toLowerCase();
+    public void createWalletForBank() {
+        String handle = "$" + RandomStringUtils
+                            .randomAlphabetic(MAX_LENGTH_HANDLE - 1)
+                            .toLowerCase();
 
         try {
-            WalletRequest walletReq  = new WalletRequest();
-            walletReq.setHandle(handle);
-            WalletRequestLabels labelsReq = new WalletRequestLabels();
-            labelsReq.setType("TROUPE");
-            labelsReq.setRouterAction("https://api.bank.com/v1/action");
-            labelsReq.setRouterDownload("");
+            Map<String, Object> labels = new HashMap<>();
+            labels.put("type", "TROUPE");
+            labels.put("name", "YOUR BANK NAME");
+            labels.put("bankBicfi", "YOUR_BANK_BICFI_CODE");
+            labels.put("routerDownload", "https://api.bank.com/v1/credit");
+            labels.put("routerUpload", "https://api.bank.com/v1/debit");
+            labels.put("routerAction", "https://api.bank.com/v1/action");
+            labels.put("routerStatus", "https://api.bank.com/v1/status");
 
-            walletReq.setLabels(labelsReq);
-            io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(walletReq);
+            io.minka.api.model.WalletResponse wallet =
+                    sdkApiClient.createWallet(handle, labels);
+
             System.out.println(wallet);
-
-            assertEquals(TestingConstants.SUCCESS_ERROR_CODE, wallet.getError().getCode().intValue());
-            existingHandle = handle;
+            assertEquals(TestingConstants.SUCCESS_ERROR_CODE,
+                    wallet.getError().getCode().intValue());
 
         } catch (WalletCreationException e) {
             e.printStackTrace();
@@ -73,28 +77,7 @@ public class WalletTesting {
         System.out.println("handle");
         System.out.println(handle);
 
-        WalletRequest walletReq =  new WalletRequest();
-        WalletRequestLabels labels = new WalletRequestLabels();
-        walletReq.setLabels(labels);
-        walletReq.setHandle(handle);
-        io.minka.api.model.WalletResponse wallet;
-        wallet = sdkApiClient.createWallet(walletReq);
-
-    }
-
-    @Test
-    public void shouldRetrieveCreatedWallet() {
-        existingHandle = "$3104845181";
-
-        assertNotEquals(existingHandle, null);
-        try {
-            io.minka.api.model.GetWalletResponse wallet = sdkApiClient.getWallet(existingHandle);
-            System.out.println(wallet);
-            assertEquals(wallet.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
-
-        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
-            exceptionResponseTinApi.printStackTrace();
-        }
+        sdkApiClient.createWallet(handle, new HashMap<>());
 
     }
 
@@ -105,11 +88,6 @@ public class WalletTesting {
                 sdkApiClient.getWalletByAlias("" +
                         "$offlinedemoath");
         System.out.println(wallets);
-
-//        io.minka.api.model.GetWalletResponse wallets;
-//        wallets = sdkApiClient.deleteWalletByAlias("$usxshvwjoptfixfdakh");
-//        System.out.println(wallets);
-
     }
 
     @Test
@@ -156,11 +134,13 @@ public class WalletTesting {
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 
-
         WalletUpdateRequest req = new WalletUpdateRequest();
         Map<String, Object> labels = new HashMap<>();
         labels.put("routerDownload", "testingupdate");
-        //req.setLabels(labels);
+
+        WalletLabels labelsWa = new WalletLabels();
+        labelsWa.putAll(labels);
+        req.setLabels(labelsWa);
         req.setSigner(signers);
         req.setDefault(defaultAddress);
         io.minka.api.model.WalletUpdateResponse walletUpdateResponse

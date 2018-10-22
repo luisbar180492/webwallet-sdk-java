@@ -711,7 +711,7 @@ paths:
         - ApiKeyAuth: []
       tags:
         - Action
-      parameters:   
+      parameters:
         - in: path
           name: actionid
           schema:
@@ -1529,7 +1529,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+  /test:
+    post:
+      summary: Get wallets
+      description: ''
+      operationId: test
+      requestBody:
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/wallet'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/genericResponse'
 servers:
   - url: 'https://achtin-tst.minka.io/v1'
 components:
@@ -1567,13 +1583,8 @@ components:
           type: string
         labels:
           type: object
-    wallet:
-      type: object
-      properties:
-        handle:
-          type: string
-        labels:
-          type: object
+
+
     signer:
       type: object
       properties:
@@ -1655,110 +1666,82 @@ components:
         scheme:
           type: string
 
-    walletRequest:
+    walletLabelsField:
+      type: string
+      enum:
+        - type
+        - name
+        - bankBicfi
+        - channelSms
+        - routerUpload
+        - routerDownload
+        - routerAction
+        - routerStatus
+        - routerAuthMethod
+        - routerAuthParams
+        - routerFormat
+
+    wallet:
       type: object
       properties:
         handle:
           type: string
         labels:
-          type: object
-          properties:
-            type:
-              type: string
-            chanelSms:
-              type: string
-            routerUpload:
-              type: string
-            routerDownload:
-              type: string
-            routerAction:
-              type: string
-            routerStatus:
-              type: string
-            routerAuthMethod:
-              type: string
-            routerAuthParams:
-              type: string
-            routerFormat:
-              type: string
+          $ref: '#/components/schemas/walletLabels'
 
+    walletLabels:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          type:
+            type: string
+          channelSms:
+            type: string
+          name:
+            type: string
+          bankBicfi:
+            type: string
+          routerUpload:
+            type: string
+          routerDownload:
+            type: string
+          routerAction:
+            type: string
+          routerStatus:
+            type: string
+          routerAuthMethod:
+            type: string
+          routerAuthParams:
+            type: string
+          routerFormat:
+            type: string
+
+    walletRequest:
+      allOf:
+        - $ref: '#/components/schemas/wallet'
 
     getWalletResponse:
-      type: object
-      properties:
-        signer:
-          type: array
-          items:
-            $ref: string
-        'default':
-          type: string
-        wallet_id:
-          type: string
-        labels:
-          type: object
-          properties:
-            type:
-              type: string
-            chanelSms:
-              type: string
-            routerUpload:
-              type: string
-            routerDownload:
-              type: string
-            routerAction:
-              type: string
-            routerStatus:
-              type: string
-            routerAuthMethod:
-              type: string
-            routerAuthParams:
-              type: string
-            routerFormat:
-              type: string
-        handle:
-          type: string
-        id:
-          type: string
-        error:
-          type: object
-          $ref: '#/components/schemas/ErrorGenerico'
+      allOf:
+        - $ref: '#/components/schemas/walletResponse'
+
     walletResponse:
-      type: object
-      properties:
-        signer:
-          type: array
-          items:
-            $ref: string
-        default:
-          type: string
-        wallet_id:
-          type: string
-        labels:
-          type: object
+      allOf:
+        - $ref: '#/components/schemas/wallet'
+        - type: object
           properties:
-            type:
+            signer:
+              type: array
+              items:
+                $ref: string
+            default:
               type: string
-            chanelSms:
+            wallet_id:
               type: string
-            routerUpload:
-              type: string
-            routerDownload:
-              type: string
-            routerAction:
-              type: string
-            routerStatus:
-              type: string
-            routerAuthMethod:
-              type: string
-            routerAuthParams:
-              type: string
-            routerFormat:
-              type: string
-        handle:
-          type: string
-        error:
-          type: object
-          $ref: '#/components/schemas/ErrorGenerico'
+            error:
+              type: object
+              $ref: '#/components/schemas/ErrorGenerico'
+
     walletUpdateRequest:
       type: object
       properties:
@@ -1768,44 +1751,17 @@ components:
           type: array
           items:
             $ref: string
-    walletUpdateResponse:
-      type: object
-      properties:
-        id:
-          type: string
         labels:
-          type: object
+          $ref: '#/components/schemas/walletLabels'
+
+    walletUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/walletResponse'
+        - type: object
           properties:
-            type:
+            id:
               type: string
-            chanelSms:
-              type: string
-            routerUpload:
-              type: string
-            routerDownload:
-              type: string
-            routerAction:
-              type: string
-            routerStatus:
-              type: string
-            routerAuthMethod:
-              type: string
-            routerAuthParams:
-              type: string
-            routerFormat:
-              type: string
-        handle:
-          type: string
-        wallet_id:
-          type: string
-        signer:
-          type: array
-          items:
-            $ref: string
-        default:
-          type: string
-        error:
-          $ref: '#/components/schemas/ErrorGenerico'
+
     signerResponse:
       type: object
       properties:

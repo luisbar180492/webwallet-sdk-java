@@ -4,9 +4,9 @@ import com.minka.ExceptionResponseTinApi;
 import com.minka.sdk.TestingConstants;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
+import io.minka.api.model.WalletLabels;
 import io.minka.api.model.WalletListResponse;
 import io.minka.api.model.WalletRequest;
-import io.minka.api.model.WalletRequestLabels;
 import io.minka.api.model.WalletUpdateRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
@@ -50,12 +50,9 @@ public class WalletStaging {
         String handle = "$" + RandomStringUtils.randomAlphabetic(19).toLowerCase();
 
         try {
-            WalletRequest walletReq  = new WalletRequest();
-            walletReq.setHandle(handle);
-            WalletRequestLabels labelsReq = new WalletRequestLabels();
-            labelsReq.setChanelSms("573004431529");
-            walletReq.setLabels(labelsReq);
-            io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(walletReq);
+            WalletLabels labelsReq = new WalletLabels();
+            labelsReq.put("channelSms","573004431529" );
+            io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(handle, labelsReq);
             System.out.println(wallet);
 
             assertEquals(TestingConstants.SUCCESS_ERROR_CODE, wallet.getError().getCode().intValue());
@@ -121,29 +118,29 @@ public class WalletStaging {
 
     }
 
-    @Ignore
     @Test
     public void shouldGetWalletBalance(){
 
-        String bankName = "$qmblkkdzkwbgepdinyr";
+        String bankName = "$cofptfyhpngqgedhrqc";
         String currency = "$tin";
         io.minka.api.model.BalanceResponse balance;
         balance = sdkApiClient.getBalance(bankName, currency);
         System.out.println(balance);
     }
 
-    @Ignore
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
         String handle = "$cofptfyhpngqgedhrqc";
-        String defaultAddress = "whYQRj4djgw32wuwwCGQfvrLhXyiNrjzUL";
+        String defaultAddress = "wQ9sX4vod8wy4zdmvfmvaCjDTsF11QBuon";
         List<String> signers = new ArrayList<>();
         signers.add(defaultAddress);
 
         WalletUpdateRequest req = new WalletUpdateRequest();
         Map<String, Object> labels = new HashMap<>();
         labels.put("routerDownload", "testingupdate");
-        //req.setLabels(labels);
+        WalletLabels labelsWallet = new WalletLabels();
+        labelsWallet.putAll(labels);
+        req.setLabels(labelsWallet);
         req.setSigner(signers);
         req.setDefault(defaultAddress);
         io.minka.api.model.WalletUpdateResponse walletUpdateResponse
@@ -152,7 +149,7 @@ public class WalletStaging {
         assertEquals(walletUpdateResponse.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
     }
 
-   @Ignore
+
    @Test(expected = ExceptionResponseTinApi.class)
     public void shouldNotUpdateWallet() throws ExceptionResponseTinApi {
         String handle = "$1serphonenumber1";
