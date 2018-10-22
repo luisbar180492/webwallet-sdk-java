@@ -1,13 +1,11 @@
 package com.minka.sdk.staging;
 
 
-import com.minka.ExceptionResponseTinApi;
 import com.minka.sdk.TestingConstants;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SignerStaging {
@@ -47,16 +45,13 @@ public class SignerStaging {
     }
 
 
-    @Ignore
     @Test
     public void createSignerForOfflineUse() {
 
-        //Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
-
         try {
-            Keeper offlineKeypair = sdkApiClient.getKeeper();
+            Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
 
-        SignerRequestLabels labels = new SignerRequestLabels();
+//            Keeper offlineKeypair = sdkApiClient.getKeeper();
 
          System.out.println("offlineKeypair.getSecret()");
 
@@ -66,13 +61,13 @@ public class SignerStaging {
          publickey.setPublic(offlineKeypair.getPublic()  );
 
          publickey.setScheme(offlineKeypair.getScheme());
+            SignerLabels labels = new SignerLabels();
             signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
+            System.out.println(signerOfflineSigning);
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
             System.out.println(e.getCode());
 
-        } catch (ExceptionResponseTinApi e) {
-            e.printStackTrace();
         }
 
         // System.out.println(signerOfflineSigning);
@@ -84,9 +79,9 @@ public class SignerStaging {
     public void createSignerForOnlineUse(){
 
         try {
-            SignerRequestLabels labels = new SignerRequestLabels();
-            labels.setRouterReference("$davjuliandiaz");
-            io.minka.api.model.SignerResponse signer = sdkApiClient.createSigner(labels);
+            SignerLabels labelss = new SignerLabels();
+            labelss.put("routerReference","$davjuliandiaz");
+            io.minka.api.model.SignerResponse signer = sdkApiClient.createSigner(labelss);
             System.out.println(signer);
             System.out.println(signer.getHandle());//address
 

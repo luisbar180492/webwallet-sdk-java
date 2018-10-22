@@ -211,20 +211,21 @@ public class SdkApiClient {
     }
 
 
-    public io.minka.api.model.SignerResponse createSigner(SignerRequestLabels labels) throws io.minka.api.handler.ApiException {
+    public io.minka.api.model.SignerResponse createSigner(SignerLabels labelss) throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.model.SignerRequest signerRequest = new io.minka.api.model.SignerRequest();
-        signerRequest.setLabels(labels);
+
+        signerRequest.setLabels(labelss);
         io.minka.api.handler.SignerApi signerApi = new io.minka.api.handler.SignerApi(apiClient);
         return signerApi.createSigner(signerRequest);
     }
 
-    public io.minka.api.model.SignerResponse createSignerOfflineSigning(SignerRequestLabels labels, io.minka.api.model.PublicKeys publicKey) throws io.minka.api.handler.ApiException {
+    public io.minka.api.model.SignerResponse createSignerOfflineSigning(SignerLabels labelss, io.minka.api.model.PublicKeys publicKey) throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
 
         io.minka.api.model.SignerRequest signerRequest = new io.minka.api.model.SignerRequest();
-        signerRequest.setLabels( labels);
+        signerRequest.setLabels( labelss);
         signerRequest.addKeeperItem(publicKey);
 
         return api.createSigner(signerRequest);

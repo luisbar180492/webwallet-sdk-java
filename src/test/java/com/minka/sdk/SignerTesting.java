@@ -7,6 +7,9 @@ import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 
 public class SignerTesting {
@@ -54,8 +57,6 @@ public class SignerTesting {
 
         Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
 
-        SignerRequestLabels labels = new SignerRequestLabels();
-
         System.out.println("offlineKeypair.getSecret()");
 
         System.out.println(offlineKeypair.getSecret());
@@ -64,6 +65,7 @@ public class SignerTesting {
         publickey.setPublic(offlineKeypair.getPublic());
 
         publickey.setScheme(offlineKeypair.getScheme());
+        SignerLabels labels = new SignerLabels();
         signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
 
         System.out.println(signerOfflineSigning);
@@ -75,9 +77,10 @@ public class SignerTesting {
     public void createSignerForOnlineUse(){
 
         try {
-            SignerRequestLabels labels = new SignerRequestLabels();
-            labels.setRouterReference("$davjuliandiaz");
-            io.minka.api.model.SignerResponse signer = sdkApiClient.createSigner(labels);
+
+            SignerLabels labelss = new SignerLabels();
+            labelss.put("routerReference","$davjuliandiaz");
+            io.minka.api.model.SignerResponse signer = sdkApiClient.createSigner(labelss);
             System.out.println(signer);
             System.out.println(signer.getHandle());//address
 

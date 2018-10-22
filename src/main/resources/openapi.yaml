@@ -1585,16 +1585,6 @@ components:
           type: object
 
 
-    signer:
-      type: object
-      properties:
-        keeper:
-          type: object
-        public:
-          type: string
-        labels:
-          type: object
-
     offlineSigningKeys:
       type: object
       properties:
@@ -1604,6 +1594,58 @@ components:
             $ref: '#/components/schemas/publicKeys'
 
     signerRequest:
+      allOf:
+        - $ref: '#/components/schemas/signer'
+
+    signerLabels:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          description:
+            type: string
+          firstName:
+            type: string
+          lastName:
+            type: string
+          email:
+            type: string
+          mobile:
+            type: string
+          identification:
+            type: string
+          proprietary:
+            type: string
+          countryOfResidence:
+            type: string
+          sourceChannel:
+            type: string
+          bankAccountNumber:
+            type: string
+          bankAccountType:
+            type: string
+          bankBicfi:
+            type: string
+          bankName:
+            type: string
+          routerReference:
+            type: string
+          routerUpload:
+            type: string
+          routerDownload:
+            type: string
+          routerAction:
+            type: string
+          routerStatus:
+            type: string
+          routerAuthMethod:
+            type: string
+          routerAuthParams:
+            type: string
+          routerFormat:
+            type: string
+
+    signer:
       type: object
       properties:
         keeper:
@@ -1611,50 +1653,7 @@ components:
           items:
             $ref: '#/components/schemas/publicKeys'
         labels:
-          type: object
-          properties:
-            description:
-              type: string
-            firstName:
-              type: string
-            lastName:
-              type: string
-            email:
-              type: string
-            mobile:
-              type: string
-            identification:
-              type: string
-            proprietary:
-              type: string
-            countryOfResidence:
-              type: string
-            sourceChannel:
-              type: string
-            bankAccountNumber:
-              type: string
-            bankAccountType:
-              type: string
-            bankBicfi:
-              type: string
-            bankName:
-              type: string
-            routerReference:
-              type: string
-            routerUpload:
-              type: string
-            routerDownload:
-              type: string
-            routerAction:
-              type: string
-            routerStatus:
-              type: string
-            routerAuthMethod:
-              type: string
-            routerAuthParams:
-              type: string
-            routerFormat:
-              type: string
+          $ref: '#/components/schemas/signerLabels'
 
     publicKeys:
       type: object
