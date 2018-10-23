@@ -11,7 +11,7 @@ public class TestingConstants {
     public static String BANK_LIMIT_WALLET = "$banco_perros";
     public static String BANK_LIMIT_ADDRESS = "wREL5QFQoWhP4aPjzycu4DXwEEvci1gYSh";
 
-    public static String PROXY_HOST = "199.14.10.66";
+    public static String PROXY_HOST = "199.14.10.166";
     public static int PROXY_PORT = 8080;
     public static boolean proxy = false;
 
