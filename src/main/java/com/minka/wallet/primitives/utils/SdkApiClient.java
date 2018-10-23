@@ -267,6 +267,13 @@ public class SdkApiClient {
         return actionApi.createAction(actionReq);
     }
 
+    public GetActionResponse continueTransaction(String actionId, ActionSigned actionSigned) throws ApiException {
+        refreshToken();
+        TransferApi api = new TransferApi(apiClient);
+        GetActionResponse getActionResponse = api.continueP2Ptranfer(actionId, actionSigned);
+        return getActionResponse;
+    }
+
     public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
 
         refreshToken();
