@@ -224,6 +224,7 @@ public class TransferTesting {
 
     }
 
+    @Ignore
     @Test
     public void continueP2Ptransfer(){
         ActionSigned actionSigned = new ActionSigned();
