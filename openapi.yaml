@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.2.14
+  version: 0.2.12
   title: 'TINAPI '
 tags:
   - name: Action
@@ -807,8 +807,7 @@ paths:
         content:
           application/json:
             schema:
-              #$ref: '#/components/schemas/iouSigned' TODO SWITCH
-              $ref: '#/components/schemas/offlineSigningKeys'
+              $ref: '#/components/schemas/iouSigned'
         required: true
 
   /keeper:
@@ -1314,9 +1313,9 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
   /wallet:
     get:
-      summary: Get wallets
+      summary: Obtiene un wallet por signer
       description: ''
-      operationId: getWallets
+      operationId: getWalletBySigner
       tags:
         - Wallet
       security:
@@ -1324,22 +1323,17 @@ paths:
         - oAuth2ClientCredentials: []
       parameters:
         - in: query
-          name: pagenum
+          name: signer
           schema:
-            type: integer
-          required: false
-        - in: query
-          name: pagesize
-          schema:
-            type: integer
-          required: false
+            type: string
+          required: true
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/walletListResponse'
+                $ref: '#/components/schemas/walletResponse'
         '100':
           description: You don't have permissions to access this method
           content:
@@ -1352,6 +1346,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+    # get:
+    #   summary: Get wallets
+    #   description: ''
+    #   operationId: getWallets
+    #   tags:
+    #     - Wallet
+    #   security:
+    #     - ApiKeyAuth: []
+    #     - oAuth2ClientCredentials: []
+    #   parameters:
+    #     - in: query
+    #       name: pagenum
+    #       schema:
+    #         type: integer
+    #       required: false
+    #     - in: query
+    #       name: pagesize
+    #       schema:
+    #         type: integer
+    #       required: false
+    #   responses:
+    #     '200':
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/walletListResponse'
+    #     '100':
+    #       description: You don't have permissions to access this method
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/ErrorResponse'
+    #     '104':
+    #       description: Invalid handle
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/ErrorResponse'
     post:
       summary: Create a wallet
       description: ''
@@ -1675,58 +1708,6 @@ components:
             routerFormat:
               type: string
 
-    signerLabelsResponse:
-      type: object
-      properties:
-        labels:
-          type: object
-          properties:
-            createdBy:
-              type: string
-            description:
-              type: string
-            firstName:
-              type: string
-            lastName:
-              type: string
-            email:
-              type: string
-            mobile:
-              type: string
-            identification:
-              type: string
-            proprietary:
-              type: string
-            countryOfResidence:
-              type: string
-            sourceChannel:
-              type: string
-            bankAccountNumber:
-              type: string
-            bankAccountType:
-              type: string
-            bankBicfi:
-              type: string
-            bankName:
-              type: string
-            routerReference:
-              type: string
-            routerUpload:
-              type: string
-            routerDownload:
-              type: string
-            routerAction:
-              type: string
-            routerStatus:
-              type: string
-            routerAuthMethod:
-              type: string
-            routerAuthParams:
-              type: string
-            routerFormat:
-              type: string
-
-
     publicKeys:
       type: object
       properties:
@@ -1900,7 +1881,7 @@ components:
           items:
             $ref: '#/components/schemas/publicKeys'
         labels:
-          $ref: '#/components/schemas/signerLabelsResponse'
+          $ref: '#/components/schemas/signerRequest'
     signerListResponse:
       type: array
       items:
@@ -2341,14 +2322,6 @@ components:
           type: object
           properties:
             type:
-              type: string
-            description:
-              type: string
-            sourceCreated:
-              type: string
-            transactionPurpose:
-              type: string
-            numberOfTransactions:
               type: string
             deviceFingerPrint:
               $ref: '#/components/schemas/deviceFingerPrint'

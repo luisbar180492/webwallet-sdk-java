@@ -30,6 +30,10 @@ public class TransferTesting {
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        }
+
 
     }
 
@@ -217,6 +221,35 @@ public class TransferTesting {
 
         System.out.println(genericResponse);
 
+
+    }
+
+    @Test
+    public void continueP2Ptransfer(){
+        ActionSigned actionSigned = new ActionSigned();
+        actionSigned.setActionId("83161a46-b797-44bb-b006-c4bd984fc9f9");
+        actionSigned.setAmount("1");
+        actionSigned.setSource("wM9kx8Bzsp51TRefSccAhH57KU4a2rfS5y");
+        actionSigned.setSymbol("$tin");
+        actionSigned.setTarget("wi5pLSsmkEwP4KHtfHnudLKDWBf59LViuZ");
+        Snapshot snapshot = new Snapshot();
+
+        actionSigned.setSnapshot(snapshot);
+        ActionSignedLabels labels = new ActionSignedLabels();
+        labels.setTxRef("15403041367819472");
+        labels.setType("DOWNLOAD");
+        labels.setHash("5eb70f98bb90459c267ad0ac2d7610b78d27b9f7b1001bf2032a9dac8025f688");
+
+        actionSigned.setLabels(labels);
+
+        String actionId = "ea80e7a9-87e2-4063-8d37-6348658fd3fe";
+
+        try {
+            GetActionResponse getActionResponse = sdkApiClient.continueTransaction(actionId, actionSigned);
+            System.out.println(getActionResponse);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
 
     }
 

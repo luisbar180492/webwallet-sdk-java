@@ -53,7 +53,7 @@ public class WalletStaging {
             WalletRequest walletReq  = new WalletRequest();
             walletReq.setHandle(handle);
             WalletRequestLabels labelsReq = new WalletRequestLabels();
-            labelsReq.setChanelSms("573004431529");
+            labelsReq.setChannelSms("573004431529");
             walletReq.setLabels(labelsReq);
             io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(walletReq);
             System.out.println(wallet);
