@@ -77,7 +77,7 @@ public class ActionStaging {
     }
 
     @Test
-    public void shouldGetPendingActions(){
+    public void shouldGetPendingActions() throws ApiException {
         String handle = "$573207246903";
         List<GetActionResponse> genericResponse =
                 sdkApiClient.getActionPendings(
