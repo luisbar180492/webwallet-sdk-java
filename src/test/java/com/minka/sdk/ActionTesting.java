@@ -7,13 +7,11 @@ import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import io.minka.api.model.PublicKeys;
+import org.apache.commons.lang.time.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Ignore;
@@ -71,6 +69,15 @@ public class ActionTesting {
     }
 
     @Test
+    public void shouldGenerateUUID(){
+        String nonceGenerated = sdkApiClient.generateUUID();
+        System.out.println(nonceGenerated);
+        System.out.println(nonceGenerated.length());
+
+    }
+
+
+    @Test
     public void shouldSignActionOnline(){
         String actionId = "512884a6-5f94-4678-a1c3-226621275dce";
         try {
@@ -108,7 +115,7 @@ public class ActionTesting {
 
     }
     @Test
-    public void shouldGetPendingActions(){
+    public void shouldGetPendingActions() throws ApiException {
         String handle = "$573207246903";
         List<GetActionResponse> genericResponse =
                 sdkApiClient.getActionPendings(
