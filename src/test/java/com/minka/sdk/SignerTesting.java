@@ -32,10 +32,17 @@ public class SignerTesting {
     @Test
     public void shouldGetSignersWithPaging() throws io.minka.api.handler.ApiException {
 
+        /*
         SignerListResponse signers = sdkApiClient.getSigners(1, 2);
         System.out.println(signers.size());
 
         System.out.println(signers);
+        */
+
+        SignerResponse signer = sdkApiClient.getSignerByAddress("wRXWqpLz76iNe6siCVixYneeepKPt6wMcN");
+
+        System.out.println(signer);
+
 //        assertEquals(signers.size(), 3);//BECAUSE OF THE pagesize + 1 error element
 
 //        io.minka.api.model.SignerResponse wAddress = sdkApiClient.getSignerByAddress("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz");

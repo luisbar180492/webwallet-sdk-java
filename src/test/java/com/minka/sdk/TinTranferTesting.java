@@ -1,5 +1,6 @@
 package com.minka.sdk;
 
+import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
@@ -24,47 +25,60 @@ public class TinTranferTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        sdkApiClient.setTimeout(20);
+        //sdkApiClient.setTimeout(20);
+        this.sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
 
     }
 
     @Ignore
     @Test
-    public void createTransferEnvio() throws ApiException {
+    public void createTransferEnvio() {
 
         CreateTransferRequest tinTranfer = new CreateTransferRequest();
         tinTranfer.setSource("wSgbrTTUxZnRAt58KGwjknnZ3LtPH5bdJL");
         tinTranfer.setTarget("$573207246903");
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("type", "SEND");
-        labels.put("description", "Description of a transfer");
-        //   tinTranfer.setLabels(labels);
+        CreateTransferRequestLabels labels = new CreateTransferRequestLabels();
+        labels.setTxId("TxId");
+        labels.setType("SEND");
+        labels.setDescription("Description of a transfer");
+        tinTranfer.setLabels(labels);
         tinTranfer.setAmount("101");
         tinTranfer.setSymbol("$tin");
 
-        //  tinTranfer.setLabels(labels);
+        tinTranfer.setLabels(labels);
         CreateTransferResponse tinTransfer =
-                sdkApiClient.createTinTransfer(tinTranfer);
+                null;
+        try {
+            tinTransfer = sdkApiClient.createTinTransfer(tinTranfer);
+        } catch (ApiException e) {
+            System.out.println(e.getCode());
+            System.out.println(e.getResponseBody());
+        }
 
         System.out.println(tinTransfer);
-
     }
 
     @Ignore
     @Test
-    public void acceptTransfer() throws ApiException {
+    public void acceptTransfer()  {
 
-        String actionRequestId = "ebb01a55-0465-4d1f-a92c-5a430368f972";
+        String actionRequestId = "005b6da8-86d3-4647-b569-b87c1ed199b5";
 
         AcceptTransferRequest req =new AcceptTransferRequest();
         WalletObject wallet = new WalletObject();
-        wallet.setHandle("$573207246903");
+        wallet.setHandle("$573016545645");
         req.setWallet(wallet);
         SignerObject signer = new SignerObject();
-        signer.setHandle("wLwiQuJa7hN1Q77tmaof2YHP5oaZbJd8Eh");
+        signer.setHandle("wewAHE6F5HjWYr5io2HPwtgFqx8jmUcHfW");
         req.setSigner(signer);
         CreateTransferResponse createTransferResponse =
-                sdkApiClient.acceptTransfer(req, actionRequestId);
+                null;
+        try {
+            createTransferResponse = sdkApiClient.acceptTransfer(req, actionRequestId);
+        } catch (ExceptionResponseTinApi e) {
+            System.out.println(e.getErrorCode());
+            System.out.println(e.getMessage());
+        }
 
         System.out.println(createTransferResponse);
     }

@@ -72,8 +72,13 @@ public class TransferTesting {
         req.setWallet(walletObject);
 
         CreateTransferResponse response;
-        response = sdkApiClient.acceptTransfer(req, actionRequestId);
-        System.out.println(response);
+        try {
+            response = sdkApiClient.acceptTransfer(req, actionRequestId);
+            System.out.println(response);
+
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+            exceptionResponseTinApi.printStackTrace();
+        }
 
 //        UpdateActionRequest req = new UpdateActionRequest();
 //        Map<String, Object> labels = new HashMap<>();
