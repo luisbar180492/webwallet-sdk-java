@@ -34,6 +34,7 @@ public class SdkApiClient {
     private int timeout;
     private boolean oauth2;
     private Proxy proxy;
+    private Gson gson;
 
     /**
      * @param domain
@@ -45,7 +46,7 @@ public class SdkApiClient {
         this.apiKey = apiKey;
         apiClient = new ApiClient();
         apiClient.setApiKey(apiKey);
-
+        gson = (new GsonBuilder()).create();
         apiClient.setBasePath(url);
 
         if (timeout > 0) {
@@ -154,7 +155,7 @@ public class SdkApiClient {
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
             Object response = api.getLink(source, target, type);
-            Gson gson = (new GsonBuilder()).create();
+
             return new Gson().fromJson(gson.toJson(response), ListLinks.class);
         } catch (io.minka.api.handler.ApiException e) {
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
@@ -308,10 +309,16 @@ public class SdkApiClient {
 
 
     public CreateTransferResponse acceptTransfer(AcceptTransferRequest req,
-                                                 String actionRequestId) throws io.minka.api.handler.ApiException {
+                                                 String actionRequestId) throws ExceptionResponseTinApi {
         refreshToken();
         TransferApi transferApi = new TransferApi(apiClient);
-        return transferApi.acceptP2Ptranfer(actionRequestId, req);
+        try {
+            return transferApi.acceptP2Ptranfer(actionRequestId, req);
+        } catch (ApiException e) {
+
+            ErrorGenerico errorGenerico = new Gson().fromJson(e.getResponseBody(), ErrorGenerico.class);
+            throw new ExceptionResponseTinApi(errorGenerico.getCode(), e.getMessage());
+        }
     }
 
 

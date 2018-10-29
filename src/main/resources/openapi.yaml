@@ -1712,53 +1712,50 @@ components:
     signerLabelsResponse:
       type: object
       properties:
-        labels:
-          type: object
-          properties:
-            createdBy:
-              type: string
-            description:
-              type: string
-            firstName:
-              type: string
-            lastName:
-              type: string
-            email:
-              type: string
-            mobile:
-              type: string
-            identification:
-              type: string
-            proprietary:
-              type: string
-            countryOfResidence:
-              type: string
-            sourceChannel:
-              type: string
-            bankAccountNumber:
-              type: string
-            bankAccountType:
-              type: string
-            bankBicfi:
-              type: string
-            bankName:
-              type: string
-            routerReference:
-              type: string
-            routerUpload:
-              type: string
-            routerDownload:
-              type: string
-            routerAction:
-              type: string
-            routerStatus:
-              type: string
-            routerAuthMethod:
-              type: string
-            routerAuthParams:
-              type: string
-            routerFormat:
-              type: string
+        createdBy:
+          type: string
+        description:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        mobile:
+          type: string
+        identification:
+          type: string
+        proprietary:
+          type: string
+        countryOfResidence:
+          type: string
+        sourceChannel:
+          type: string
+        bankAccountNumber:
+          type: string
+        bankAccountType:
+          type: string
+        bankBicfi:
+          type: string
+        bankName:
+          type: string
+        routerReference:
+          type: string
+        routerUpload:
+          type: string
+        routerDownload:
+          type: string
+        routerAction:
+          type: string
+        routerStatus:
+          type: string
+        routerAuthMethod:
+          type: string
+        routerAuthParams:
+          type: string
+        routerFormat:
+          type: string
 
 
     publicKeys:
@@ -1935,6 +1932,7 @@ components:
             $ref: '#/components/schemas/publicKeys'
         labels:
           $ref: '#/components/schemas/signerLabelsResponse'
+
     signerListResponse:
       type: array
       items:
