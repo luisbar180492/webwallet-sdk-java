@@ -37,14 +37,15 @@ public class TinTranferTesting {
         CreateTransferRequest tinTranfer = new CreateTransferRequest();
         tinTranfer.setSource("wSgbrTTUxZnRAt58KGwjknnZ3LtPH5bdJL");
         tinTranfer.setTarget("$573207246903");
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("type", "SEND");
-        labels.put("description", "Description of a transfer");
-        //   tinTranfer.setLabels(labels);
+        CreateTransferRequestLabels labels = new CreateTransferRequestLabels();
+        labels.setTxId("TxId");
+        labels.setType("SEND");
+        labels.setDescription("Description of a transfer");
+        tinTranfer.setLabels(labels);
         tinTranfer.setAmount("101");
         tinTranfer.setSymbol("$tin");
 
-        //  tinTranfer.setLabels(labels);
+        tinTranfer.setLabels(labels);
         CreateTransferResponse tinTransfer =
                 null;
         try {
@@ -52,11 +53,9 @@ public class TinTranferTesting {
         } catch (ApiException e) {
             System.out.println(e.getCode());
             System.out.println(e.getResponseBody());
-
         }
 
         System.out.println(tinTransfer);
-
     }
 
     @Ignore

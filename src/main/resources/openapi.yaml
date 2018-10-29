@@ -2378,13 +2378,14 @@ components:
               type: string
             sourceCreated:
               type: string
+            tx_id:
+              type: string
             transactionPurpose:
               type: string
             numberOfTransactions:
               type: string
             deviceFingerPrint:
               $ref: '#/components/schemas/deviceFingerPrint'
-
 
     createTransferResponse:
       type: object
