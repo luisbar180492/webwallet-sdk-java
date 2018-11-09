@@ -1,16 +1,12 @@
 openapi: 3.0.0
 info:
-  version: 0.2.14
-  title: 'TINAPI '
+  version: 0.2.20
+  title: 'TINAPI-Minka'
 tags:
   - name: Action
     description: 'Endpoint related to actions (transactions) in TIN platform'
-  - name: Domain
-    description: 'Endpoint related to domains in TIN platform'
   - name: Keeper
     description: 'Endpoint to create keypairs in TIn platform'
-  - name: Klemer
-    description: 'Endpoint related to transpilation of actions to addresses in Tin platform'
   - name: Links
     description: 'Endpoint related to trust links in Tin platform'
   - name: Signer
@@ -142,11 +138,11 @@ paths:
               $ref: '#/components/schemas/actionSigned'
       responses:
         '200':
-          description: Succesful ACCeptance of a transfer
+          description: Succesful Acceptance of a transfer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getActionResponse'
+                $ref: '#/components/schemas/createTransferResponse'
         '400':
           description: Transfer error message
           content:
@@ -347,51 +343,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /klemer:
-    post:
-      summary: create a claim for core
-      description: ''
-      operationId: createClaim
-      tags:
-        - Klemer
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: Succesful creation of a claim
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/createClaimResponse'
-        '400':
-          description: klemer error message
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '100':
-          description: You don't have permissions to access this method
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '102':
-          description: Invalid labels
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/createClaimRequest'
-        required: true
-
 
   /oauth/token:
     post:
@@ -689,7 +640,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/genericResponse'
+                $ref: '#/components/schemas/getActionResponse'
         '400':
           description: Domain error message
           content:
@@ -862,124 +813,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /domain:
-    post:
-      summary: Genera un domain
-      description: ''
-      operationId: createDomain
-      tags:
-        - Domain
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: Domain retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/domainResponse'
-        '400':
-          description: Domain error message
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '100':
-          description: You don't have permissions to access this method
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '102':
-          description: Invalid labels
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/domainRequest'
-        required: true
-    get:
-      summary: Obtiene un domain
-      description: ''
-      operationId: readDomain
-      tags:
-        - Domain
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: Domain generated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/domainRequest'
-        '400':
-          description: Domain generated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '100':
-          description: You don't have permissions to access this method
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '102':
-          description: Invalid labels
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      summary: Edita un domain
-      description: ''
-      operationId: updateDomain
-      tags:
-        - Domain
-      parameters:
-        - in: header
-          name: API_KEY
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: Domain retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/domainResponse'
-        '400':
-          description: Domain error message
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '100':
-          description: You don't have permissions to access this method
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '102':
-          description: Invalid labels
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /signer/{signerAddress}:
     delete:
       summary: Delete signer
@@ -1078,7 +911,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/genericResponse'
+                $ref: '#/components/schemas/signerResponse'
         '100':
           description: You don't have permissions to access this method.
           content:
@@ -1622,31 +1455,6 @@ components:
           type: string
         secret:
           type: string
-    domainRequest:
-      type: object
-      properties:
-        handle:
-          type: string
-        router:
-          type: string
-        labels:
-          type: object
-    wallet:
-      type: object
-      properties:
-        handle:
-          type: string
-        labels:
-          type: object
-    signer:
-      type: object
-      properties:
-        keeper:
-          type: object
-        public:
-          type: string
-        labels:
-          type: object
 
     offlineSigningKeys:
       type: object
@@ -1802,7 +1610,7 @@ components:
         signer:
           type: array
           items:
-            $ref: string
+            type: string
         'default':
           type: string
         wallet_id:
@@ -1841,7 +1649,7 @@ components:
         signer:
           type: array
           items:
-            $ref: string
+            type: string
         default:
           type: string
         wallet_id:
@@ -1880,7 +1688,7 @@ components:
         signer:
           type: array
           items:
-            $ref: string
+            type: string
     walletUpdateResponse:
       type: object
       properties:
@@ -1914,7 +1722,7 @@ components:
         signer:
           type: array
           items:
-            $ref: string
+            type: string
         default:
           type: string
         error:
@@ -1932,6 +1740,9 @@ components:
             $ref: '#/components/schemas/publicKeys'
         labels:
           $ref: '#/components/schemas/signerLabelsResponse'
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
 
     signerListResponse:
       type: array
@@ -1941,6 +1752,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/walletResponse'
+
     domainResponse:
       type: object
       properties:
@@ -1977,6 +1789,9 @@ components:
         claims:
           type: object
           $ref: '#/components/schemas/claims'
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     claims:
       type: object
       properties:
@@ -2085,6 +1900,8 @@ components:
               type: string
             sourceCreated:
               type: string
+            sourceChannel:
+              type: string
             targetUpdated:
               type: string
             description:
@@ -2117,42 +1934,47 @@ components:
           type: string
         amount:
           type: string
-        labels:
-            type: object
-            properties:
-              tx_id:
-                type: string
-              tx_ref:
-                type: string
-              status:
-                type: string
-              created:
-                type: string
-              hash:
-                type: string
-              sourceCreated:
-                type: string
-              targetUpdated:
-                type: string
-              description:
-                type: string
-              type:
-                type: string
-              rejectSource:
-                type: string
-              rejectDescription:
-                type: string
-              transactionPurpose:
-                type: string
-              numberOftransactions:
-                type: string
-              deviceFingerPrint:
-                type: object
-                $ref: '#/components/schemas/deviceFingerPrint'
-
         snapshot:
           type: object
           $ref: '#/components/schemas/Snapshot'
+        labels:
+          type: object
+          properties:
+            tx_id:
+              type: string
+            tx_ref:
+              type: string
+            status:
+              type: string
+            created:
+              type: string
+            hash:
+              type: string
+            sourceCreated:
+              type: string
+            sourceChannel:
+              type: string
+            targetUpdated:
+              type: string
+            description:
+              type: string
+            type:
+              type: string
+            rejectSource:
+              type: string
+            rejectDescription:
+              type: string
+            transactionPurpose:
+              type: string
+            numberOftransactions:
+              type: string
+            deviceFingerPrint:
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
+            error:
+              type: object
+              $ref: '#/components/schemas/ErrorGenerico'
+
 
     ErrorForbidden:
       type: object
@@ -2185,7 +2007,10 @@ components:
           $ref: '#/components/schemas/Snapshot'
         labels:
           type: object
-          additionalProperties: true
+          properties:
+            status:
+              type: string
+
     createLinkRequest:
       type: object
       properties:
@@ -2208,6 +2033,9 @@ components:
           enum:
             - TRUST
             - BLOCK
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     ListLinks:
       type: array
       items:
@@ -2228,6 +2056,9 @@ components:
           type: string
         'type':
           type: string
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
     getActionResponse:
       properties:
         action_id:
@@ -2258,6 +2089,8 @@ components:
               type: string
             sourceCreated:
               type: string
+            sourceChannel:
+              type: string
             targetUpdated:
               type: string
             description:
@@ -2275,6 +2108,10 @@ components:
             deviceFingerPrint:
               type: object
               $ref: '#/components/schemas/deviceFingerPrint'
+            error:
+              type: object
+              $ref: '#/components/schemas/ErrorGenerico'
+
 
     actionSignedLabels:
       properties:
@@ -2290,6 +2127,8 @@ components:
             created:
               type: string
             sourceCreated:
+              type: string
+            sourceChannel:
               type: string
             targetUpdated:
               type: string
@@ -2343,6 +2182,13 @@ components:
               type: string
             sourceCreated:
               type: string
+            sourceChannel:
+              type: string
+        error:
+          type: object
+          properties:
+          $ref: '#/components/schemas/ErrorGenerico'
+
     getTransfersResponse:
       type: object
       properties:
@@ -2374,11 +2220,13 @@ components:
           properties:
             type:
               type: string
+            tx_id:
+              type: string
             description:
               type: string
             sourceCreated:
               type: string
-            tx_id:
+            sourceChannel:
               type: string
             transactionPurpose:
               type: string
@@ -2387,6 +2235,7 @@ components:
             deviceFingerPrint:
               $ref: '#/components/schemas/deviceFingerPrint'
 
+
     createTransferResponse:
       type: object
       properties:
@@ -2394,9 +2243,9 @@ components:
           type: string
         source:
           type: string
-        target:
-          type: string
         symbol:
+          type: string
+        target:
           type: string
         amount:
           type: string
@@ -2406,14 +2255,40 @@ components:
         labels:
           type: object
           properties:
+            tx_id:
+              type: string
             tx_ref:
+              type: string
+            status:
               type: string
             created:
               type: string
-            type:
-              type: string
             hash:
               type: string
+            sourceCreated:
+              type: string
+            sourceChannel:
+              type: string
+            targetUpdated:
+              type: string
+            description:
+              type: string
+            type:
+              type: string
+            rejectSource:
+              type: string
+            rejectDescription:
+              type: string
+            transactionPurpose:
+              type: string
+            numberOftransactions:
+              type: string
+            deviceFingerPrint:
+              type: object
+              $ref: '#/components/schemas/deviceFingerPrint'
+            error:
+              type: object
+              $ref: '#/components/schemas/ErrorGenerico'
 
         error:
           type: object
@@ -2473,7 +2348,9 @@ components:
         signer:
           type: array
           items:
-            $ref: string
+            type: string
+        default:
+          type: string
         labels:
           type: object
           properties:
@@ -2500,6 +2377,8 @@ components:
                       type: string
                 handle:
                   type: string
+                default:
+                  type: string
             signer:
               type: object
               properties:
@@ -2519,6 +2398,8 @@ components:
                     channelSms:
                       type: string
                 handle:
+                  type: string
+                default:
                   type: string
             signer:
               type: object

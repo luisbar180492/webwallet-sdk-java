@@ -251,7 +251,8 @@ public class TransferTesting {
         String actionId = "ea80e7a9-87e2-4063-8d37-6348658fd3fe";
 
         try {
-            GetActionResponse getActionResponse = sdkApiClient.continueTransaction(actionId, actionSigned);
+            CreateTransferResponse getActionResponse = sdkApiClient.continueTransaction(actionId, actionSigned);
+
             System.out.println(getActionResponse);
         } catch (ApiException e) {
             e.printStackTrace();

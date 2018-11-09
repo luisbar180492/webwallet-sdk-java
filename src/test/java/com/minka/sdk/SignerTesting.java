@@ -7,6 +7,8 @@ import io.minka.api.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
 
 public class SignerTesting {
@@ -48,11 +50,13 @@ public class SignerTesting {
 //        io.minka.api.model.SignerResponse wAddress = sdkApiClient.getSignerByAddress("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz");
 //        System.out.println(wAddress);
 
-//        SignerRequest req = new SignerRequest();
-//        Map<String, Object> labels = new HashMap<>();
-//        labels.put("description", "saving");
-//        req.setLabels(labels);
-//        sdkApiClient.updateSigner("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz", req);
+        SignerRequest req = new SignerRequest();
+        SignerRequestLabels labels = new SignerRequestLabels();
+        labels.setEmail("aranfra@asfda.com");
+        req.setLabels(labels);
+
+        SignerResponse tempo = sdkApiClient.updateSigner("wiJGxHwVpnGUniCCTEMT1JsHHMd7RM4fo4", req);
+        System.out.println(tempo);
     }
 
 

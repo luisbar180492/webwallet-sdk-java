@@ -9,13 +9,11 @@ import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
-import io.minka.api.handler.auth.Authentication;
 import io.minka.api.model.*;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -276,10 +274,10 @@ public class SdkApiClient {
         return actionApi.createAction(actionReq);
     }
 
-    public GetActionResponse continueTransaction(String actionId, ActionSigned actionSigned) throws ApiException {
+    public CreateTransferResponse continueTransaction(String actionId, ActionSigned actionSigned) throws ApiException {
         refreshToken();
         TransferApi api = new TransferApi(apiClient);
-        GetActionResponse getActionResponse = api.continueP2Ptranfer(actionId, actionSigned);
+        CreateTransferResponse getActionResponse = api.continueP2Ptranfer(actionId, actionSigned);
         return getActionResponse;
     }
 
@@ -347,10 +345,6 @@ public class SdkApiClient {
         refreshToken();
         io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
 
-        System.out.println("api.getApiClient().getBasePath()");
-        System.out.println(api.getApiClient().getBasePath());
-
-
         return api.createTinTransfer(tintransfer);
     }
 
@@ -374,7 +368,7 @@ public class SdkApiClient {
     }
 
 
-    public io.minka.api.model.GenericResponse updateSigner(String signerAddress, io.minka.api.model.SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+    public SignerResponse updateSigner(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
         return api.updateSigner(signerAddress, updateSignerReq);
     }
@@ -384,7 +378,7 @@ public class SdkApiClient {
         return api.getSignerByAddress(wAddress);
     }
 
-    public io.minka.api.model.GenericResponse updateAction(String actionid, UpdateActionRequest req) throws io.minka.api.handler.ApiException {
+    public GetActionResponse updateAction(String actionid, UpdateActionRequest req) throws io.minka.api.handler.ApiException {
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
 
