@@ -36,6 +36,21 @@ public class SdkApiClient {
     private Proxy proxy;
     private Gson gson;
 
+
+    public SdkApiClient(String domain, String apiKey, String urlBase) {
+        this.domain = domain;
+        this.url = urlBase;
+        this.apiKey = apiKey;
+        apiClient = new ApiClient();
+        apiClient.setApiKey(apiKey);
+        gson = (new GsonBuilder()).create();
+        apiClient.setBasePath(url);
+
+        if (timeout > 0) {
+            apiClient.setConnectTimeout(timeout);
+        }
+    }
+
     /**
      * @param domain
      * @param apiKey
@@ -438,7 +453,9 @@ public class SdkApiClient {
         }
         apiClientToken.setUsername(clientId);
         apiClientToken.setPassword(secret);
-        apiClientToken.setBasePath("https://" + domain + ".minka.io");
+
+        //apiClientToken.setBasePath("https://" + domain + ".minkna.io");
+        apiClientToken.setBasePath(this.url.substring(0, this.url.length() - 3));
         TokenApi api = new TokenApi(apiClientToken);
         return api.getToken("client_credentials", clientId, secret);
     }

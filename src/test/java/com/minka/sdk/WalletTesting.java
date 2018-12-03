@@ -112,6 +112,7 @@ public class WalletTesting {
 
     }
 
+    @Ignore
     @Test
     public void shouldGetWallets() throws io.minka.api.handler.ApiException {
         WalletListResponse wallets = sdkApiClient.getWallets(1, 3);
