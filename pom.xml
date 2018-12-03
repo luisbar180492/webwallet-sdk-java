@@ -3,7 +3,7 @@
 
   <groupId>io.github.minkainc</groupId>
   <artifactId>webwallet-sdk</artifactId>
-  <version>0.1.19</version>
+  <version>0.1.20-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>webwallet-sdk</name>
@@ -260,7 +260,7 @@
         <connection>scm:git:git://github.com:minkainc/webwallet-sdk-java.git</connection>
         <developerConnection>scm:git:git@github.com:minkainc/webwallet-sdk-java.git</developerConnection>
         <url>https://github.com/minkainc/webwallet-sdk-java.git</url>
-        <tag>webwallet-sdk-0.1.19</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <profiles>
