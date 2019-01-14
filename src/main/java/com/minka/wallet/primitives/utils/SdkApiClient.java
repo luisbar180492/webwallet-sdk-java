@@ -9,13 +9,11 @@ import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
-import io.minka.api.handler.auth.Authentication;
 import io.minka.api.model.*;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -294,8 +292,10 @@ public class SdkApiClient {
     public GetActionResponse continueTransaction(String actionId, ActionSigned actionSigned) throws ApiException {
         refreshToken();
         TransferApi api = new TransferApi(apiClient);
-        GetActionResponse getActionResponse = api.continueP2Ptranfer(actionId, actionSigned);
-        return getActionResponse;
+        CreateTransferResponse getActionResponse = api.continueP2Ptranfer(actionId, actionSigned);
+        GetActionResponse result = new GetActionResponse();
+
+        return result;
     }
 
     public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
@@ -372,9 +372,11 @@ public class SdkApiClient {
     public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
-        WalletListResponse temporal = api.getWallets(pagenum, pagesize);
+        GetWalletResponse temporal = api.getWalletByAlias(null);
+        //getWallets(pagenum, pagesize);
 
-        return temporal;
+        WalletListResponse result = null;
+        return result;
     }
 
     public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
@@ -389,7 +391,7 @@ public class SdkApiClient {
     }
 
 
-    public io.minka.api.model.GenericResponse updateSigner(String signerAddress, io.minka.api.model.SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+    public SignerResponse updateSigner(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
         return api.updateSigner(signerAddress, updateSignerReq);
     }
@@ -399,7 +401,9 @@ public class SdkApiClient {
         return api.getSignerByAddress(wAddress);
     }
 
-    public io.minka.api.model.GenericResponse updateAction(String actionid, UpdateActionRequest req) throws io.minka.api.handler.ApiException {
+    public GetActionResponse updateAction(String actionid,
+                                          UpdateActionRequest req)
+            throws io.minka.api.handler.ApiException {
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
 
@@ -425,6 +429,7 @@ public class SdkApiClient {
         io.minka.api.handler.WalletApi api;
         api = new io.minka.api.handler.WalletApi(apiClient);
 
+        aliasHandle = "{\"gt\":100,\"lt\":200\"}";
         return api.getWalletByAlias(aliasHandle);
     }
 

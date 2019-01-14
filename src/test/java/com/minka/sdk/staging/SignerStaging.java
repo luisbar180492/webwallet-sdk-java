@@ -39,7 +39,7 @@ public class SignerStaging {
         SignerListResponse signers = null;
         try {
             signers = sdkApiClient.getSigners(1, 2);
-            System.out.println(signers.size());
+          //  System.out.println(signers.size());
             System.out.println(signers);
         } catch (io.minka.api.handler.ApiException e) {
             System.out.println(e.getResponseBody());

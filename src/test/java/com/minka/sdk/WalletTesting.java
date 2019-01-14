@@ -26,8 +26,9 @@ public class WalletTesting {
 
     @Before
     public void prepare(){
-        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
+      //  sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN, TestingConstants.API_KEY);
+
+    sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN, TestingConstants.API_KEY, "http://be8fc860.ngrok.io");
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
