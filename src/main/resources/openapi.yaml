@@ -1262,7 +1262,7 @@ paths:
           name: signer
           schema:
             type: string
-          required: true
+          required: false
         - in: query
           name: pagenum
           schema:

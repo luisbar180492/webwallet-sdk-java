@@ -14,6 +14,7 @@ import io.minka.api.model.*;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -372,11 +373,15 @@ public class SdkApiClient {
     public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
-        GetWalletResponse temporal = api.getWalletByAlias(null);
-        //getWallets(pagenum, pagesize);
 
-        WalletListResponse result = null;
-        return result;
+        WalletsResponse walletBySigner = api.getWalletBySigner(null, pagenum, pagesize);
+
+        List<WalletResponse> entities = walletBySigner.getEntities();
+        WalletListResponse walletResponses = new WalletListResponse();
+        for (WalletResponse curr: entities) {
+            walletResponses.add(curr);
+        }
+        return  walletResponses;
     }
 
     public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
@@ -429,7 +434,6 @@ public class SdkApiClient {
         io.minka.api.handler.WalletApi api;
         api = new io.minka.api.handler.WalletApi(apiClient);
 
-        aliasHandle = "{\"gt\":100,\"lt\":200\"}";
         return api.getWalletByAlias(aliasHandle);
     }
 
