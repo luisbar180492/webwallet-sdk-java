@@ -22,6 +22,7 @@ public class CustomApiClient extends ApiClient {
         }
     }
 
+    /*
     @Override
     public Call buildCall(String path, String method, List<Pair> queryParams, List<Pair> collectionQueryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String[] authNames, ProgressRequestBody.ProgressRequestListener progressRequestListener)  {
 
@@ -32,9 +33,9 @@ public class CustomApiClient extends ApiClient {
                 //fetchOauthToken();
             };
         }
-
-
     }
+
+    */
 /*
     private void fetchOauthToken() {
         ApiClient apiClientToken = new ApiClient();
