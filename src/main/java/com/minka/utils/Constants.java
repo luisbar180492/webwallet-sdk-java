@@ -2,6 +2,7 @@ package com.minka.utils;
 
 public class Constants {
 
+    public static final String MESSAGE_OAUTH = "Authorization field missing";
     public static final int BAD_REQUEST = 400;
     public static final String UNEXPECTED_ERROR_MESSAGE = "Error inesperado";
     public static int FORBIDDEN = 403;

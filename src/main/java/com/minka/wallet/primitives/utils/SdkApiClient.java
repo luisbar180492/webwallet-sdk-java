@@ -2,6 +2,7 @@ package com.minka.wallet.primitives.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.minka.CustomApiClient;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.KeyPairHolder;
 import com.minka.utils.ActionType;
@@ -24,7 +25,7 @@ import java.util.UUID;
  */
 public class SdkApiClient {
 
-    private final ApiClient apiClient;
+    private final CustomApiClient apiClient;
     private final String domain;
     private String url;
     private String apiKey;
@@ -40,7 +41,7 @@ public class SdkApiClient {
         this.domain = domain;
         this.url = urlBase;
         this.apiKey = apiKey;
-        apiClient = new ApiClient();
+        apiClient = new CustomApiClient();
         apiClient.setApiKey(apiKey);
         gson = (new GsonBuilder()).create();
         apiClient.setBasePath(url);
@@ -58,9 +59,8 @@ public class SdkApiClient {
         this.domain = domain;
         this.url = "https://" + domain + ".minka.io/v1";
         this.apiKey = apiKey;
-        apiClient = new ApiClient();
+        apiClient = new CustomApiClient();
         apiClient.setApiKey(apiKey);
-        gson = (new GsonBuilder()).create();
         apiClient.setBasePath(url);
 
         if (timeout > 0) {
@@ -76,7 +76,7 @@ public class SdkApiClient {
     }
 
     private void refreshToken() {
-        if (oauth2) {
+        //if (oauth2) {
             TokenResponse token = null;
             try {
                 token = getToken();
@@ -87,8 +87,8 @@ public class SdkApiClient {
             } catch (io.minka.api.handler.ApiException e) {
                 e.printStackTrace();
             }
-        }
-        updateXNonce();
+        //}
+        //updateXNonce();//TODO
     }
 
     private void updateXNonce() {
@@ -142,7 +142,7 @@ public class SdkApiClient {
      * @return un objeto con las llaves (privada y pública)
      */
     public io.minka.api.model.Keeper getKeeper() throws ExceptionResponseTinApi {
-        refreshToken();
+
 
         io.minka.api.handler.KeeperApi api = new io.minka.api.handler.KeeperApi(apiClient);
 
@@ -153,7 +153,7 @@ public class SdkApiClient {
         } catch (io.minka.api.handler.ApiException e) {
 
             String responseBody = e.getResponseBody();
-
+        System.out.println(e.getResponseBody());
             if (e.getCode() == Constants.FORBIDDEN) {
                 ErrorForbidden errorForbidden = new Gson().fromJson(responseBody, ErrorForbidden.class);
                 throw new ExceptionResponseTinApi(e.getCode(), errorForbidden.getError());
@@ -345,15 +345,18 @@ public class SdkApiClient {
         return transferApi.rejectP2Ptranfer(actionId, req);
     }
 
+    public void getActionsWithCustomQuery(String customQuery) throws ApiException {
+        refreshToken();
+        io.minka.api.handler.ActionApi tempoapi = new io.minka.api.handler.ActionApi(apiClient);
+
+
+    }
+
     public List<GetActionResponse> getActionPendings(String alias, AliasType aliasType, ActionType action) throws ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi tempoapi = new io.minka.api.handler.ActionApi(apiClient);
 
-        if (aliasType.getValue().equals(AliasType.SOURCE.getValue())) {
-            return tempoapi.getPending(action.getValue(), null, alias);
-        } else {
-            return tempoapi.getPending(action.getValue(), alias, null);
-        }
+        return tempoapi.getTransfer("?pagesize=2&pagenum=2").getEntities();
     }
 
 
@@ -372,9 +375,10 @@ public class SdkApiClient {
 
     public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
         refreshToken();
+
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
 
-        WalletsResponse walletBySigner = api.getWalletBySigner(null, pagenum, pagesize);
+        WalletsResponse walletBySigner = api.getWalletBySigner("?pagesize=2&pagenum=2");
 
         List<WalletResponse> entities = walletBySigner.getEntities();
         WalletListResponse walletResponses = new WalletListResponse();
@@ -444,13 +448,14 @@ public class SdkApiClient {
 
     public GetTransfersResponse getTransfer(String type, String target, String source) throws io.minka.api.handler.ApiException {
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-        return api.getTransfer(type, target, source, null);
+        String customQuery = null;
+        return api.getTransfer(customQuery);
     }
 
     public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-        return api.getTransfer(null, null, null, null);
+        return api.getTransfer(null);
     }
 
 
@@ -463,7 +468,6 @@ public class SdkApiClient {
         apiClientToken.setUsername(clientId);
         apiClientToken.setPassword(secret);
 
-        //apiClientToken.setBasePath("https://" + domain + ".minkna.io");
         apiClientToken.setBasePath(this.url.substring(0, this.url.length() - 3));
         TokenApi api = new TokenApi(apiClientToken);
         return api.getToken("client_credentials", clientId, secret);

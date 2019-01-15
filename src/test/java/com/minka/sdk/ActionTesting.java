@@ -27,6 +27,9 @@ public class ActionTesting {
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
                 TestingConstants.API_KEY);
 
+        //sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN, TestingConstants.API_KEY, "http://be8fc860.ngrok.io");
+
+
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
@@ -115,12 +118,16 @@ public class ActionTesting {
 
     }
     @Test
-    public void shouldGetPendingActions() throws ApiException {
+    public void shouldGetPendingActions() {
         String handle = "$573207246903";
         List<GetActionResponse> genericResponse =
-                sdkApiClient.getActionPendings(
-                handle, AliasType.TARGET, ActionType.SEND);
+                null;
+        try {
+            genericResponse = sdkApiClient.getActionPendings(
+            handle, AliasType.TARGET, ActionType.SEND);
+        } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+        }
 
-        System.out.println(genericResponse.size());
     }
 }

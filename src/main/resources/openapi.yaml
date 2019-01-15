@@ -418,29 +418,10 @@ paths:
         - XNonce: []
       parameters:
         - in: query
-          name: labels.type
+          name: customQuery
           schema:
             type: string
-            enum:
-              - REQUEST
-              - SEND
-          required: false
-        - in: query
-          name: target
-          schema:
-            type: string
-        - in: query
-          name: source
-          schema:
-            type: string
-        - in: query
-          name: params
-          required: false
-          schema:
-            type: object
-            additionalProperties: true
-          style: form
-          explode: true
+          required: true
       responses:
         '200':
           description: succesful get of an action
@@ -1259,20 +1240,11 @@ paths:
         - XNonce: []
       parameters:
         - in: query
-          name: signer
+          name: customQuery
           schema:
             type: string
           required: false
-        - in: query
-          name: pagenum
-          schema:
-            type: integer
-          required: false
-        - in: query
-          name: pagesize
-          schema:
-            type: integer
-          required: false
+
       responses:
         '200':
           description: OK
