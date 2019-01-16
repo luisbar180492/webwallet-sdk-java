@@ -24,7 +24,7 @@ public class KeeperStaging {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        //sdkApiClient.setOauth2On();
+
         io.minka.api.model.Keeper keeper = null;
         try {
             keeper = sdkApiClient.getKeeper();
@@ -41,8 +41,8 @@ public class KeeperStaging {
     @Test
     public void shouldGetToken() throws ApiException {
 
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                TestingConstants.API_KEY,"https://ach-minka-stg.transferenciasinmediatas.com/v1");
+        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)

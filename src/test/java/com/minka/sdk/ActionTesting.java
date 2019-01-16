@@ -1,20 +1,17 @@
 package com.minka.sdk;
 
-import com.minka.ExceptionResponseTinApi;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import io.minka.api.model.PublicKeys;
-import org.apache.commons.lang.time.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Ignore;
 
 public class ActionTesting {
 
@@ -24,10 +21,10 @@ public class ActionTesting {
     @Before
     public void prepare(){
 
-        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
 
-        //sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN, TestingConstants.API_KEY, "http://be8fc860.ngrok.io");
+        //sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING, TestingConstants.API_KEY, "http://be8fc860.ngrok.io");
 
 
         sdkApiClient

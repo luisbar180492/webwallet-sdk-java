@@ -19,13 +19,13 @@ public class SignerStaging {
     public void prepare(){
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                TestingConstants.API_KEY);
+                TestingConstants.API_KEY, TestingConstants.STAGING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        sdkApiClient.setOauth2On();
+
         if (TestingConstants.proxy){
             sdkApiClient.setProxy(TestingConstants.PROXY_HOST,
                     TestingConstants.PROXY_PORT);

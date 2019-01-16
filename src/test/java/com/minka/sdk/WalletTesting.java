@@ -26,15 +26,13 @@ public class WalletTesting {
 
     @Before
     public void prepare(){
-      //  sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN, TestingConstants.API_KEY);
 
-    sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN, TestingConstants.API_KEY, "http://be8fc860.ngrok.io");
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
-
-        sdkApiClient.setOauth2Off();
 
         if (TestingConstants.proxy){
             sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
