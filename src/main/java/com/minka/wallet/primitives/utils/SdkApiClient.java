@@ -370,7 +370,7 @@ public class SdkApiClient {
 
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
 
-        WalletsResponse walletBySigner = api.getWalletBySigner("?pagesize=2&pagenum=2");
+        WalletsResponse walletBySigner = api.getWalletBySigner("?pagesize=" + pagesize + "&pagenum=" + pagenum);
 
         List<WalletResponse> entities = walletBySigner.getEntities();
         WalletListResponse walletResponses = new WalletListResponse();
