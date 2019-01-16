@@ -117,11 +117,11 @@ public class ActionTesting {
     @Test
     public void shouldGetPendingActions() {
         String handle = "$573207246903";
-        List<GetActionResponse> genericResponse =
-                null;
+
         try {
-            genericResponse = sdkApiClient.getActionPendings(
-            handle, AliasType.TARGET, ActionType.SEND);
+            List<GetActionResponse> genericResponse =
+                    sdkApiClient.getActionPendings(handle, AliasType.TARGET, ActionType.SEND);
+            System.out.println(genericResponse);
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
         }

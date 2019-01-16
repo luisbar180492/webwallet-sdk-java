@@ -348,7 +348,14 @@ public class SdkApiClient {
         refreshToken();
         io.minka.api.handler.ActionApi tempoapi = new io.minka.api.handler.ActionApi(apiClient);
 
-        return tempoapi.getTransfer("?pagesize=2&pagenum=2").getEntities();
+        String customQuery = "?";
+        if (aliasType.getValue().equals(AliasType.TARGET.getValue())){
+            customQuery = customQuery + "target=" + alias;
+        } else{
+            customQuery = customQuery + "source=" + alias;
+        }
+        customQuery = customQuery + "&labels.type=" + action.getValue();
+        return tempoapi.getTransfer(customQuery).getEntities();
     }
 
 
