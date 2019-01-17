@@ -337,11 +337,25 @@ public class SdkApiClient {
         return transferApi.rejectP2Ptranfer(actionId, req);
     }
 
-    public void getActionsWithCustomQuery(String customQuery) throws ApiException {
+    public GetTransfersResponse getActionsWithCustomQuery(String customQuery) throws ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi tempoapi = new io.minka.api.handler.ActionApi(apiClient);
 
+        return tempoapi.getTransfer(customQuery);
+    }
 
+    public SignerListResponse getSignersWithCustomQuery(String customQuery) throws ApiException {
+        refreshToken();
+        io.minka.api.handler.SignerApi tempoapi = new io.minka.api.handler.SignerApi(apiClient);
+
+        return tempoapi.getSigners(customQuery);
+    }
+
+    public GetWalletResponse getWalletWithCustomQuery(String customQuery) throws ApiException {
+        refreshToken();
+        io.minka.api.handler.WalletApi tempoapi = new io.minka.api.handler.WalletApi(apiClient);
+
+        return tempoapi.getWalletByAlias(customQuery);
     }
 
     public List<GetActionResponse> getActionPendings(String alias, AliasType aliasType, ActionType action) throws ApiException {
@@ -356,6 +370,12 @@ public class SdkApiClient {
         }
         customQuery = customQuery + "&labels.type=" + action.getValue();
         return tempoapi.getTransfer(customQuery).getEntities();
+    }
+
+    public GetTransfersResponse getTransfer(String type, String target, String source) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+        String customQuery = "?" + "target=" + target + "source=" + source;
+        return api.getTransfer(customQuery);
     }
 
 
@@ -390,7 +410,7 @@ public class SdkApiClient {
     public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
-        return api.getSigners(pagenum, pagesize);
+        return api.getSigners("?pagesize=" + pagesize + "&pagenum=" + pagenum);
     }
 
     public io.minka.api.model.SignerResponse deleteSigner(String signerAddress) throws io.minka.api.handler.ApiException {
@@ -422,20 +442,6 @@ public class SdkApiClient {
         return api.updateActionLabels(actionid, req);
     }
 
-    /*
-    public io.minka.api.model.GenericResponse deleteAction(String actionid) throws io.minka.api.handler.ApiException {
-        refreshToken();
-        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-
-        return null;
-    }*/
-
-
-    public io.minka.api.model.GetWalletResponse deleteWalletByAlias(String aliasHandle) throws io.minka.api.handler.ApiException {
-        io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
-
-        return null;
-    }
 
     public io.minka.api.model.GetWalletResponse getWalletByAlias(String aliasHandle)
             throws io.minka.api.handler.ApiException {
@@ -451,11 +457,7 @@ public class SdkApiClient {
 
     }
 
-    public GetTransfersResponse getTransfer(String type, String target, String source) throws io.minka.api.handler.ApiException {
-        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-        String customQuery = null;
-        return api.getTransfer(customQuery);
-    }
+
 
     public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
         refreshToken();

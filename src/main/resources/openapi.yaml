@@ -995,15 +995,10 @@ paths:
         - XNonce: []
       parameters:
         - in: query
-          name: pagenum
+          name: customQuery
           schema:
-            type: integer
-          required: false
-        - in: query
-          name: pagesize
-          schema:
-            type: integer
-          required: false
+            type: string
+          required: true
       responses:
         '200':
           description: OK
