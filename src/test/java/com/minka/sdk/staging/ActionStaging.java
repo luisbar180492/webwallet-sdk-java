@@ -1,6 +1,5 @@
 package com.minka.sdk.staging;
 
-import com.minka.ExceptionResponseTinApi;
 import com.minka.sdk.ActionTesting;
 import com.minka.sdk.TestingConstants;
 import com.minka.utils.ActionType;
@@ -8,17 +7,12 @@ import com.minka.utils.AliasType;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
-import io.minka.api.model.PublicKeys;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Ignore;
 
 public class ActionStaging {
 
@@ -27,8 +21,8 @@ public class ActionStaging {
     @Before
     public void prepare(){
 
-        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
+                TestingConstants.API_KEY, TestingConstants.STAGING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)

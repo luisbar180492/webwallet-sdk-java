@@ -12,10 +12,10 @@ import static org.junit.Assert.assertNotEquals;
 public class KeeperStaging {
 
     @Test
-    public void shouldReturnKeypair() throws ExceptionResponseTinApi, ApiException {
+    public void shouldReturnKeypair() {
 
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                TestingConstants.API_KEY);
+                TestingConstants.API_KEY, TestingConstants.STAGING_BASE);
 
         if (TestingConstants.proxy) {
             sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
@@ -24,8 +24,13 @@ public class KeeperStaging {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        sdkApiClient.setOauth2On();
-        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
+
+        io.minka.api.model.Keeper keeper = null;
+        try {
+            keeper = sdkApiClient.getKeeper();
+        } catch (ExceptionResponseTinApi exceptionResponseTinApi) {
+           // exceptionResponseTinApi.printStackTrace();
+        }
 
         assertNotEquals(null, keeper.getSecret() );
         assertNotEquals(null, keeper.getPublic() );
@@ -36,8 +41,8 @@ public class KeeperStaging {
     @Test
     public void shouldGetToken() throws ApiException {
 
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                TestingConstants.API_KEY);
+        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)

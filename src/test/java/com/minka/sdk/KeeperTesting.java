@@ -4,7 +4,6 @@ import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.Keeper;
-import io.minka.api.model.TokenResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,14 +20,12 @@ public class KeeperTesting {
 
     @Before
     public void prepare(){
-        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
-
-        sdkApiClient.setOauth2Off();
 
         if (TestingConstants.proxy){
             sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
@@ -52,8 +49,8 @@ public class KeeperTesting {
     @Test
     public void shouldGenerateOfflineSigningKeypair() throws ApiException {
 
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
+        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
 
         Keeper keypair = sdkApiClient.getKeeperForOfflineSigning();
         System.out.println(keypair);

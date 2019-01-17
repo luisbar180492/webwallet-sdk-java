@@ -24,8 +24,8 @@ public class TransferTesting {
     @Before
     public void prepare(){
 
-        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
@@ -33,8 +33,6 @@ public class TransferTesting {
         if (TestingConstants.proxy){
             sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
         }
-
-
     }
 
 
@@ -153,6 +151,7 @@ public class TransferTesting {
         */
     }
 
+    @Ignore
     @Test
     public void shouldCreateAction() throws  io.minka.api.handler.ApiException {
         io.minka.api.model.CreateActionRequest req = new io.minka.api.model.CreateActionRequest();
@@ -251,7 +250,7 @@ public class TransferTesting {
         String actionId = "ea80e7a9-87e2-4063-8d37-6348658fd3fe";
 
         try {
-            GetActionResponse getActionResponse = sdkApiClient.continueTransaction(actionId, actionSigned);
+            CreateTransferResponse getActionResponse = sdkApiClient.continueTransaction(actionId, actionSigned);
             System.out.println(getActionResponse);
         } catch (ApiException e) {
             e.printStackTrace();

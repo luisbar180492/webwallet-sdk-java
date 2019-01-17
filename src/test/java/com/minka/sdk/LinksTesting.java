@@ -15,13 +15,15 @@ public class LinksTesting {
     @Before
     public void prepare(){
 
-        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN,
-                TestingConstants.API_KEY);
+        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
-
+        if (TestingConstants.proxy){
+            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+        }
     }
 
     @Ignore

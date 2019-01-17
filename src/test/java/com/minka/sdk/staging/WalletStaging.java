@@ -31,7 +31,7 @@ public class WalletStaging {
     @Before
     public void prepare(){
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                TestingConstants.API_KEY);
+                TestingConstants.API_KEY, TestingConstants.STAGING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
@@ -42,7 +42,6 @@ public class WalletStaging {
                     TestingConstants.PROXY_PORT);
         }
 
-        sdkApiClient.setOauth2On();
     }
 
     @Test
