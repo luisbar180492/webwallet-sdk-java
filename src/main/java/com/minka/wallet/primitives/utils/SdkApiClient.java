@@ -498,4 +498,16 @@ public class SdkApiClient {
     public String generateUUID() {
         return String.valueOf((new Date()).getTime()) + "-" + UUID.randomUUID().toString();
     }
+
+    public List<Conciliation> getConciliation() throws ApiException {
+        refreshToken();
+        io.minka.api.handler.ConciliationApi api = new io.minka.api.handler.ConciliationApi(apiClient);
+        return api.getConciliation();
+    }
+
+    public GetAnalyticsResponse getAnalytics() throws ApiException {
+        refreshToken();
+        io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
+        return api.getTransfersAnalytics();
+    }
 }

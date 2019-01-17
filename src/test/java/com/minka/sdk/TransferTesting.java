@@ -33,8 +33,6 @@ public class TransferTesting {
         if (TestingConstants.proxy){
             sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
         }
-
-
     }
 
 
@@ -153,6 +151,7 @@ public class TransferTesting {
         */
     }
 
+    @Ignore
     @Test
     public void shouldCreateAction() throws  io.minka.api.handler.ApiException {
         io.minka.api.model.CreateActionRequest req = new io.minka.api.model.CreateActionRequest();

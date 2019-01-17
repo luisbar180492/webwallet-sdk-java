@@ -7,6 +7,7 @@ import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import io.minka.api.model.PublicKeys;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -37,6 +38,7 @@ public class ActionTesting {
         }
     }
 
+    @Ignore
     @Test
     public void shouldCreateAction() throws io.minka.api.handler.ApiException {
         io.minka.api.model.CreateActionRequest req = new io.minka.api.model.CreateActionRequest();
