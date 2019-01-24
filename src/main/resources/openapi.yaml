@@ -1089,6 +1089,105 @@ paths:
               $ref: '#/components/schemas/signerRequest'
         required: true
 
+  /custom/signer/{signerAddress}:
+    put:
+      summary: Actualiza un signer
+      description: ''
+      operationId: updateSignerCustom
+      security:
+        - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
+        - XNonce: []
+      parameters:
+        - in: path
+          name: signerAddress
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signerRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '100':
+          description: You don't have permissions to access this method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  '/custom/action/{action_id}':
+    put:
+      summary: Update labels of an action
+      description: ''
+      operationId: updateActionLabels
+      security:
+        - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
+        - XNonce: []
+      parameters:
+        - in: path
+          name: action_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '115':
+          description: Invalid action hash
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '116':
+          description: Field is not allowed to be changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateActionRequest'
+        required: true
+
   '/signer/{userAddress}/router/{actionId}/action':
     post:
       summary: Call action in user's Bank

@@ -432,12 +432,20 @@ public class SdkApiClient {
         return api.getSignerByAddress(wAddress);
     }
 
-    public GetActionResponse updateAction(String actionid,
-                                          UpdateActionRequest req)
+
+    public GetActionResponse updateActionParameters(String actionid, UpdateActionRequest req)
             throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
+        return api.updateActionLabels(actionid, req);
+    }
+
+    public GenericResponse updateAction(String actionid,
+                                        UpdateActionRequest req)
+            throws io.minka.api.handler.ApiException {
+        refreshToken();
+        io.minka.api.handler.DefaultApi api = new io.minka.api.handler.DefaultApi(apiClient);
 
         return api.updateActionLabels(actionid, req);
     }

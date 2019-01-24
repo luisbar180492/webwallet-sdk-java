@@ -18,8 +18,9 @@ public class CustomApiClient extends ApiClient {
         if (queryParams.size() ==1 && queryParams.get(0).getName().equals("customQuery"))
         {
             return super.getBasePath() + path + queryParams.get(0).getValue();
-        } else if (path.contains("/custom/signer")){
-
+        } else if (path.contains("/custom/action/")){
+            return super.buildUrl(StringUtils.remove(path,"/custom"), queryParams, collectionQueryParams);
+        }else if (path.contains("/custom/signer")){
             return super.buildUrl(StringUtils.remove(path,"/custom"), queryParams, collectionQueryParams);
         } else {
             return super.buildUrl(path, queryParams, collectionQueryParams);
