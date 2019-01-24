@@ -507,16 +507,16 @@ public class SdkApiClient {
         return String.valueOf((new Date()).getTime()) + "-" + UUID.randomUUID().toString();
     }
 
-    public List<Conciliation> getConciliation() throws ApiException {
+    public List<Conciliation> getConciliation(String customQuery) throws ApiException {
         refreshToken();
         io.minka.api.handler.ConciliationApi api = new io.minka.api.handler.ConciliationApi(apiClient);
-        return api.getConciliation();
+        return api.getConciliation(customQuery);
     }
 
-    public GetAnalyticsResponse getAnalytics() throws ApiException {
+    public GetAnalyticsResponse getAnalytics(String customQuery) throws ApiException {
         refreshToken();
         io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
-        return api.getTransfersAnalytics();
+        return api.getTransfersAnalytics(customQuery);
     }
 
     public Transfers getTransfersWithCustomQuery(String query) throws ApiException {

@@ -29,6 +29,12 @@ paths:
         - XNonce: []
       tags:
         - Transfer
+      parameters:
+        - in: query
+          name: customQuery
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: get of a transfers data for analytics
@@ -847,6 +853,12 @@ paths:
         - XNonce: []
       tags:
         - Conciliation
+      parameters:
+        - in: query
+          name: customQuery
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: Conciliation file generated
