@@ -414,8 +414,13 @@ public class SdkApiClient {
         return api.deleteSignerByAddress(signerAddress);
     }
 
+    public GenericResponse updateSigner(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+        refreshToken();
+        DefaultApi api = new DefaultApi(apiClient);
+        return api.updateSignerCustom(signerAddress, updateSignerReq);
+    }
 
-    public SignerResponse updateSigner(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+    public SignerResponse updateSignerParameters(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
         return api.updateSigner(signerAddress, updateSignerReq);
