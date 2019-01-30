@@ -66,12 +66,13 @@ public class ActionTesting {
         }
     }
 
+    @Ignore
     @Test
     public void getTransfersWithCustomQuery() {
         try {
             String query = "?";
             Transfers actions = sdkApiClient.getTransfersWithCustomQuery(query);
-            System.out.println(actions.getEntities().size());
+            System.out.println(actions);
         } catch (ApiException e) {
             e.printStackTrace();
             System.out.println(e.getResponseBody());
