@@ -26,12 +26,12 @@ public class ConciliationTesting {
     @Ignore
     @Test
     public void concilia() throws ApiException {
-        sdkApiClient.getConciliation();
+        sdkApiClient.getConciliation("?");
     }
 
     @Ignore
     @Test
     public void getAnalytics() throws ApiException {
-        sdkApiClient.getAnalytics();
+        sdkApiClient.getAnalytics("?");
     }
 }

@@ -29,6 +29,12 @@ paths:
         - XNonce: []
       tags:
         - Transfer
+      parameters:
+        - in: query
+          name: customQuery
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: get of a transfers data for analytics
@@ -242,6 +248,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+    get:
+      summary: Get Transfers
+      operationId: getTransfers
+      security:
+        - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
+        - XNonce: []
+      parameters:
+        - in: query
+          name: customQuery
+          schema:
+            type: string
+          required: true
+      tags:
+        - Transfer
+      responses:
+        '200':
+          description: get Pending transfers
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/transfers'
+        '400':
+          description: Link error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '104':
+          description: Invalid handle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /link/{link_id}:
     delete:
       summary: Delete a link
@@ -409,7 +456,7 @@ paths:
     get:
       summary: Get Actions received
       description: ''
-      operationId: getTransfer
+      operationId: getActions
       tags:
         - Action
       security:
@@ -806,6 +853,12 @@ paths:
         - XNonce: []
       tags:
         - Conciliation
+      parameters:
+        - in: query
+          name: customQuery
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: Conciliation file generated
@@ -1046,6 +1099,105 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/signerRequest'
+        required: true
+
+  /custom/signer/{signerAddress}:
+    put:
+      summary: Actualiza un signer
+      description: ''
+      operationId: updateSignerCustom
+      security:
+        - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
+        - XNonce: []
+      parameters:
+        - in: path
+          name: signerAddress
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signerRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '100':
+          description: You don't have permissions to access this method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  '/custom/action/{action_id}':
+    put:
+      summary: Update labels of an action
+      description: ''
+      operationId: updateActionLabels
+      security:
+        - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
+        - XNonce: []
+      parameters:
+        - in: path
+          name: action_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '400':
+          description: Domain error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '100':
+          description: You don't have permissions to access this method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '102':
+          description: Invalid labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '115':
+          description: Invalid action hash
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '116':
+          description: Field is not allowed to be changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateActionRequest'
         required: true
 
   '/signer/{userAddress}/router/{actionId}/action':
@@ -1450,9 +1602,8 @@ paths:
       parameters:
         - in: path
           name: handle
-          style: form
           schema:
-            type: object
+            type: string
           required: true
       responses:
         '200':
@@ -2614,3 +2765,71 @@ components:
           type: string
         filter:
           type: string
+
+    transfers:
+      type: object
+      properties:
+        entities:
+          type: array
+          items:
+           $ref: '#/components/schemas/getTransferResponse'
+        pagination:
+          type: object
+          $ref: '#/components/schemas/pagination'
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
+
+    getTransferResponse:
+        type: object
+        properties:
+          transfer_id:
+            type: string
+          tx_id:
+            type: string
+          tx_ref:
+            type: string
+          source:
+            type: string
+          sourceWallet:
+            type: string
+          sourceSigner:
+            type: string
+          sourceSignerBalance:
+            type: string
+          sourceBank:
+            type: string
+          sourceBankBicfi:
+            type: string
+          target:
+            type: string
+          targetWallet:
+            type: string
+          targetSigner:
+            type: string
+          targetSignerBalance:
+            type: string
+          targetBank:
+            type: string
+          targetBankBicfi:
+            type: string
+          amount:
+            type: string
+          symbol:
+            type: string
+          type:
+            type: string
+          status:
+            type: string
+          description:
+            type: string
+          created:
+            type: string
+          updated:
+            type: string
+          domain:
+            type: string
+          owner:
+            type: string
+          labels:
+            type: string

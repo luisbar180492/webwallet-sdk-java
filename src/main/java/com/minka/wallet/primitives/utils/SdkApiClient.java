@@ -255,8 +255,6 @@ public class SdkApiClient {
                 WalletUpdateResponse response = new Gson().fromJson(responseBody, WalletUpdateResponse.class);
                 throw new ExceptionResponseTinApi(response.getError().getCode(), response.getError().getMessage());
             } else {
-                System.out.println(e.getCode());
-                System.out.println(e.getResponseBody());
                 throw new ExceptionResponseTinApi(Constants.UNEXPECTED_ERROR, Constants.UNEXPECTED_ERROR_MESSAGE);
             }
         }
@@ -341,7 +339,7 @@ public class SdkApiClient {
         refreshToken();
         io.minka.api.handler.ActionApi tempoapi = new io.minka.api.handler.ActionApi(apiClient);
 
-        return tempoapi.getTransfer(customQuery);
+        return tempoapi.getActions(customQuery);
     }
 
     public SignerListResponse getSignersWithCustomQuery(String customQuery) throws ApiException {
@@ -368,14 +366,15 @@ public class SdkApiClient {
         } else{
             customQuery = customQuery + "source=" + alias;
         }
-        customQuery = customQuery + "&labels.type=" + action.getValue();
-        return tempoapi.getTransfer(customQuery).getEntities();
+        customQuery = customQuery + "&labels.type=" + action.getValue() + "&labels.status=PENDING";
+        return tempoapi.getActions(customQuery).getEntities();
     }
 
-    public GetTransfersResponse getTransfer(String type, String target, String source) throws io.minka.api.handler.ApiException {
-        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-        String customQuery = "?" + "target=" + target + "source=" + source;
-        return api.getTransfer(customQuery);
+    public Transfers getTransferPendings(String type, String target, String source) throws io.minka.api.handler.ApiException {
+        io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
+
+        String customQuery = "?" + "target=" + target + "source=" + source + "&labels.type=" + type + "&labels.status=PENDING";;
+        return  api.getTransfers(customQuery);
     }
 
 
@@ -384,10 +383,6 @@ public class SdkApiClient {
 
         refreshToken();
         io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
-
-        System.out.println("api.getApiClient().getBasePath()");
-        System.out.println(api.getApiClient().getBasePath());
-
 
         return api.createTinTransfer(tintransfer);
     }
@@ -419,8 +414,13 @@ public class SdkApiClient {
         return api.deleteSignerByAddress(signerAddress);
     }
 
+    public GenericResponse updateSigner(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+        refreshToken();
+        DefaultApi api = new DefaultApi(apiClient);
+        return api.updateSignerCustom(signerAddress, updateSignerReq);
+    }
 
-    public SignerResponse updateSigner(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
+    public SignerResponse updateSignerParameters(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
         return api.updateSigner(signerAddress, updateSignerReq);
@@ -432,12 +432,20 @@ public class SdkApiClient {
         return api.getSignerByAddress(wAddress);
     }
 
-    public GetActionResponse updateAction(String actionid,
-                                          UpdateActionRequest req)
+
+    public GetActionResponse updateActionParameters(String actionid, UpdateActionRequest req)
             throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
+        return api.updateActionLabels(actionid, req);
+    }
+
+    public GenericResponse updateAction(String actionid,
+                                        UpdateActionRequest req)
+            throws io.minka.api.handler.ApiException {
+        refreshToken();
+        io.minka.api.handler.DefaultApi api = new io.minka.api.handler.DefaultApi(apiClient);
 
         return api.updateActionLabels(actionid, req);
     }
@@ -462,7 +470,7 @@ public class SdkApiClient {
     public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-        return api.getTransfer(null);
+        return api.getActions("?");
     }
 
 
@@ -499,15 +507,21 @@ public class SdkApiClient {
         return String.valueOf((new Date()).getTime()) + "-" + UUID.randomUUID().toString();
     }
 
-    public List<Conciliation> getConciliation() throws ApiException {
+    public List<Conciliation> getConciliation(String customQuery) throws ApiException {
         refreshToken();
         io.minka.api.handler.ConciliationApi api = new io.minka.api.handler.ConciliationApi(apiClient);
-        return api.getConciliation();
+        return api.getConciliation(customQuery);
     }
 
-    public GetAnalyticsResponse getAnalytics() throws ApiException {
+    public GetAnalyticsResponse getAnalytics(String customQuery) throws ApiException {
         refreshToken();
         io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
-        return api.getTransfersAnalytics();
+        return api.getTransfersAnalytics(customQuery);
+    }
+
+    public Transfers getTransfersWithCustomQuery(String query) throws ApiException {
+        refreshToken();
+        io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
+        return api.getTransfers(query);
     }
 }

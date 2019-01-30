@@ -25,8 +25,6 @@ public class ActionTesting {
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
 
-        //sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING, TestingConstants.API_KEY, "http://be8fc860.ngrok.io");
-
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
@@ -45,11 +43,11 @@ public class ActionTesting {
 
         CreateActionRequestLabels labels = new CreateActionRequestLabels();
         req.setLabels(labels);
-        req.setAmount("1");
-        req.setSource("$offline");
-        //req.setSource("$tin");
+        req.setAmount("100");
+        //req.setSource("$gzlboubhabkmslivdxt");
+        req.setSource("$tin");
         req.setSymbol("$tin");
-        req.setTarget("$ivanchonline");
+        req.setTarget("$gzlboubhabkmslivdxt");
         System.out.println(req);
 
         io.minka.api.model.CreateActionResponse action = null;
@@ -58,11 +56,47 @@ public class ActionTesting {
     }
 
     @Test
+    public void getActionByActionsNoFilters() {
+        try {
+            GetTransfersResponse actions = sdkApiClient.getActions();
+            System.out.println(actions.getEntities().size());
+        } catch (ApiException e) {
+            e.printStackTrace();
+            System.out.println(e.getResponseBody());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void getTransfersWithCustomQuery() {
+        try {
+            String query = "?";
+            Transfers actions = sdkApiClient.getTransfersWithCustomQuery(query);
+            System.out.println(actions);
+        } catch (ApiException e) {
+            e.printStackTrace();
+            System.out.println(e.getResponseBody());
+        }
+    }
+
+    @Test
+    public void getActionsWithCustomQuery() {
+        try {
+            String query = "?labels.type=SEND&target=$573008507524";
+            GetTransfersResponse actions = sdkApiClient.getActionsWithCustomQuery(query);
+            System.out.println(actions.getEntities().size());
+        } catch (ApiException e) {
+            e.printStackTrace();
+            System.out.println(e.getResponseBody());
+        }
+    }
+
+    @Test
     public void getActionByActionId(){
         try {
             GetActionResponse actionResponse =
                     sdkApiClient.getAction(
-                            "bd8518df-67c2-4598-b9fb-97b06c35c03e");
+                            "3eafded6-2645-4ce2-836c-c79928d8df77");
 
             System.out.println(actionResponse);
         } catch (ApiException e) {
@@ -81,12 +115,13 @@ public class ActionTesting {
 
     @Test
     public void shouldSignActionOnline(){
-        String actionId = "512884a6-5f94-4678-a1c3-226621275dce";
+        String actionId = "b32debab-9df0-49db-814f-92a06dbedc15";
         try {
             ActionSignedLabels signedLabels = new ActionSignedLabels();
             ActionSigned actionSigned = sdkApiClient.signAction(actionId, signedLabels);
             System.out.println(actionSigned);
         } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
             e.printStackTrace();
         }
     }
@@ -118,12 +153,12 @@ public class ActionTesting {
     }
     @Test
     public void shouldGetPendingActions() {
-        String handle = "$573207246903";
+        String handle = "$573008507524";
 
         try {
             List<GetActionResponse> genericResponse =
                     sdkApiClient.getActionPendings(handle, AliasType.TARGET, ActionType.SEND);
-            System.out.println(genericResponse);
+            System.out.println(genericResponse.size());
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
         }
