@@ -65,6 +65,7 @@ public class WalletTesting {
 
     }
 
+    @Ignore
     @Test(expected = WalletCreationException.class)
     public void shouldNotCreateWalletWithWrongHandle() throws WalletCreationException {
         String handle = "$" + RandomStringUtils.randomAlphabetic(21).toLowerCase();
