@@ -2,6 +2,7 @@ package com.minka.sdk;
 
 import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.handler.ApiException;
 import io.minka.api.model.LinkItem;
 import io.minka.api.model.ListLinks;
 import org.junit.Before;
@@ -13,7 +14,7 @@ public class LinksTesting {
     SdkApiClient sdkApiClient;
 
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY,TestingConstants.TESTING_BASE);

@@ -16,7 +16,7 @@ public class SignerStaging {
     SdkApiClient sdkApiClient;
 
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
                 TestingConstants.API_KEY, TestingConstants.STAGING_BASE);

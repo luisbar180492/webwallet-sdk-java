@@ -1,5 +1,12 @@
 package com.minka.wallet.primitives.utils;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import javax.net.ssl.SSLContextSpi;
+import sun.security.jca.GetInstance;
+import sun.security.jca.ProviderList;
+import sun.security.jca.Providers;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.CustomApiClient;
@@ -10,19 +17,28 @@ import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
+import io.minka.api.handler.auth.OAuth;
 import io.minka.api.model.*;
+import sun.security.jca.GetInstance;
+import sun.security.jca.ProviderList;
+import sun.security.jca.Providers;
 
+import javax.net.ssl.SSLContextSpi;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
+import java.security.Provider;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /***
  * Cliente para la integración con el servicio WEB de TINAPI de MINKA
  */
 public class SdkApiClient {
+
+    private Logger logger = Logger.getLogger(SdkApiClient.class.getName());
 
     private final CustomApiClient apiClient;
     private final String domain;
@@ -35,7 +51,12 @@ public class SdkApiClient {
     private Proxy proxy;
     private Gson gson;
 
-    public SdkApiClient(String domain, String apiKey, String urlBase) {
+    public SdkApiClient(String domain, String apiKey, String urlBase) throws ApiException {
+        try {
+            forceTLS1dot2version();
+        } catch (NoSuchAlgorithmException e) {
+            throw new ApiException("TLS version 1.2 no pudo ser inicializada");
+        }
         this.domain = domain;
         this.url = urlBase;
         this.apiKey = apiKey;
@@ -46,6 +67,18 @@ public class SdkApiClient {
 
         if (timeout > 0) {
             apiClient.setConnectTimeout(timeout);
+        }
+    }
+
+    private void forceTLS1dot2version() throws NoSuchAlgorithmException {
+        ProviderList providerList = Providers.getProviderList();
+        GetInstance.Instance instance = GetInstance.getInstance("SSLContext", SSLContextSpi.class, "TLS");
+        for (Provider provider : providerList.providers())
+        {
+            if (provider == instance.provider)
+            {
+                provider.put("Alg.Alias.SSLContext.TLS", "TLSv1.2");
+            }
         }
     }
 
@@ -87,6 +120,9 @@ public class SdkApiClient {
     private void updateXNonce() {
         ApiKeyAuth xNonce = (ApiKeyAuth) apiClient.getAuthentication("XNonce");
         xNonce.setApiKey(generateUUID());
+
+        ApiKeyAuth apiKeyTin = (ApiKeyAuth) apiClient.getAuthentication("ApiKeyAuth");
+        apiKeyTin.setApiKey(apiKey);
     }
 
     /**
@@ -146,6 +182,7 @@ public class SdkApiClient {
         } catch (io.minka.api.handler.ApiException e) {
 
             String responseBody = e.getResponseBody();
+            System.out.println(e.getResponseBody());
 
             if (e.getCode() == Constants.FORBIDDEN) {
                 ErrorForbidden errorForbidden = new Gson().fromJson(responseBody, ErrorForbidden.class);
@@ -321,7 +358,11 @@ public class SdkApiClient {
         try {
             return transferApi.acceptP2Ptranfer(actionRequestId, req);
         } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+            System.out.println(e.getCode());
+            System.out.println(e.getResponseHeaders());
 
+            System.out.println(e.getResponseBody());
             ErrorGenerico errorGenerico = new Gson().fromJson(e.getResponseBody(), ErrorGenerico.class);
             throw new ExceptionResponseTinApi(errorGenerico.getCode(), e.getMessage());
         }
@@ -367,6 +408,7 @@ public class SdkApiClient {
             customQuery = customQuery + "source=" + alias;
         }
         customQuery = customQuery + "&labels.type=" + action.getValue() + "&labels.status=PENDING";
+        System.out.println(customQuery);
         return tempoapi.getActions(customQuery).getEntities();
     }
 
@@ -467,6 +509,7 @@ public class SdkApiClient {
 
 
 
+    @Deprecated
     public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);

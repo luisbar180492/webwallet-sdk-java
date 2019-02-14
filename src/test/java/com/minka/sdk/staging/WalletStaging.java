@@ -4,6 +4,7 @@ import com.minka.ExceptionResponseTinApi;
 import com.minka.sdk.TestingConstants;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
+import io.minka.api.handler.ApiException;
 import io.minka.api.model.WalletListResponse;
 import io.minka.api.model.WalletRequest;
 import io.minka.api.model.WalletRequestLabels;
@@ -29,7 +30,7 @@ public class WalletStaging {
     String existingHandle;
 
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
                 TestingConstants.API_KEY, TestingConstants.STAGING_BASE);
 
