@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotEquals;
 public class KeeperStaging {
 
     @Test
-    public void shouldReturnKeypair() {
+    public void shouldReturnKeypair() throws ApiException {
 
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
                 TestingConstants.API_KEY, TestingConstants.STAGING_BASE);

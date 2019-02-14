@@ -4,9 +4,11 @@ import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.Keeper;
+import io.minka.api.model.TokenResponse;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertNotEquals;
@@ -14,12 +16,14 @@ import static org.junit.Assert.assertNotEquals;
 
 public class KeeperTesting {
 
+
     private Logger logger = Logger.getLogger(KeeperTesting.class.getName());
 
-    SdkApiClient sdkApiClient;
+    private SdkApiClient sdkApiClient;
 
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
+
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY,TestingConstants.STAGING_BASE);
 
@@ -28,15 +32,10 @@ public class KeeperTesting {
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
-
-        if (TestingConstants.proxy){
-            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
-        }
-
     }
 
     @Test
-    public void shouldReturnKeypairTesting() throws ExceptionResponseTinApi, ApiException {
+    public void shouldReturnKeypairTesting() throws ExceptionResponseTinApi, ApiException, NoSuchAlgorithmException {
 
         io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
 
