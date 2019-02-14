@@ -22,7 +22,7 @@ public class TransferTesting {
     SdkApiClient sdkApiClient;
 
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
@@ -51,11 +51,11 @@ public class TransferTesting {
     @Test
     public void shouldAcceptRequestTransfer() throws io.minka.api.handler.ApiException {
 
-        String actionRequestId = "dff4423c-8c85-4902-a792-7c5168ba842d";
+        String actionRequestId = "6b2ef24c-5f78-4a37-a808-97ae516bcdad";
 
         AcceptTransferRequest req = new AcceptTransferRequest();
         SignerObject signer = new SignerObject();
-        signer.setHandle("wic6kF3M2Zvy986mByV76YKXDFNY1spa6f");
+        signer.setHandle("wXSabnoufg1cjwM4Pk4bvVuAghutNW4HBH");
         req.setSigner(signer);
         WalletObject walletObject = new WalletObject();
         Map<String, Object> labels = new HashMap<>();
@@ -63,9 +63,8 @@ public class TransferTesting {
         labels.put("channelSms", "573185951061");
 
         //walletObject.setLabels(labels);
-        walletObject.setHandle("$573185951061");
+        walletObject.setHandle("$573113135295");
         List<String> signerss = new ArrayList<>();
-        signerss.add("wic6kF3M2Zvy986mByV76YKXDFNY1spa6f");
         walletObject.setSigner(signerss);
         req.setWallet(walletObject);
 
@@ -95,7 +94,8 @@ public class TransferTesting {
         String amount = "1";
         String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String action;
-//        action = sdkApiClient.createTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
+        CreateTransferRequest tinTransfer = new CreateTransferRequest();
+         //sdkApiClient.createTinTransfer(tinTransfer);
 //        System.out.println("ACTION ID " + action);
 //        assertNotEquals(null, action);
     }

@@ -3,6 +3,7 @@ package com.minka.sdk;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
+import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import io.minka.api.model.WalletUpdateRequest;
 import org.apache.commons.lang.RandomStringUtils;
@@ -25,7 +26,7 @@ public class WalletTesting {
     String existingHandle;
 
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
@@ -34,9 +35,9 @@ public class WalletTesting {
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
 
-        if (TestingConstants.proxy){
-            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
-        }
+//        if (TestingConstants.proxy){
+            //sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+  //      }
 
     }
 
@@ -142,6 +143,36 @@ public class WalletTesting {
 //        assertNotEquals(wallet.getError().getCode().intValue(), TestingConstants.SUCCESS_ERROR_CODE);
 //        System.out.println(wallet);
 
+    }
+
+    @Test
+    public void daViviend(){
+        try {
+            SdkApiClient sdkApiClient =  new SdkApiClient(TestingConstants.DOMAIN_TESTING, TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
+            sdkApiClient.setSecret(TestingConstants.SECRET).setClientId(TestingConstants.CLIENT_ID);
+            // Crear Wallet
+
+            //sdkApiClient.setProxy(TestingConstants.PROXY_HOST,TestingConstants.PROXY_PORT);
+            String handle = "$" + RandomStringUtils.randomAlphabetic(19).toLowerCase();
+            WalletRequest walletReq  = new WalletRequest();
+            walletReq.setHandle(handle);
+            WalletRequestLabels labelsReq = new WalletRequestLabels();
+            labelsReq.setType("TROUPE");
+
+            labelsReq.setRouterDownload("https://bank-dot-ach-tin-tst.appspot.com/v1/credit");
+            labelsReq.setRouterAction("https://bank-dot-ach-tin-tst.appspot.com/v1/action");
+            labelsReq.setRouterUpload("https://bank-dot-ach-tin-tst.appspot.com/v1/debit");
+            labelsReq.setRouterStatus("https://bank-dot-ach-tin-tst.appspot.com/v1/status");
+
+            walletReq.setLabels(labelsReq);
+            io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(walletReq);
+
+            System.out.println("1. CREAR WALLET: " + handle);
+            System.out.println(wallet);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

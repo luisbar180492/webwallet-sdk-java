@@ -6,8 +6,10 @@ public class TestingConstants {
     public static String DOMAIN_TESTING = "achtin.minka.io";
     public static String DOMAIN_STAGING = "achtin.minka.io";
     public static String STAGING_BASE= "https://ach-minka-stg.transferenciasinmediatas.com/v1";
-    //public static String TESTING_BASE= "https://ach-minka-tst.transferenciasinmediatas.com/v1";
-    public static String TESTING_BASE="https://achtin-tst.minka.io/v1/";
+    public static String TESTING_BASE= "https://ach-minka-tst.transferenciasinmediatas.com/v1";
+    //public static String TESTING_BASE="https://achtin-tst.minka.io/v1";
+    //public static String TESTING_BASE = "https://6ee820ff.ngrok.io/v1";
+
     public static String API_KEY = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";
     public static String CLIENT_ID = "03cead0f92164973947a545a5ceef078";
     public static String SECRET = "ZWViNjU2YmEtZmU5ZS00NTgzLWI2YmMtMTI2MmM5MGFjYzk2";

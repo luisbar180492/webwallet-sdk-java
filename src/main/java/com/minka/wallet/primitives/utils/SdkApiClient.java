@@ -530,6 +530,7 @@ public class SdkApiClient {
 
 
 
+    @Deprecated
     public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
