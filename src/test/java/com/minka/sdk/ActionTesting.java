@@ -20,7 +20,7 @@ public class ActionTesting {
     SdkApiClient sdkApiClient;
 
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
@@ -55,6 +55,7 @@ public class ActionTesting {
         System.out.println(action.getActionId());
     }
 
+    @Ignore
     @Test
     public void getActionByActionsNoFilters() {
         try {
@@ -153,7 +154,7 @@ public class ActionTesting {
     }
     @Test
     public void shouldGetPendingActions() {
-        String handle = "$573008507524";
+        String handle = "$573113135295";
 
         try {
             List<GetActionResponse> genericResponse =

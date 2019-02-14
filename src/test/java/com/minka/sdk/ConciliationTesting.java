@@ -10,7 +10,7 @@ import org.junit.Test;
 public class ConciliationTesting {
     SdkApiClient sdkApiClient;
     @Before
-    public void prepare(){
+    public void prepare() throws ApiException {
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
