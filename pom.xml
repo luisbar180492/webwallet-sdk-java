@@ -117,6 +117,7 @@
             <version>3.2.2</version>
             <executions>
                 <execution>
+                    <id>tin-api-rest-client</id>
                     <goals>
                         <goal>generate</goal>
                     </goals>
@@ -130,6 +131,23 @@
                         <apiPackage>io.minka.api.handler</apiPackage>
                         <modelPackage>io.minka.api.model</modelPackage>
                         <invokerPackage>io.minka.api.handler</invokerPackage>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>webwallet-core-rest-client</id>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                    <configuration>
+                        <inputSpec>${project.basedir}/src/main/resources/webwallet.yaml</inputSpec>
+                        <generatorName>java</generatorName>
+                        <generateApiTests>false</generateApiTests>
+                        <configOptions>
+                            <sourceFolder>src/gen/java/main</sourceFolder>
+                        </configOptions>
+                        <apiPackage>org.webwallet.api.handler</apiPackage>
+                        <modelPackage>org.webwallet.api.model</modelPackage>
+                        <invokerPackage>org.webwallet.api.handler</invokerPackage>
                     </configuration>
                 </execution>
             </executions>

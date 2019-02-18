@@ -210,6 +210,7 @@ public class SdkApiClient {
         try {
             return walletApi.createWallet(walletRequest);
         } catch (io.minka.api.handler.ApiException e) {
+            System.out.println(e.getResponseBody());
             throw new WalletCreationException(Constants.UNEXPECTED_ERROR, Constants.UNEXPECTED_ERROR_MESSAGE);
         }
     }

@@ -33,45 +33,32 @@ public class SignerTesting {
     @Test
     public void shouldGetSignersWithPaging() throws io.minka.api.handler.ApiException {
 
-        /*
-        SignerListResponse signers = sdkApiClient.getSigners(1, 2);
-        System.out.println(signers.size());
+//        SignerResponse signer = sdkApiClient.getSignerByAddress("wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV");
 
-        System.out.println(signers);
-        */
 
-        SignerResponse signer = sdkApiClient.getSignerByAddress("wRXWqpLz76iNe6siCVixYneeepKPt6wMcN");
-
-        System.out.println(signer);
-
-//        assertEquals(signers.size(), 3);//BECAUSE OF THE pagesize + 1 error element
-
-//        io.minka.api.model.SignerResponse wAddress = sdkApiClient.getSignerByAddress("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz");
-//        System.out.println(wAddress);
-
-//        SignerRequest req = new SignerRequest();
-//        Map<String, Object> labels = new HashMap<>();
-//        labels.put("description", "saving");
-//        req.setLabels(labels);
-//        sdkApiClient.updateSigner("wTLsUYdoo8vNLwJqxgb5aUpxSCm6zfCBPz", req);
+        SignerRequest req = new SignerRequest();
+        SignerRequestLabels labels = new SignerRequestLabels();
+        labels.setRouterReference("$bancoheroku");
+        req.setLabels(labels);
+        sdkApiClient.updateSigner("wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV", req);
     }
 
 
     @Test
     public void createSignerForOfflineUse() throws io.minka.api.handler.ApiException, ExceptionResponseTinApi {
 
-        Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
+//        Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
 
         SignerRequestLabels labels = new SignerRequestLabels();
 
         System.out.println("offlineKeypair.getSecret()");
 
-        System.out.println(offlineKeypair.getSecret());
+//        System.out.println(offlineKeypair.getSecret());
         io.minka.api.model.SignerResponse signerOfflineSigning;
         PublicKeys publickey = new PublicKeys();
-        publickey.setPublic(offlineKeypair.getPublic());
+        publickey.setPublic("c0d71f409e3a583d01806359fd667d08a628db9c4c631853dc9eb41c3dbbeb85");
 
-        publickey.setScheme(offlineKeypair.getScheme());
+        publickey.setScheme("eddsa-ed25519");
         signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
 
         System.out.println(signerOfflineSigning);
