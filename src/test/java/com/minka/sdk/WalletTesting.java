@@ -28,7 +28,7 @@ public class WalletTesting {
     public void prepare(){
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
-                TestingConstants.API_KEY,TestingConstants.STAGING_BASE);
+                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
@@ -88,7 +88,7 @@ public class WalletTesting {
 
     @Test
     public void shouldRetrieveCreatedWallet() {
-        existingHandle = "$3104845181";
+        existingHandle = "$bancojoel12";
 
         assertNotEquals(existingHandle, null);
         try {
@@ -156,14 +156,15 @@ public class WalletTesting {
 
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$573104845181";
-        String defaultAddress = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
-        List<String> signers = new ArrayList<>();
-        signers.add(defaultAddress);
+        String handle = "$bancojoel2";
+//        String defaultAddress = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
+//        List<String> signers = new ArrayList<>();
+//        signers.add(defaultAddress);
 
         WalletUpdateRequest req = new WalletUpdateRequest();
-        req.setSigner(signers);
-        req.setDefault(defaultAddress);
+
+//        req.setSigner(signers);
+//        req.setDefault(defaultAddress);
         io.minka.api.model.WalletUpdateResponse walletUpdateResponse
                 = sdkApiClient.updateWallet(handle, req);
         System.out.println(walletUpdateResponse);

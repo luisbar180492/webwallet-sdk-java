@@ -23,23 +23,24 @@ public class TinTranferTesting {
                 .setClientId(TestingConstants.CLIENT_ID);
 
         //sdkApiClient.setTimeout(20);
-        this.sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
+       // this.sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
 
     }
 
     @Ignore
     @Test
     public void createTransferEnvio() {
+        String userEnvioAddress= "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
 
         CreateTransferRequest tinTranfer = new CreateTransferRequest();
-        tinTranfer.setSource("wSgbrTTUxZnRAt58KGwjknnZ3LtPH5bdJL");
-        tinTranfer.setTarget("$573207246903");
+        tinTranfer.setSource(userEnvioAddress);
+        tinTranfer.setTarget("$joeluser13");
         CreateTransferRequestLabels labels = new CreateTransferRequestLabels();
         labels.setTxId("TxId");
         labels.setType("SEND");
         labels.setDescription("Description of a transfer");
         tinTranfer.setLabels(labels);
-        tinTranfer.setAmount("101");
+        tinTranfer.setAmount("1");
         tinTranfer.setSymbol("$tin");
 
         tinTranfer.setLabels(labels);

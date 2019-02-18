@@ -304,8 +304,10 @@ public class SdkApiClient {
         IouSigned iouSigned;
         try {
             iouSigned = IouUtil.generateIou(actionPending, domain, keys);
+
             return api.signOffline(actionId, iouSigned);
         } catch (Exception e) {
+
             throw new ApiException(e.getMessage());
         }
 

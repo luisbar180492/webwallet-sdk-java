@@ -30,13 +30,16 @@ public class IouUtil {
             throw new Exception("Only one key pair is allowed, you are sending:" + keys.getKeeper().size());
         }
 
+        Address address = new Address(keys.getKeeper().get(0).getPublic());
+        String sourceAddress = address.generate().getValue();
+
         IouSigned result = new IouSigned();
         IouSignedData data = new IouSignedData();
         data.setAmount(action.getAmount());
         data.setDomain(domain);
         data.setExpiry(action.getLabels().getCreated());
         data.setRandom(getRandomString());
-        data.setSource(action.getSnapshot().getSource().getSigner().getHandle());
+        data.setSource(sourceAddress);
         data.setTarget(action.getSnapshot().getTarget().getSigner().getHandle());
         data.setSymbol(action.getSnapshot().getSymbol().getSigner().getHandle());
         result.data(data);
