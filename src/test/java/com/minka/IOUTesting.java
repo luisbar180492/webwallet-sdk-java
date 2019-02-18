@@ -20,8 +20,8 @@ public class IOUTesting {
 
 
     static final Logger logger = Logger.getLogger(String.valueOf(IOUTesting.class));
-    private static final String PRIV_KEY = "4aea0e61c029e600d1ca36d6b50bc974a2001574a80ac69997c4b2a04997b884";
-    private static final String PUB_KEY =  "6a35efbef9eaad6b486a1f5d52aed18260e06339e2182056ea060bd26d4b4a8a";
+    private static final String PRIV_KEY = "0bf2ee2e4847991be298b0b28f6bf254de5e8479af16f7f14ac2c816adb68ff6";
+    //private static final String PUB_KEY =  "6a35efbef9eaad6b486a1f5d52aed18260e06339e2182056ea060bd26d4b4a8a";
 
     private Gson gson;
 
@@ -45,22 +45,25 @@ public class IOUTesting {
         logger.info("Now we generate an address");
 
         Address address = new Address(keypairDto.getPublico());
-        String sourceAddress = "wQStXD7irdnGjGZVJ99mZ25vbZeXamCGFi";
-        logger.info("addressGenerated : " + sourceAddress);
+//        String sourceAddress = "weDRQjKoE2UhD7yjicJTkDgXAwc2zqivXL";
+//        logger.info("addressGenerated : " + sourceAddress);
 
         IouParamsDto iouParamsDto;
-        String domain = "localhost";
+        String domain = "achtin.minka.io";
 
-        String source = "wQStXD7irdnGjGZVJ99mZ25vbZeXamCGFi";
-        String target = "wT99yCRnoYrN3KvTte3XhkUzjB9naFbwHo";
-        String symbol = source;
-        String random = "d7fa72c397477797c487";
+//        String source = "weDRQjKoE2UhD7yjicJTkDgXAwc2zqivXL";
+//        String target = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
+        String source = "weDRQjKoE2UhD7yjicJTkDgXAwc2zqivXL";
+        String target = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
+
+        String symbol = "wMxKCAzsQBiUURDU3xD3xuSbVo1S9jmf3d";
+        String random = "0c24a9f69f4b18ca1648";
 
         logger.info("source:" + source);
-        BigDecimal amount = new BigDecimal(100);
-        BigDecimal credit = null;
+        BigDecimal amount = new BigDecimal(1);
+//        BigDecimal credit = null;
         logger.info("We convert the java date to ISO FORMAT");
-        String expiry = "2018-10-05T22:41:05.061Z";
+        String expiry = "2019-02-18T03:51:28.675Z";
 
         iouParamsDto = new IouParamsDto(domain,
                 source, target, amount.toString(), null,
@@ -71,15 +74,15 @@ public class IOUTesting {
         IOU theIou = iouUtil.write(iouParamsDto);
 
         Map<PrivateKey, SignatureDto> signaturePairs = new HashMap<>();
-        signaturePairs.put(sourcekeyPairHolder.getPrivateKey(), sourcekeyPairHolder.getBasicSignatureDto(sourceAddress));
+        signaturePairs.put(sourcekeyPairHolder.getPrivateKey(), sourcekeyPairHolder.getBasicSignatureDto(source));
         logger.info("In order to sign we use the Key,value = PrivateKeys, SignatureDto");
         theIou.sign(signaturePairs);
-        logger.info(gson.toJson(theIou));
+//        logger.info(gson.toJson(theIou));
 
-        logger.info("Printing pretty JSON ");
-        logger.info(theIou.toPrettyJson());
-        logger.info("Printing Raw JSON ");
-        logger.info(theIou.toRawJson());
+//        logger.info("Printing pretty JSON ");
+//        logger.info(theIou.toPrettyJson());
+//        logger.info("Printing Raw JSON ");
+//        logger.info(theIou.toRawJson());
 
 //        logger.info("Printing pretty JSON for the FORMAT V022");
 //        logger.info(theIou.toPrettyJsonV022());

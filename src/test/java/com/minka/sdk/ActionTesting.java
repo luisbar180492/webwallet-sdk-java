@@ -2,6 +2,7 @@ package com.minka.sdk;
 
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
+import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
@@ -44,10 +45,10 @@ public class ActionTesting {
         CreateActionRequestLabels labels = new CreateActionRequestLabels();
         req.setLabels(labels);
         req.setAmount("100");
-        //req.setSource("$gzlboubhabkmslivdxt");
-        req.setSource("$tin");
+        req.setSource("$bancoffline");
+//        req.setSource("$tin");
         req.setSymbol("$tin");
-        req.setTarget("$gzlboubhabkmslivdxt");
+        req.setTarget("$bancoheroku");
         System.out.println(req);
 
         io.minka.api.model.CreateActionResponse action = null;
@@ -127,16 +128,16 @@ public class ActionTesting {
     }
 
     @Test
-    public void shouldSignActionOffline(){
-        String actionId = "a3d0d6d2-6600-414f-b192-9b3fa3a3afe4";
+    public void shouldSignActionOffline() throws MissingRequiredParameterIOUCreation {
+        String actionId = "b0f29726-e6ee-458f-9f36-b7078bdbb028";
 
         try {
             OfflineSigningKeys keys = new OfflineSigningKeys();
             List<PublicKeys> keeper = new ArrayList<>();
             PublicKeys theKeys = new PublicKeys();
-            theKeys.setPublic("0407605f6a4a7b16784418c428ffcbc010ac703e0a92b104f7ed7eaa82ae64648b245ef22efa9919bf3f628d785552cb65faecd7332a383d0063506dc34ca79634");
-            theKeys.setScheme("ed25519");
-            theKeys.setSecret("0b311a83c863f8dd28f0b35be84b7bc3affc4b95e30bdfcc59ec7f23c389ba7c");
+            theKeys.setPublic("73962f7467934bcd42d9c9e4a65efa5002c20b390d90f474f7c7e74d9c439cc3");
+            theKeys.setScheme("eddsa-ed25519");
+            theKeys.setSecret("0bf2ee2e4847991be298b0b28f6bf254de5e8479af16f7f14ac2c816adb68ff6");
             keeper.add(theKeys);
             keys.setKeeper(keeper);
             ActionSigned actionSigned = sdkApiClient.signActionOffline(actionId, keys);

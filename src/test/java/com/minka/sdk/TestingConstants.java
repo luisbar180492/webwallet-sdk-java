@@ -3,8 +3,8 @@ package com.minka.sdk;
 public class TestingConstants {
 
     public static final int SUCCESS_ERROR_CODE = 0;
-    public static String DOMAIN_TESTING = "achtin-tst";
-    public static String DOMAIN_STAGING = "achtin-stg";
+    public static String DOMAIN_TESTING = "achtin.minka.io";
+    public static String DOMAIN_STAGING = "achtin.minka.io";
     public static String STAGING_BASE= "https://ach-minka-stg.transferenciasinmediatas.com/v1";
     public static String TESTING_BASE= "https://ach-minka-tst.transferenciasinmediatas.com/v1";
     public static String API_KEY = "5b481fc2ae177010e197026b39c58cdb000f4c3897e841714e82c84c";

@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.CustomApiClient;
 import com.minka.ExceptionResponseTinApi;
+import com.minka.IouUtil;
 import com.minka.KeyPairHolder;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
+import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
 import io.minka.api.model.*;
+import sun.nio.ch.IOUtil;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -81,10 +84,13 @@ public class SdkApiClient {
         } catch (io.minka.api.handler.ApiException e) {
             e.printStackTrace();
         }
-        updateXNonce();
+        updateHeaders();
     }
 
-    private void updateXNonce() {
+    private void updateHeaders() {
+        ApiKeyAuth xApiKey = (ApiKeyAuth) apiClient.getAuthentication("ApiKeyAuth");
+        xApiKey.setApiKey(apiKey);
+
         ApiKeyAuth xNonce = (ApiKeyAuth) apiClient.getAuthentication("XNonce");
         xNonce.setApiKey(generateUUID());
     }
@@ -207,6 +213,7 @@ public class SdkApiClient {
         try {
             return walletApi.createWallet(walletRequest);
         } catch (io.minka.api.handler.ApiException e) {
+            System.out.println(e.getResponseBody());
             throw new WalletCreationException(Constants.UNEXPECTED_ERROR, Constants.UNEXPECTED_ERROR_MESSAGE);
         }
     }
@@ -284,20 +291,26 @@ public class SdkApiClient {
     public CreateTransferResponse continueTransaction(String actionId, ActionSigned actionSigned) throws ApiException {
         refreshToken();
         TransferApi api = new TransferApi(apiClient);
-        CreateTransferResponse result = api.continueP2Ptranfer(actionId, actionSigned);
 
-        return result;
+        return api.continueP2Ptranfer(actionId, actionSigned);
     }
 
-    public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException {
-
+    public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException{
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
-        GetActionResponse actionByActionId = api.getActionByActionId(actionId);
+        GetActionResponse actionPending = api.getActionByActionId(actionId);
 
-        IouSigned iouSigned = new IouSigned();//TODO switch to OFFLINE
-        return api.signOffline(actionId, keys);
+        IouSigned iouSigned;
+        try {
+            iouSigned = IouUtil.generateIou(actionPending, domain, keys);
+
+            return api.signOffline(actionId, iouSigned);
+        } catch (Exception e) {
+
+            throw new ApiException(e.getMessage());
+        }
+
     }
 
 

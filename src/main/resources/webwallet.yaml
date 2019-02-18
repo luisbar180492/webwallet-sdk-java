@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: 'webwallet'
+
+paths:
+  '/transaction':
+    post:
+      summary: Creates an I.O.U
+      description: ''
+      operationId: createIou
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/iouWrapper'
+      responses:
+        '200':
+          description: Succesful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+servers:
+  - url: 'https://core-tst.appspot.com'
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    XNonce:
+      type: apiKey
+      in: header
+      name: x-nonce
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: API_KEY
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: Simple credentials
+      flows:
+        clientCredentials:
+          tokenUrl: https://achtin-stg.minka.io/oauth/token
+          scopes: {} # tin ach does not use scopes
+  schemas:
+    keeper:
+      type: object
+      properties:
+        scheme:
+          type: string
+        public:
+          type: string
+        secret:
+          type: string
+
+    offlineSigningKeys:
+      type: object
+      properties:
+        keeper:
+          type: array
+          items:
+            $ref: '#/components/schemas/publicKeys'
+
+    iouWrapper:
+      type: object
+      properties:
+        data:
+          type: object
+          $ref: '#/components/schemas/inputs'
+
+    inputs:
+      type: object
+      properties:
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/iouSigned'
+
+    iouSigned:
+      type: object
+      properties:
+        hash:
+          type: object
+          properties:
+            types:
+              type: string
+            steps:
+              type: string
+            value:
+              type: string
+        data:
+          type: object
+          properties:
+            domain:
+              type: string
+            source:
+              type: string
+            target:
+              type: string
+            amount:
+              type: string
+            symbol:
+              type: string
+            expiry:
+              type: string
+            random:
+              type: string
+        meta:
+          type: object
+          properties:
+            signatures:
+              type: array
+              items:
+                $ref: '#/components/schemas/Signatures'
+
+    Signatures:
+      type: object
+      properties:
+        scheme:
+          type: string
+        signer:
+          type: string
+        public:
+          type: string
+        string:
+          type: string
+
+    publicKeys:
+      type: object
+      properties:
+        public:
+          type: string
+        secret:
+          type: string
+        scheme:
+          type: string
+
+
+    ErrorForbidden:
+      type: object
+      properties:
+        error:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          $ref: '#/components/schemas/ErrorGenerico'
+
+    ErrorGenerico:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

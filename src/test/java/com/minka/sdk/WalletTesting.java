@@ -42,16 +42,21 @@ public class WalletTesting {
 
     @Test
     public void createWalletProperly() {
-        String handle = "$" + RandomStringUtils.randomAlphabetic(19).toLowerCase();
+        String handle = "$bancojoselanza";
+
+//        String urlBase = "https://b450c068.ngrok.io";
 
         try {
             WalletRequest walletReq  = new WalletRequest();
             walletReq.setHandle(handle);
             WalletRequestLabels labelsReq = new WalletRequestLabels();
-            labelsReq.setType("TROUPE");
-            labelsReq.setRouterAction("https://api.bank.com/v1/action");
-            labelsReq.setRouterDownload("");
+//            labelsReq.setType("PERSON");
 
+//            labelsReq.setType("TROUPE");
+//            labelsReq.setRouterAction(urlBase + "/v1/action");
+//            labelsReq.setRouterDownload(urlBase + "/v1/credit");
+//            labelsReq.setRouterStatus(urlBase + "/v1/status");
+//            labelsReq.setRouterUpload(urlBase + "/v1/debit");
             walletReq.setLabels(labelsReq);
             io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(walletReq);
             System.out.println(wallet);
@@ -83,7 +88,7 @@ public class WalletTesting {
 
     @Test
     public void shouldRetrieveCreatedWallet() {
-        existingHandle = "$3104845181";
+        existingHandle = "$bancojoel12";
 
         assertNotEquals(existingHandle, null);
         try {
@@ -151,18 +156,15 @@ public class WalletTesting {
 
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
-        String handle = "$offlinedemoath";
-        String defaultAddress = "weyFqsN2ogzFadsXDzEwXNNWDiDLy5yUjv";
-        List<String> signers = new ArrayList<>();
-        signers.add(defaultAddress);
-
+        String handle = "$bancojoel2";
+//        String defaultAddress = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
+//        List<String> signers = new ArrayList<>();
+//        signers.add(defaultAddress);
 
         WalletUpdateRequest req = new WalletUpdateRequest();
-        Map<String, Object> labels = new HashMap<>();
-        labels.put("routerDownload", "testingupdate");
-        //req.setLabels(labels);
-        req.setSigner(signers);
-        req.setDefault(defaultAddress);
+
+//        req.setSigner(signers);
+//        req.setDefault(defaultAddress);
         io.minka.api.model.WalletUpdateResponse walletUpdateResponse
                 = sdkApiClient.updateWallet(handle, req);
         System.out.println(walletUpdateResponse);

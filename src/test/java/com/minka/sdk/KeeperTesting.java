@@ -21,8 +21,10 @@ public class KeeperTesting {
     @Before
     public void prepare(){
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
-                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
+                TestingConstants.API_KEY,TestingConstants.STAGING_BASE);
 
+//        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
+//                TestingConstants.API_KEY,"https://b450c068.ngrok.io");
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);

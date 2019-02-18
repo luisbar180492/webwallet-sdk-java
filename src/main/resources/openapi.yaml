@@ -837,10 +837,8 @@ paths:
         content:
           application/json:
             schema:
-              #$ref: '#/components/schemas/iouSigned' TODO SWITCH
-              $ref: '#/components/schemas/offlineSigningKeys'
+              $ref: '#/components/schemas/iouSigned'
         required: true
-
 
   /conciliation:
     get:
@@ -1639,7 +1637,7 @@ components:
     ApiKeyAuth:
       type: apiKey
       in: header
-      name: API_KEY
+      name: x-api-key
     oAuth2ClientCredentials:
       type: oauth2
       description: Simple credentials
@@ -2084,7 +2082,7 @@ components:
     iouSigned:
       type: object
       properties:
-        hash:
+        data:
           type: object
           properties:
             amount:
@@ -2101,7 +2099,7 @@ components:
               type: string
             target:
               type: string
-        data:
+        hash:
           type: object
           properties:
             types:

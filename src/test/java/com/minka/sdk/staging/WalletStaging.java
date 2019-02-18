@@ -46,13 +46,19 @@ public class WalletStaging {
 
     @Test
     public void createWalletProperly() {
-        String handle = "$" + RandomStringUtils.randomAlphabetic(19).toLowerCase();
+//        String handle = "$" + RandomStringUtils.randomAlphabetic(19).toLowerCase();
+        String handle = "$bancoheroku";
+        String urlBase = "https://b450c068.ngrok.io";
 
         try {
             WalletRequest walletReq  = new WalletRequest();
             walletReq.setHandle(handle);
             WalletRequestLabels labelsReq = new WalletRequestLabels();
-            labelsReq.setChannelSms("573004431529");
+            labelsReq.setType("TROUPE");
+            labelsReq.setRouterAction(urlBase + "/v1/action");
+            labelsReq.setRouterDownload(urlBase + "/v1/credit");
+            labelsReq.setRouterStatus(urlBase + "/v1/status");
+            labelsReq.setRouterUpload(urlBase + "/v1/debit");
             walletReq.setLabels(labelsReq);
             io.minka.api.model.WalletResponse wallet = sdkApiClient.createWallet(walletReq);
             System.out.println(wallet);

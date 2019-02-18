@@ -13,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 public class AddressTesting {
 
 
-    private static String SOURCE_PUBLIC = "0411c0b8d67c8c47d617ea8312bb1e157b0bb32f9e50f5ed3d4387d3f76ab3bb3e10224ee9876e6c67d16b7d3ada0e19e2b1b9b196cca45131fe33c034c6d606f1";
-    private static String SOURCE_WALLET = "wL1318MhGBnmMDaf6Xe9iH7CeESBj67qRy";
+    private static String SOURCE_PUBLIC = "73962f7467934bcd42d9c9e4a65efa5002c20b390d90f474f7c7e74d9c439cc3";
+//    private static String SOURCE_WALLET = "wL1318MhGBnmMDaf6Xe9iH7CeESBj67qRy";
 
     @Test
     public void checkAddress()  throws Exception
