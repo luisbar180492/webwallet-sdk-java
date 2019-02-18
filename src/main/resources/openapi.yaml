@@ -1639,7 +1639,7 @@ components:
     ApiKeyAuth:
       type: apiKey
       in: header
-      name: API_KEY
+      name: x-api-key
     oAuth2ClientCredentials:
       type: oauth2
       description: Simple credentials

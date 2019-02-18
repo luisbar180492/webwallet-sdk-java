@@ -81,10 +81,13 @@ public class SdkApiClient {
         } catch (io.minka.api.handler.ApiException e) {
             e.printStackTrace();
         }
-        updateXNonce();
+        updateHeaders();
     }
 
-    private void updateXNonce() {
+    private void updateHeaders() {
+        ApiKeyAuth xApiKey = (ApiKeyAuth) apiClient.getAuthentication("ApiKeyAuth");
+        xApiKey.setApiKey(apiKey);
+
         ApiKeyAuth xNonce = (ApiKeyAuth) apiClient.getAuthentication("XNonce");
         xNonce.setApiKey(generateUUID());
     }
