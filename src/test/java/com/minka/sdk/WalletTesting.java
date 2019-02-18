@@ -42,7 +42,7 @@ public class WalletTesting {
 
     @Test
     public void createWalletProperly() {
-        String handle = "$573104845181";
+        String handle = "$bancojoselanza";
 
 //        String urlBase = "https://b450c068.ngrok.io";
 
@@ -50,7 +50,7 @@ public class WalletTesting {
             WalletRequest walletReq  = new WalletRequest();
             walletReq.setHandle(handle);
             WalletRequestLabels labelsReq = new WalletRequestLabels();
-            labelsReq.setType("PERSON");
+//            labelsReq.setType("PERSON");
 
 //            labelsReq.setType("TROUPE");
 //            labelsReq.setRouterAction(urlBase + "/v1/action");

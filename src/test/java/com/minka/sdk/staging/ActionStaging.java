@@ -64,7 +64,7 @@ public class ActionStaging {
 
     @Test
     public void shouldSignActionOffline() throws MissingRequiredParameterIOUCreation {
-        String actionId = "3f2fea3c-23ed-473a-8be9-a584f5d526ca";
+        String actionId = "5528cd6d-9eeb-40f3-921a-9483cc34628e";
 
         try {
             OfflineSigningKeys keys = new OfflineSigningKeys();

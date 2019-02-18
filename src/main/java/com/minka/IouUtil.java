@@ -13,14 +13,22 @@ import java.util.*;
 public class IouUtil {
 
 
+    private static final int LIMIT_NUMBER_KEYS = 1;
+
     public static String convertToIsoFormat(Date date){
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         return df.format(date);
     }
-    //TODO multiple signing!!
-    public static IouSigned generateIou(GetActionResponse action, String domain, OfflineSigningKeys keys) throws MissingRequiredParameterIOUCreation {
+
+    public static IouSigned generateIou(GetActionResponse action, String domain, OfflineSigningKeys keys) throws Exception {
+
+        int size = keys.getKeeper().size();
+
+        if (size != LIMIT_NUMBER_KEYS){
+            throw new Exception("Only one key pair is allowed, you are sending:" + keys.getKeeper().size());
+        }
 
         IouSigned result = new IouSigned();
         IouSignedData data = new IouSignedData();

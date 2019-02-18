@@ -291,19 +291,24 @@ public class SdkApiClient {
     public CreateTransferResponse continueTransaction(String actionId, ActionSigned actionSigned) throws ApiException {
         refreshToken();
         TransferApi api = new TransferApi(apiClient);
-        CreateTransferResponse result = api.continueP2Ptranfer(actionId, actionSigned);
 
-        return result;
+        return api.continueP2Ptranfer(actionId, actionSigned);
     }
 
-    public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException, MissingRequiredParameterIOUCreation {
+    public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException{
         refreshToken();
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
         GetActionResponse actionPending = api.getActionByActionId(actionId);
 
-        IouSigned iouSigned = IouUtil.generateIou(actionPending, domain, keys);
-        return api.signOffline(actionId, iouSigned);
+        IouSigned iouSigned;
+        try {
+            iouSigned = IouUtil.generateIou(actionPending, domain, keys);
+            return api.signOffline(actionId, iouSigned);
+        } catch (Exception e) {
+            throw new ApiException(e.getMessage());
+        }
+
     }
 
 
