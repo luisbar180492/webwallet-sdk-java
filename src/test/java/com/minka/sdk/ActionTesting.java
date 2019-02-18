@@ -2,6 +2,7 @@ package com.minka.sdk;
 
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
+import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
@@ -127,7 +128,7 @@ public class ActionTesting {
     }
 
     @Test
-    public void shouldSignActionOffline(){
+    public void shouldSignActionOffline() throws MissingRequiredParameterIOUCreation {
         String actionId = "a3d0d6d2-6600-414f-b192-9b3fa3a3afe4";
 
         try {

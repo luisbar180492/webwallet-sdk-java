@@ -28,7 +28,7 @@ public class WalletTesting {
     public void prepare(){
 
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
-                TestingConstants.API_KEY,TestingConstants.TESTING_BASE);
+                TestingConstants.API_KEY,TestingConstants.STAGING_BASE);
 
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)

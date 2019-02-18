@@ -20,8 +20,8 @@ public class IOUTesting {
 
 
     static final Logger logger = Logger.getLogger(String.valueOf(IOUTesting.class));
-    private static final String PRIV_KEY = "0428d3c7c859773de10cdf887032fde8558b8ae4256714d911009be4cbf8f53b";
-    private static final String PUB_KEY =  "6a35efbef9eaad6b486a1f5d52aed18260e06339e2182056ea060bd26d4b4a8a";
+    private static final String PRIV_KEY = "0bf2ee2e4847991be298b0b28f6bf254de5e8479af16f7f14ac2c816adb68ff6";
+    //private static final String PUB_KEY =  "6a35efbef9eaad6b486a1f5d52aed18260e06339e2182056ea060bd26d4b4a8a";
 
     private Gson gson;
 
@@ -53,17 +53,17 @@ public class IOUTesting {
 
 //        String source = "weDRQjKoE2UhD7yjicJTkDgXAwc2zqivXL";
 //        String target = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
-        String source = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
-        String target = "weDRQjKoE2UhD7yjicJTkDgXAwc2zqivXL";
+        String source = "weDRQjKoE2UhD7yjicJTkDgXAwc2zqivXL";
+        String target = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
 
-        String symbol = source;
+        String symbol = "wMxKCAzsQBiUURDU3xD3xuSbVo1S9jmf3d";
         String random = "0c24a9f69f4b18ca1648";
 
         logger.info("source:" + source);
-        BigDecimal amount = new BigDecimal(100);
+        BigDecimal amount = new BigDecimal(1);
 //        BigDecimal credit = null;
         logger.info("We convert the java date to ISO FORMAT");
-        String expiry = "2019-02-17T17:56:34.391Z";
+        String expiry = "2019-02-18T03:51:28.675Z";
 
         iouParamsDto = new IouParamsDto(domain,
                 source, target, amount.toString(), null,
@@ -77,7 +77,7 @@ public class IOUTesting {
         signaturePairs.put(sourcekeyPairHolder.getPrivateKey(), sourcekeyPairHolder.getBasicSignatureDto(source));
         logger.info("In order to sign we use the Key,value = PrivateKeys, SignatureDto");
         theIou.sign(signaturePairs);
-        logger.info(gson.toJson(theIou));
+//        logger.info(gson.toJson(theIou));
 
 //        logger.info("Printing pretty JSON ");
 //        logger.info(theIou.toPrettyJson());
