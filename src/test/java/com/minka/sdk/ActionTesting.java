@@ -56,6 +56,7 @@ public class ActionTesting {
         System.out.println(action.getActionId());
     }
 
+    @Ignore
     @Test
     public void getActionByActionsNoFilters() {
         try {

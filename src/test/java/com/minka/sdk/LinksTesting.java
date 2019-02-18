@@ -54,6 +54,7 @@ public class LinksTesting {
         }
     }
 
+    @Ignore
     @Test
     public void shouldGetAllLinks(){
         try {

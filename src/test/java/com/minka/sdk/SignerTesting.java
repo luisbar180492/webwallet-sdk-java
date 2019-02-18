@@ -47,18 +47,17 @@ public class SignerTesting {
     @Test
     public void createSignerForOfflineUse() throws io.minka.api.handler.ApiException, ExceptionResponseTinApi {
 
-//        Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
+        Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
 
         SignerRequestLabels labels = new SignerRequestLabels();
 
         System.out.println("offlineKeypair.getSecret()");
 
-//        System.out.println(offlineKeypair.getSecret());
         io.minka.api.model.SignerResponse signerOfflineSigning;
         PublicKeys publickey = new PublicKeys();
-        publickey.setPublic("c0d71f409e3a583d01806359fd667d08a628db9c4c631853dc9eb41c3dbbeb85");
+        publickey.setPublic(offlineKeypair.getPublic());
 
-        publickey.setScheme("eddsa-ed25519");
+        publickey.setScheme(offlineKeypair.getScheme());
         signerOfflineSigning = sdkApiClient.createSignerOfflineSigning(labels, publickey);
 
         System.out.println(signerOfflineSigning);
