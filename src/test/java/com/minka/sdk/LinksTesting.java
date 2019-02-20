@@ -2,6 +2,7 @@ package com.minka.sdk;
 
 import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
+import io.minka.api.handler.ApiException;
 import io.minka.api.model.LinkItem;
 import io.minka.api.model.ListLinks;
 import org.junit.Before;
@@ -30,8 +31,8 @@ public class LinksTesting {
     @Test
     public void shouldCreateLink(){
 
-        String source = "$5731445678";
-        String target = "$573207246903";
+        String source = "$573201902143";
+        String target = "wbgWL7RJD6jBi989uS3qCHzriGwHUPxTrB";
         try {
             LinkItem link = sdkApiClient.createLink(source, target,
                     io.minka.api.model.CreateLinkRequest.TypeEnum.TRUST);
@@ -41,11 +42,23 @@ public class LinksTesting {
         }
     }
 
+    @Ignore
+    @Test
+    public void shouldDeleteLink(){
+        String linkId = "7887610f-a173-4829-b8a9-3237150a0e9b";
+        try {
+            LinkItem linkItem = sdkApiClient.deleteLink(linkId);
+            System.out.println(linkItem);
+        } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+        }
+    }
+
     @Test
     public void shouldGetLink(){
 
-        String source = "$auhxlvsouudtiailkmr";
-        String target = "$yuhenntyycupgbubbha";
+        String source = "$5731445678";
+        String target = "wP8fxVGVxvycgorSzCFnd9AsZkhfpPHFsN";
         try {
             LinkItem link = sdkApiClient.getLink(source, target);
             System.out.println(link);
@@ -58,7 +71,7 @@ public class LinksTesting {
     @Test
     public void shouldGetAllLinks(){
         try {
-            ListLinks links = sdkApiClient.getLinks(null,  "$targetPhone", "TRUST");
+            ListLinks links = sdkApiClient.getLinks(null,  "$573210160251", "TRUST");
             System.out.println(links.size());
             for (LinkItem currLink:links) {
                 System.out.println(currLink);
