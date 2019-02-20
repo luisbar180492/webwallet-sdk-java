@@ -167,9 +167,11 @@ public class SdkApiClient {
         refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
-            Object response = api.getLink(source, target, type);
-
-            return new Gson().fromJson(gson.toJson(response), ListLinks.class);
+            Links response = api.getLink(source, target, type);
+            List<LinkItem> entities = response.getEntities();
+            ListLinks result = new ListLinks();
+            result.addAll(entities);
+            return result;
         } catch (io.minka.api.handler.ApiException e) {
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
         }
@@ -179,14 +181,22 @@ public class SdkApiClient {
         refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
-            Object response = api.getLink(source, target, null);
-            Gson gson = (new GsonBuilder()).create();
-            return new Gson().fromJson(gson.toJson(response), LinkItem.class);
+            Links response = api.getLink(source, target, null);
+            if (response.getEntities().size() == 1){
+                return response.getEntities().get(0);
+            } else {
+                throw new ExceptionResponseTinApi(112, "No existe link de confianza");
+            }
         } catch (io.minka.api.handler.ApiException e) {
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
         }
     }
 
+    public LinkItem deleteLink(String linkId) throws ApiException {
+        refreshToken();
+        io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
+        return api.deleteLink(linkId);
+    }
     public LinkItem createLink(String source, String target, io.minka.api.model.CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
         refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
@@ -199,7 +209,6 @@ public class SdkApiClient {
             return api.createLink(req);
         } catch (io.minka.api.handler.ApiException e) {
             throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
-
         }
     }
 
