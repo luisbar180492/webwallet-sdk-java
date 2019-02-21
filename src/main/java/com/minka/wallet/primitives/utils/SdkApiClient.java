@@ -9,11 +9,9 @@ import com.minka.KeyPairHolder;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
-import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
 import io.minka.api.model.*;
-import sun.nio.ch.IOUtil;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -529,7 +527,7 @@ public class SdkApiClient {
         return String.valueOf((new Date()).getTime()) + "-" + UUID.randomUUID().toString();
     }
 
-    public List<Conciliation> getConciliation(String customQuery) throws ApiException {
+    public Conciliation getConciliation(String customQuery) throws ApiException {
         refreshToken();
         io.minka.api.handler.ConciliationApi api = new io.minka.api.handler.ConciliationApi(apiClient);
         return api.getConciliation(customQuery);

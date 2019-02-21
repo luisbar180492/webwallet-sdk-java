@@ -3,6 +3,7 @@ package com.minka.sdk;
 
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
+import io.minka.api.model.Conciliation;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,7 +27,10 @@ public class ConciliationTesting {
     @Ignore
     @Test
     public void concilia() throws ApiException {
-        sdkApiClient.getConciliation("?");
+        Conciliation conciliation = sdkApiClient.getConciliation("?bankId=$bancorojo&startDate=2019-02-18&endDate=2019-02-21");
+        System.out.println(conciliation.getFileName());
+        System.out.println(conciliation.getText());
+
     }
 
     @Ignore

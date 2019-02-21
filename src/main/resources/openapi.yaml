@@ -861,11 +861,9 @@ paths:
         '200':
           description: Conciliation file generated
           content:
-            Text:
+            application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/conciliation'
+               $ref: '#/components/schemas/conciliation'
         '400':
           description: Forbidden ac
           content:
@@ -2704,9 +2702,11 @@ components:
           type: string
 
     conciliation:
-      type: array
+      type: object
       properties:
-        cus:
+        fileName:
+          type: string
+        text:
           type: string
 
     getAnalyticsResponse:
