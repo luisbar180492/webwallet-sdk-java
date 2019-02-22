@@ -4,6 +4,7 @@ package com.minka.sdk;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.Conciliation;
+import io.minka.api.model.GetAnalyticsResponse;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -36,6 +37,6 @@ public class ConciliationTesting {
     @Ignore
     @Test
     public void getAnalytics() throws ApiException {
-        sdkApiClient.getAnalytics("?");
+        GetAnalyticsResponse analytics = sdkApiClient.getAnalytics("?");
     }
 }
