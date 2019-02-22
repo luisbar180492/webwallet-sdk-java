@@ -16,14 +16,10 @@ import com.minka.KeyPairHolder;
 import com.minka.utils.ActionType;
 import com.minka.utils.AliasType;
 import com.minka.utils.Constants;
-import com.minka.wallet.MissingRequiredParameterIOUCreation;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
 import io.minka.api.handler.auth.OAuth;
 import io.minka.api.model.*;
-import sun.security.jca.GetInstance;
-import sun.security.jca.ProviderList;
-import sun.security.jca.Providers;
 
 import javax.net.ssl.SSLContextSpi;
 import java.net.InetSocketAddress;
@@ -571,7 +567,7 @@ public class SdkApiClient {
         return String.valueOf((new Date()).getTime()) + "-" + UUID.randomUUID().toString();
     }
 
-    public List<Conciliation> getConciliation(String customQuery) throws ApiException {
+    public Conciliation getConciliation(String customQuery) throws ApiException {
         refreshToken();
         io.minka.api.handler.ConciliationApi api = new io.minka.api.handler.ConciliationApi(apiClient);
         return api.getConciliation(customQuery);

@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.minka.wallet.*;
 import io.minka.api.model.*;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import java.security.PrivateKey;
 import java.text.DateFormat;
@@ -14,6 +15,9 @@ public class IouUtil {
 
 
     private static final int LIMIT_NUMBER_KEYS = 1;
+    private static final java.lang.String JS_FORMAT_ISODATE = "YYYY-MM-dd'T'HH:mm:ss.sss'Z'";
+    private static final int ONE_DAY = 1;
+    private static final String UNIVERSAL_TIME_ZONE = "UTC";
 
     public static String convertToIsoFormat(Date date){
         TimeZone tz = TimeZone.getTimeZone("UTC");
@@ -37,7 +41,7 @@ public class IouUtil {
         IouSignedData data = new IouSignedData();
         data.setAmount(action.getAmount());
         data.setDomain(domain);
-        data.setExpiry(action.getLabels().getCreated());
+        data.setExpiry(getExpiryDate());
         data.setRandom(getRandomString());
         data.setSource(sourceAddress);
         data.setTarget(action.getSnapshot().getTarget().getSigner().getHandle());
@@ -73,6 +77,14 @@ public class IouUtil {
 
         result.setMeta(signatures);
         return result;
+    }
+
+    public static String getExpiryDate() {
+        Date tomorrow = DateUtils.addDays(new Date(), ONE_DAY);
+        SimpleDateFormat dateFormatterEquivalentToJs =
+                (new SimpleDateFormat(JS_FORMAT_ISODATE));
+        dateFormatterEquivalentToJs.setTimeZone(TimeZone.getTimeZone(UNIVERSAL_TIME_ZONE));
+        return dateFormatterEquivalentToJs.format(tomorrow);
     }
 
     public static String getRandomString() {
