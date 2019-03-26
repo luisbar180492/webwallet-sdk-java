@@ -1711,7 +1711,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
 
@@ -1759,7 +1760,8 @@ components:
         routerAuthMethod:
           type: string
         routerAuthParams:
-          type: string
+          type: object
+          additionalProperties: true
         routerFormat:
           type: string
 
@@ -1797,7 +1799,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
 
@@ -1830,7 +1833,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
@@ -1869,7 +1873,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
@@ -1915,7 +1920,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
@@ -1956,7 +1962,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
