@@ -15,7 +15,7 @@ public class KeeperStaging {
     public void shouldReturnKeypair() {
 
         SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_STAGING,
-                TestingConstants.API_KEY, TestingConstants.STAGING_BASE);
+                TestingConstants.API_KEY, TestingConstants.DEV_BASE);
 
         if (TestingConstants.proxy) {
             sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);

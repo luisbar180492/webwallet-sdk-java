@@ -3,6 +3,7 @@ package com.minka.sdk;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
+import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import io.minka.api.model.WalletUpdateRequest;
 import org.apache.commons.lang.RandomStringUtils;
@@ -144,7 +145,7 @@ public class WalletTesting {
     }
 
     @Test
-    public void shouldGetWalletBalance(){
+    public void shouldGetWalletBalance() throws ApiException {
 //        existingHandle = "$usxshvwjoptfixfdakh";
 
         String bankName = "$offlinedemoath";
