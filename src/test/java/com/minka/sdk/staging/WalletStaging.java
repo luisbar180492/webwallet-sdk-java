@@ -4,6 +4,7 @@ import com.minka.ExceptionResponseTinApi;
 import com.minka.sdk.TestingConstants;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import com.minka.wallet.primitives.utils.WalletCreationException;
+import io.minka.api.handler.ApiException;
 import io.minka.api.model.WalletListResponse;
 import io.minka.api.model.WalletRequest;
 import io.minka.api.model.WalletRequestLabels;
@@ -128,7 +129,7 @@ public class WalletStaging {
 
     @Ignore
     @Test
-    public void shouldGetWalletBalance(){
+    public void shouldGetWalletBalance() throws ApiException {
 
         String bankName = "$qmblkkdzkwbgepdinyr";
         String currency = "$tin";

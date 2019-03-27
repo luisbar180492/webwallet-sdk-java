@@ -12,6 +12,7 @@ import com.minka.utils.Constants;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
 import io.minka.api.model.*;
+import io.swagger.annotations.Api;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -71,17 +72,14 @@ public class SdkApiClient {
         return this;
     }
 
-    private void refreshToken() {
+    private void refreshToken() throws ApiException {
         TokenResponse token;
-        try {
-            token = getToken();
-            io.minka.api.handler.auth.OAuth oAuth2ClientCredentials;
-            oAuth2ClientCredentials = (io.minka.api.handler.auth.OAuth)
-                    apiClient.getAuthentication("oAuth2ClientCredentials");
-            oAuth2ClientCredentials.setAccessToken(token.getAccessToken());
-        } catch (io.minka.api.handler.ApiException e) {
-            e.printStackTrace();
-        }
+        token = getToken();
+        io.minka.api.handler.auth.OAuth oAuth2ClientCredentials;
+        oAuth2ClientCredentials = (io.minka.api.handler.auth.OAuth)
+                apiClient.getAuthentication("oAuth2ClientCredentials");
+        oAuth2ClientCredentials.setAccessToken(token.getAccessToken());
+
         updateHeaders();
     }
 
@@ -140,7 +138,6 @@ public class SdkApiClient {
      */
     public io.minka.api.model.Keeper getKeeper() throws ExceptionResponseTinApi {
 
-        refreshToken();
         io.minka.api.handler.KeeperApi api = new io.minka.api.handler.KeeperApi(apiClient);
 
         try {
@@ -148,21 +145,21 @@ public class SdkApiClient {
             keeperGenerated = api.obtenerKeeper();
             return keeperGenerated;
         } catch (io.minka.api.handler.ApiException e) {
-
-            String responseBody = e.getResponseBody();
-
-            if (e.getCode() == Constants.FORBIDDEN) {
-                ErrorForbidden errorForbidden = new Gson().fromJson(responseBody, ErrorForbidden.class);
-                throw new ExceptionResponseTinApi(e.getCode(), errorForbidden.getError());
+            boolean didTokenExpired = e.getCode() == Constants.FORBIDDEN;
+            if (didTokenExpired) {
+                try {
+                    refreshToken();
+                    return api.obtenerKeeper();
+                } catch (ApiException e1) {
+                    throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+                }
             } else {
-                e.printStackTrace();
-                throw new ExceptionResponseTinApi(e.getCode(), "Error inesperado");
+                throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
             }
         }
     }
 
     public ListLinks getLinks(String source, String target, String type) throws ExceptionResponseTinApi {
-        refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
             Links response = api.getLink(source, target, type);
@@ -171,32 +168,70 @@ public class SdkApiClient {
             result.addAll(entities);
             return result;
         } catch (io.minka.api.handler.ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+            boolean didTokenExpired = e.getCode() == Constants.FORBIDDEN;
+            if (didTokenExpired) {
+                try {
+                    refreshToken();
+                    Links response = api.getLink(source, target, type);
+                    List<LinkItem> entities = response.getEntities();
+                    ListLinks result = new ListLinks();
+                    result.addAll(entities);
+                    return result;
+                } catch (ApiException e1) {
+                    throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+                }
+            } else {
+                throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+            }
         }
     }
 
     public LinkItem getLink(String source, String target) throws ExceptionResponseTinApi {
-        refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
         try {
-            Links response = api.getLink(source, target, null);
-            if (response.getEntities().size() == 1){
-                return response.getEntities().get(0);
-            } else {
-                throw new ExceptionResponseTinApi(112, "No existe link de confianza");
-            }
+            return getLinkItem(source, target, api);
         } catch (io.minka.api.handler.ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+            if(didTokenExpiredOrAbsent(e)){
+                try {
+                    refreshToken();
+                    return getLinkItem(source, target, api);
+                } catch (ApiException e1) {
+                    throw new ExceptionResponseTinApi(e1.getCode(), e1.getMessage());
+                }
+            }else {
+                throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+            }
+        }
+    }
+
+    private boolean didTokenExpiredOrAbsent(ApiException e) {
+        return Constants.FORBIDDEN == e.getCode();
+    }
+
+    private LinkItem getLinkItem(String source, String target, LinksApi api) throws ApiException, ExceptionResponseTinApi {
+        Links response = api.getLink(source, target, null);
+        if (response.getEntities().size() == 1){
+            return response.getEntities().get(0);
+        } else {
+            throw new ExceptionResponseTinApi(112, "No existe link de confianza");
         }
     }
 
     public LinkItem deleteLink(String linkId) throws ApiException {
-        refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
-        return api.deleteLink(linkId);
+
+        try {
+            return api.deleteLink(linkId);
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.deleteLink(linkId);
+            } else {
+                throw e;
+            }
+        }
     }
     public LinkItem createLink(String source, String target, io.minka.api.model.CreateLinkRequest.TypeEnum typeLink) throws ExceptionResponseTinApi {
-        refreshToken();
         io.minka.api.handler.LinksApi api = new io.minka.api.handler.LinksApi(apiClient);
 
         io.minka.api.model.CreateLinkRequest req = new io.minka.api.model.CreateLinkRequest();
@@ -205,179 +240,308 @@ public class SdkApiClient {
         req.setType(typeLink);
         try {
             return api.createLink(req);
-        } catch (io.minka.api.handler.ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                try {
+                    refreshToken();
+                    return api.createLink(req);
+                } catch (ApiException e1) {
+                    throw new ExceptionResponseTinApi(e1.getCode(), e1.getMessage());
+                }
+            }  else {
+                throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+            }
         }
     }
 
 
     public io.minka.api.model.WalletResponse createWallet(WalletRequest walletRequest)
             throws WalletCreationException {
-        refreshToken();
 
         io.minka.api.handler.WalletApi walletApi;
         walletApi = new io.minka.api.handler.WalletApi(apiClient);
         try {
             return walletApi.createWallet(walletRequest);
         } catch (io.minka.api.handler.ApiException e) {
-            System.out.println(e.getResponseBody());
-            throw new WalletCreationException(Constants.UNEXPECTED_ERROR, Constants.UNEXPECTED_ERROR_MESSAGE);
+            if (didTokenExpiredOrAbsent(e)){
+                try {
+                    refreshToken();
+                    return walletApi.createWallet(walletRequest);
+                } catch (ApiException e1) {
+                    throw new WalletCreationException(Constants.UNEXPECTED_ERROR, e1.getMessage());
+                }
+            }else{
+                throw new WalletCreationException(Constants.UNEXPECTED_ERROR, Constants.UNEXPECTED_ERROR_MESSAGE);
+            }
         }
     }
 
     public io.minka.api.model.GetWalletResponse getWallet(String handle)
             throws ExceptionResponseTinApi {
-        refreshToken();
+
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
         try {
             return api.getWalletByAlias(handle);
         } catch (io.minka.api.handler.ApiException e) {
-            throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+            if (didTokenExpiredOrAbsent(e)){
+                try {
+                    refreshToken();
+                    return api.getWalletByAlias(handle);
+                } catch (ApiException e1) {
+                    throw new ExceptionResponseTinApi(e1.getCode(), e1.getMessage());
+                }
+            }else{
+                throw new ExceptionResponseTinApi(e.getCode(), e.getMessage());
+            }
         }
     }
 
 
-    public io.minka.api.model.SignerResponse createSigner(SignerRequestLabels labels) throws io.minka.api.handler.ApiException {
-        refreshToken();
+    public io.minka.api.model.SignerResponse createSigner(SignerRequestLabels labels) throws ApiException {
         io.minka.api.model.SignerRequest signerRequest = new io.minka.api.model.SignerRequest();
         signerRequest.setLabels(labels);
         io.minka.api.handler.SignerApi signerApi = new io.minka.api.handler.SignerApi(apiClient);
-        return signerApi.createSigner(signerRequest);
+        return createSignerInternal(signerRequest, signerApi);
+    }
+
+    private SignerResponse createSignerInternal(SignerRequest signerRequest, SignerApi signerApi) throws ApiException {
+        try {
+            return signerApi.createSigner(signerRequest);
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return signerApi.createSigner(signerRequest);
+            }else {
+                throw e;
+            }
+        }
     }
 
     public io.minka.api.model.SignerResponse createSignerOfflineSigning(SignerRequestLabels labels, io.minka.api.model.PublicKeys publicKey) throws io.minka.api.handler.ApiException {
-        refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
 
         io.minka.api.model.SignerRequest signerRequest = new io.minka.api.model.SignerRequest();
         signerRequest.setLabels(labels);
         signerRequest.addKeeperItem(publicKey);
+        return createSignerInternal(signerRequest, api);
 
-        return api.createSigner(signerRequest);
     }
 
-
     public io.minka.api.model.WalletUpdateResponse updateWallet(String handle, io.minka.api.model.WalletUpdateRequest createUpdateWalletReq) throws ExceptionResponseTinApi {
-        refreshToken();
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
-
         try {
             return api.updateWallet(handle, createUpdateWalletReq);
         } catch (io.minka.api.handler.ApiException e) {
             String responseBody = e.getResponseBody();
-            if (e.getCode() == Constants.BAD_REQUEST) {
-                WalletUpdateResponse response = new Gson().fromJson(responseBody, WalletUpdateResponse.class);
-                throw new ExceptionResponseTinApi(response.getError().getCode(), response.getError().getMessage());
-            } else {
-                throw new ExceptionResponseTinApi(Constants.UNEXPECTED_ERROR, Constants.UNEXPECTED_ERROR_MESSAGE);
+            if (didTokenExpiredOrAbsent(e)){
+                try {
+                    refreshToken();
+                    return api.updateWallet(handle, createUpdateWalletReq);
+                } catch (ApiException e1) {
+                    return handleExceptionUpdateWallet(e1, responseBody);
+                }
+            } else{
+                return handleExceptionUpdateWallet(e, responseBody);
+            }
+
+        }
+    }
+
+    private WalletUpdateResponse handleExceptionUpdateWallet(ApiException e, String responseBody) throws ExceptionResponseTinApi {
+        if (e.getCode() == Constants.BAD_REQUEST) {
+            WalletUpdateResponse response = new Gson().fromJson(responseBody, WalletUpdateResponse.class);
+            throw new ExceptionResponseTinApi(response.getError().getCode(), response.getError().getMessage());
+        } else {
+            throw new ExceptionResponseTinApi(Constants.UNEXPECTED_ERROR, Constants.UNEXPECTED_ERROR_MESSAGE);
+        }
+    }
+
+    public io.minka.api.model.BalanceResponse getBalance(String bankName, String currency) throws ApiException {
+
+        io.minka.api.handler.WalletApi walletApi;
+        walletApi = new io.minka.api.handler.WalletApi(apiClient);
+        try {
+            return walletApi.getBalance(bankName, currency);
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return walletApi.getBalance(bankName, currency);
+            }else{
+                throw e;
             }
         }
     }
 
-    public io.minka.api.model.BalanceResponse getBalance(String bankName, String currency) {
-        refreshToken();
-        io.minka.api.handler.WalletApi walletApi;
-        walletApi = new io.minka.api.handler.WalletApi(apiClient);
-
-        io.minka.api.model.BalanceResponse balance = null;
-        try {
-            balance = walletApi.getBalance(bankName, currency);
-        } catch (io.minka.api.handler.ApiException e) {
-            e.printStackTrace();
-        }
-        return balance;
-    }
-
     public io.minka.api.model.CreateActionResponse createAction(io.minka.api.model.CreateActionRequest actionReq)
             throws io.minka.api.handler.ApiException {
-        refreshToken();
+
         io.minka.api.handler.ActionApi actionApi = new io.minka.api.handler.ActionApi(apiClient);
-        return actionApi.createAction(actionReq);
+        try {
+            return actionApi.createAction(actionReq);
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return actionApi.createAction(actionReq);
+            } else {
+                throw e;
+            }
+        }
     }
 
     public CreateTransferResponse continueTransaction(String actionId, ActionSigned actionSigned) throws ApiException {
         refreshToken();
         TransferApi api = new TransferApi(apiClient);
-
-        return api.continueP2Ptranfer(actionId, actionSigned);
+        try {
+            return api.continueP2Ptranfer(actionId, actionSigned);
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.continueP2Ptranfer(actionId, actionSigned);
+            } else {
+                throw e;
+            }
+        }
     }
 
     public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException{
-        refreshToken();
+
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-
         GetActionResponse actionPending = api.getActionByActionId(actionId);
+        IouSigned iouSigned = null;
 
-        IouSigned iouSigned;
         try {
             iouSigned = IouUtil.generateIou(actionPending, domain, keys);
-
             return api.signOffline(actionId, iouSigned);
+        } catch (ApiException e1) {
+            if (didTokenExpiredOrAbsent(e1)){
+                refreshToken();
+                return api.signOffline(actionId, iouSigned);
+            } else {
+                throw new ApiException(e1.getMessage());
+            }
         } catch (Exception e) {
-
             throw new ApiException(e.getMessage());
         }
-
     }
 
 
     public ActionSigned signAction(String actionId, ActionSignedLabels actionLabels) throws ApiException {
-        refreshToken();
         ActionApi actionApi = new ActionApi(apiClient);
-        return actionApi.signAction(actionId, actionLabels);
+
+        try {
+            return actionApi.signAction(actionId, actionLabels);
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return actionApi.signAction(actionId, actionLabels);
+            } else {
+                throw e;
+            }
+        }
     }
 
     public GetActionResponse getAction(String hashValue) throws ApiException {
-        refreshToken();
+
         ActionApi actionApi = new ActionApi(apiClient);
-        return actionApi.getActionByActionId(hashValue);
+
+        try {
+            return actionApi.getActionByActionId(hashValue);
+        } catch (ApiException e) {
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return actionApi.getActionByActionId(hashValue);
+            } else {
+                throw e;
+            }
+        }
     }
 
 
     public CreateTransferResponse acceptTransfer(AcceptTransferRequest req,
                                                  String actionRequestId) throws ExceptionResponseTinApi {
-        refreshToken();
+
         TransferApi transferApi = new TransferApi(apiClient);
         try {
             return transferApi.acceptP2Ptranfer(actionRequestId, req);
         } catch (ApiException e) {
 
-            ErrorGenerico errorGenerico = new Gson().fromJson(e.getResponseBody(), ErrorGenerico.class);
-            throw new ExceptionResponseTinApi(errorGenerico.getCode(), e.getMessage());
+            if (didTokenExpiredOrAbsent(e)){
+                try {
+                    refreshToken();
+                    return transferApi.acceptP2Ptranfer(actionRequestId, req);
+                } catch (ApiException e1) {
+                    ErrorGenerico errorGenerico = new Gson().fromJson(e1.getResponseBody(), ErrorGenerico.class);
+                    throw new ExceptionResponseTinApi(errorGenerico.getCode(), e1.getMessage());
+                }
+            } else {
+                ErrorGenerico errorGenerico = new Gson().fromJson(e.getResponseBody(), ErrorGenerico.class);
+                throw new ExceptionResponseTinApi(errorGenerico.getCode(), e.getMessage());
+            }
         }
     }
 
 
     public CreateTransferResponse rejectTransfer(RejectTransferRequest req, String actionId) throws ExceptionResponseTinApi, io.minka.api.handler.ApiException {
-        refreshToken();
+
         TransferApi transferApi = new TransferApi(apiClient);
 
-        return transferApi.rejectP2Ptranfer(actionId, req);
+        try{
+            return transferApi.rejectP2Ptranfer(actionId, req);
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return transferApi.rejectP2Ptranfer(actionId, req);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public GetTransfersResponse getActionsWithCustomQuery(String customQuery) throws ApiException {
-        refreshToken();
         io.minka.api.handler.ActionApi tempoapi = new io.minka.api.handler.ActionApi(apiClient);
-
-        return tempoapi.getActions(customQuery);
+        try{
+            return tempoapi.getActions(customQuery);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return tempoapi.getActions(customQuery);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public SignerListResponse getSignersWithCustomQuery(String customQuery) throws ApiException {
-        refreshToken();
         io.minka.api.handler.SignerApi tempoapi = new io.minka.api.handler.SignerApi(apiClient);
-
-        return tempoapi.getSigners(customQuery);
+        try{
+            return tempoapi.getSigners(customQuery);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return tempoapi.getSigners(customQuery);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public GetWalletResponse getWalletWithCustomQuery(String customQuery) throws ApiException {
-        refreshToken();
         io.minka.api.handler.WalletApi tempoapi = new io.minka.api.handler.WalletApi(apiClient);
-
-        return tempoapi.getWalletByAlias(customQuery);
+        try{
+            return tempoapi.getWalletByAlias(customQuery);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return tempoapi.getWalletByAlias(customQuery);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public List<GetActionResponse> getActionPendings(String alias, AliasType aliasType, ActionType action) throws ApiException {
-        refreshToken();
+
         io.minka.api.handler.ActionApi tempoapi = new io.minka.api.handler.ActionApi(apiClient);
 
         String customQuery = "?";
@@ -387,7 +551,16 @@ public class SdkApiClient {
             customQuery = customQuery + "source=" + alias;
         }
         customQuery = customQuery + "&labels.type=" + action.getValue() + "&labels.status=PENDING";
-        return tempoapi.getActions(customQuery).getEntities();
+        try{
+            return tempoapi.getActions(customQuery).getEntities();
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return tempoapi.getActions(customQuery).getEntities();
+            }else{
+                throw e;
+            }
+        }
     }
 
     public Transfers getTransferPendings(String type, String target, String source) throws io.minka.api.handler.ApiException {
@@ -401,18 +574,35 @@ public class SdkApiClient {
     public CreateTransferResponse createTinTransfer(CreateTransferRequest tintransfer)
             throws io.minka.api.handler.ApiException {
 
-        refreshToken();
         io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
-
-        return api.createTinTransfer(tintransfer);
+        try{
+            return api.createTinTransfer(tintransfer);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.createTinTransfer(tintransfer);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public WalletListResponse getWallets(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
-        refreshToken();
+
 
         io.minka.api.handler.WalletApi api = new io.minka.api.handler.WalletApi(apiClient);
 
-        WalletsResponse walletBySigner = api.getWalletBySigner("?pagesize=" + pagesize + "&pagenum=" + pagenum);
+        WalletsResponse walletBySigner;
+        try{
+            walletBySigner = api.getWalletBySigner("?pagesize=" + pagesize + "&pagenum=" + pagenum);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                walletBySigner = api.getWalletBySigner("?pagesize=" + pagesize + "&pagenum=" + pagenum);
+            }else{
+                throw e;
+            }
+        }
 
         List<WalletResponse> entities = walletBySigner.getEntities();
         WalletListResponse walletResponses = new WalletListResponse();
@@ -423,74 +613,156 @@ public class SdkApiClient {
     }
 
     public SignerListResponse getSigners(int pagenum, int pagesize) throws io.minka.api.handler.ApiException {
-        refreshToken();
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
-        return api.getSigners("?pagesize=" + pagesize + "&pagenum=" + pagenum);
+        try{
+            return api.getSigners("?pagesize=" + pagesize + "&pagenum=" + pagenum);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.getSigners("?pagesize=" + pagesize + "&pagenum=" + pagenum);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public io.minka.api.model.SignerResponse deleteSigner(String signerAddress) throws io.minka.api.handler.ApiException {
-        refreshToken();
+
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
-        return api.deleteSignerByAddress(signerAddress);
+        try{
+            return api.deleteSignerByAddress(signerAddress);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.deleteSignerByAddress(signerAddress);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public GenericResponse updateSigner(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
-        refreshToken();
         DefaultApi api = new DefaultApi(apiClient);
-        return api.updateSignerCustom(signerAddress, updateSignerReq);
+        try{
+            return api.updateSignerCustom(signerAddress, updateSignerReq);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.updateSignerCustom(signerAddress, updateSignerReq);
+            }else{
+                throw e;
+            }
+        }
     }
 
     public SignerResponse updateSignerParameters(String signerAddress, SignerRequest updateSignerReq) throws io.minka.api.handler.ApiException {
-        refreshToken();
+
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
-        return api.updateSigner(signerAddress, updateSignerReq);
+        try{
+            return api.updateSigner(signerAddress, updateSignerReq);
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.updateSigner(signerAddress, updateSignerReq);
+            }else{
+                throw e;
+            }
+        }
+
     }
 
     public io.minka.api.model.SignerResponse getSignerByAddress(String wAddress) throws io.minka.api.handler.ApiException {
-        refreshToken();
+
         io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
-        return api.getSignerByAddress(wAddress);
+        try{
+            return api.getSignerByAddress(wAddress);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.getSignerByAddress(wAddress);
+            }else{
+                throw e;
+            }
+        }
     }
 
 
     public GetActionResponse updateActionParameters(String actionid, UpdateActionRequest req)
             throws io.minka.api.handler.ApiException {
-        refreshToken();
-        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
 
-        return api.updateActionLabels(actionid, req);
+        io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
+        try{
+            return api.updateActionLabels(actionid, req);
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.updateActionLabels(actionid, req);
+
+            }else{
+                throw e;
+            }
+        }
     }
 
     public GenericResponse updateAction(String actionid,
                                         UpdateActionRequest req)
             throws io.minka.api.handler.ApiException {
-        refreshToken();
         io.minka.api.handler.DefaultApi api = new io.minka.api.handler.DefaultApi(apiClient);
 
-        return api.updateActionLabels(actionid, req);
+        try{
+            return api.updateActionLabels(actionid, req);
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.updateActionLabels(actionid, req);
+            }else{
+                throw e;
+            }
+        }
+
     }
 
 
     public io.minka.api.model.GetWalletResponse getWalletByAlias(String aliasHandle)
             throws io.minka.api.handler.ApiException {
-        refreshToken();
+
         io.minka.api.handler.WalletApi api;
         api = new io.minka.api.handler.WalletApi(apiClient);
+        try{
+            return api.getWalletByAlias(aliasHandle);
 
-        return api.getWalletByAlias(aliasHandle);
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.getWalletByAlias(aliasHandle);
+
+            }else{
+                throw e;
+            }
+        }
     }
-
-    public void updateSigner() {
-        io.minka.api.handler.SignerApi api = new io.minka.api.handler.SignerApi(apiClient);
-
-    }
-
 
 
     public GetTransfersResponse getActions() throws io.minka.api.handler.ApiException {
-        refreshToken();
+
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-        return api.getActions("?");
+        try{
+            return api.getActions("?");
+
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.getActions("?");
+            }else{
+                throw e;
+            }
+        }
+
     }
 
 
@@ -528,15 +800,38 @@ public class SdkApiClient {
     }
 
     public Conciliation getConciliation(String customQuery) throws ApiException {
-        refreshToken();
+
+
         io.minka.api.handler.ConciliationApi api = new io.minka.api.handler.ConciliationApi(apiClient);
-        return api.getConciliation(customQuery);
+        try{
+            return api.getConciliation(customQuery);
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.getConciliation(customQuery);
+
+            }else{
+                throw e;
+            }
+        }
     }
 
     public GetAnalyticsResponse getAnalytics(String customQuery) throws ApiException {
-        refreshToken();
+
         io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
-        return api.getTransfersAnalytics(customQuery);
+
+        try{
+            return api.getTransfersAnalytics(customQuery);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.getTransfersAnalytics(customQuery);
+            }else{
+                throw e;
+            }
+        }
+
     }
 
     public Transfers getTransfersWithCustomQuery(String query) throws ApiException {
