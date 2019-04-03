@@ -3,7 +3,7 @@
 
   <groupId>io.github.minkainc</groupId>
   <artifactId>webwallet-sdk-seven</artifactId>
-  <version>0.1.27-SNAPSHOT</version>
+  <version>0.1.27.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>webwallet-sdk</name>
