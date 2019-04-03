@@ -27,8 +27,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Transfer
+      
       parameters:
         - in: query
           name: customQuery
@@ -70,8 +69,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Transfer
+      
       parameters:
         - in: path
           name: actionid
@@ -118,8 +116,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Transfer
+
       parameters:
         - in: path
           name: actionid
@@ -166,8 +163,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Transfer
+
       parameters:
         - in: path
           name: actionid
@@ -214,8 +210,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Transfer
+
       requestBody:
               content:
                 application/json:
@@ -261,8 +256,7 @@ paths:
           schema:
             type: string
           required: true
-      tags:
-        - Transfer
+
       responses:
         '200':
           description: get Pending transfers
@@ -294,8 +288,7 @@ paths:
       summary: Delete a link
       description: ''
       operationId: deleteLink
-      tags:
-        - Links
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -336,8 +329,7 @@ paths:
       summary: Create a link
       description: ''
       operationId: createLink
-      tags:
-        - Links
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -383,8 +375,7 @@ paths:
       summary: Get a link
       description: ''
       operationId: getLink
-      tags:
-        - Links
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -457,8 +448,7 @@ paths:
       summary: Get Actions received
       description: ''
       operationId: getActions
-      tags:
-        - Action
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -499,8 +489,7 @@ paths:
       summary: Create an action
       description: ''
       operationId: createAction
-      tags:
-        - Action
+
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -590,8 +579,7 @@ paths:
       summary: Get unsigned actions
       description: ''
       operationId: getPending
-      tags:
-        - Action
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -645,8 +633,7 @@ paths:
       summary: Get an action by action_id
       description: ''
       operationId: getActionByActionId
-      tags:
-        - Action
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -691,8 +678,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Action
+
       parameters:
         - in: path
           name: action_id
@@ -752,8 +738,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Action
+
       parameters:
         - in: path
           name: actionid
@@ -800,8 +785,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Action
+
       parameters:
         - in: path
           name: actionid
@@ -849,8 +833,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Conciliation
+
       parameters:
         - in: query
           name: customQuery
@@ -892,8 +875,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Keeper
+
       responses:
         '200':
           description: Keypair generated
@@ -929,8 +911,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Signer
+
       parameters:
         - in: path
           name: signerAddress
@@ -964,8 +945,7 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      tags:
-        - Signer
+
       parameters:
         - in: path
           name: signerAddress
@@ -995,8 +975,7 @@ paths:
       summary: Actualiza un signer
       description: ''
       operationId: updateSigner
-      tags:
-        - Signer
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1036,8 +1015,7 @@ paths:
       summary: Obtiene un signer
       description: ''
       operationId: getSigners
-      tags:
-        - Signer
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1075,8 +1053,7 @@ paths:
             - ApiKeyAuth: []
             - oAuth2ClientCredentials: []
             - XNonce: []
-      tags:
-        - Signer
+
       responses:
         '200':
           description: OK
@@ -1201,8 +1178,7 @@ paths:
       summary: Call action in user's Bank
       description: ''
       operationId: callAction
-      tags:
-        - Signer
+
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1242,8 +1218,7 @@ paths:
       summary: Call debit in user's bank
       description: ''
       operationId: callUpload
-      tags:
-        - Signer
+
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1283,8 +1258,7 @@ paths:
       summary: Notify status
       description: ''
       operationId: callStatus
-      tags:
-        - Signer
+
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1329,8 +1303,7 @@ paths:
       summary: Call credit in user's bank
       description: ''
       operationId: callDownload
-      tags:
-        - Signer
+
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1375,8 +1348,7 @@ paths:
       summary: Obtiene un wallet por signer
       description: ''
       operationId: getWalletBySigner
-      tags:
-        - Wallet
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1412,8 +1384,7 @@ paths:
       summary: Create a wallet
       description: ''
       operationId: createWallet
-      tags:
-        - Wallet
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1460,8 +1431,7 @@ paths:
       summary: Send sms
       description: ''
       operationId: sendSms
-      tags:
-        - Wallet
+
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1507,8 +1477,7 @@ paths:
       summary: Get default account  balance of a wallet
       description: ''
       operationId: getBalance
-      tags:
-        - Wallet
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1548,8 +1517,7 @@ paths:
       summary: Edit a wallet
       description: ''
       operationId: updateWallet
-      tags:
-        - Wallet
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1589,8 +1557,7 @@ paths:
       summary: Get a wallet
       description: ''
       operationId: getWalletByAlias
-      tags:
-        - Wallet
+
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []

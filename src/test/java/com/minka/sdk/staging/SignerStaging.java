@@ -71,8 +71,6 @@ public class SignerStaging {
             System.out.println(e.getResponseBody());
             System.out.println(e.getCode());
 
-        } catch (ExceptionResponseTinApi e) {
-            e.printStackTrace();
         }
 
         // System.out.println(signerOfflineSigning);

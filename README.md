@@ -1,3 +1,12 @@
+CHANGELOG
+
+1. Se quitó el constructor SdkApiClient(String domain, String apiKey), 
+ya que la URL debe ser parametrizable.
+
+2. Se quitó setOauth2On y setOauth2Off ya que por debajo se usa 
+oauth2 authentication siempre.
+
+3. 
 # webwallet-sdk
 Webwallet sdk java version
 
