@@ -17,8 +17,43 @@ tags:
     description: 'Endpoint related to transfers in TIN platform'
   - name: Conciliation
     description: 'Endpoint related to conciliation process in TIN platform'
+  - name: shd
+    description: 'Endpoint related to SHD proyect'
 
 paths:
+  '/vendors/{vendorId}/invoices/{invoiceId}':
+    get:
+      summary: Get vendors
+      operationId: getVendors
+      security:
+        - ApiKeyAuth: []
+        - oAuth2ClientCredentials: []
+        - XNonce: []
+      tags:
+        - shd
+      parameters:
+        - in: path
+          name: vendorId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: invoiceId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: customQuery
+          schema:
+            type: string
+      responses:
+        '200':
+          description: dsa
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/getVendorsResponse'
+
   '/transfer/analytics':
     get:
       summary: Get data related to Transfers
@@ -1141,7 +1176,7 @@ paths:
     put:
       summary: Update labels of an action
       description: ''
-      operationId: updateActionLabels
+      operationId: updateActionLabels2
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1644,6 +1679,40 @@ components:
           tokenUrl: https://achtin-stg.minka.io/oauth/token
           scopes: {} # tin ach does not use scopes
   schemas:
+    getVendorsResponse:
+      type: object
+      properties:
+        target:
+          type: string
+        amount:
+          type: string
+        symbol:
+          type: string
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+        labels:
+          type: object
+          properties:
+            type:
+              type: string
+            status:
+              type: string
+            domain:
+              type: string
+            detail:
+              type: string
+            nature:
+              type: string
+            invoice:
+              type: string
+            subscription:
+              type: string
+
     Keeper:
       type: object
       properties:
@@ -1672,6 +1741,12 @@ components:
         labels:
           type: object
           properties:
+            personType:
+              type: string
+            name:
+              type: string
+            language:
+              type: string
             description:
               type: string
             firstName:
@@ -1719,6 +1794,12 @@ components:
     signerLabelsResponse:
       type: object
       properties:
+        personType:
+          type: string
+        name:
+          type: string
+        language:
+          type: string
         createdBy:
           type: string
         description:
@@ -2159,6 +2240,16 @@ components:
         labels:
           type: object
           properties:
+            subscription:
+              type: string
+            invoice:
+              type: string
+            nature:
+              type: string
+            detail:
+              type: string
+            domain:
+              type: string
             tx_id:
               type: string
             tx_ref:
@@ -2784,6 +2875,10 @@ components:
           type: string
         filter:
           type: string
+
+    GenericResponse:
+     type: object
+     additionalProperties: true
 
     transfers:
       type: object

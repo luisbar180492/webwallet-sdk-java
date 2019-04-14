@@ -158,9 +158,9 @@ public class WalletTesting {
     @Test
     public void shouldUpdateWallet() throws ExceptionResponseTinApi {
         String handle = "$bancojoel2";
-//        String defaultAddress = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
-//        List<String> signers = new ArrayList<>();
-//        signers.add(defaultAddress);
+        String defaultAddress = "wQxWXHPCDcfmGnuNPRAxfVoxWH79YcGBJV";
+        List<String> signers = new ArrayList<>();
+        signers.add(defaultAddress);
 
         WalletUpdateRequest req = new WalletUpdateRequest();
 

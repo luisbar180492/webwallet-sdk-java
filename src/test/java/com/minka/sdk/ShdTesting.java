@@ -3,6 +3,8 @@ package com.minka.sdk;
 import com.minka.ExceptionResponseTinApi;
 import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
+import io.minka.api.model.GetTransfersResponse;
+import io.minka.api.model.GetVendorsResponse;
 import io.minka.api.model.Keeper;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +14,7 @@ import java.util.logging.Logger;
 import static org.junit.Assert.assertNotEquals;
 
 
-public class KeeperTesting {
+public class ShdTesting {
 
     private Logger logger = Logger.getLogger(KeeperTesting.class.getName());
 
@@ -21,7 +23,7 @@ public class KeeperTesting {
     @Before
     public void prepare(){
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
-                TestingConstants.API_KEY,TestingConstants.STAGING_BASE);
+                TestingConstants.API_KEY,"http://e0e09e39.ngrok.io");
 
 //        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
 //                TestingConstants.API_KEY,"https://b450c068.ngrok.io");
@@ -35,31 +37,15 @@ public class KeeperTesting {
 
     }
 
+
     @Test
-    public void shouldReturnKeypairTesting() throws ExceptionResponseTinApi, ApiException {
-
-        io.minka.api.model.Keeper keeper = sdkApiClient.getKeeper();
-
-        assertNotEquals(null, keeper.getSecret() );
-        assertNotEquals(null, keeper.getPublic() );
-
-        logger.info(keeper.toString());
-
+    public void getActionsWithCustomQuery() throws ApiException {
+        String vendorId = "$shd_bogota";
+        String invoiceId = "1000";
+        String customQuery = "?param=value&apd=32";
+        GetVendorsResponse getVendorsResponse = sdkApiClient.verifyPayment(vendorId, invoiceId, customQuery);
 
     }
 
-    
 
-    @Test
-    public void shouldGenerateOfflineSigningKeypair() throws ApiException {
-
-        SdkApiClient sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
-                TestingConstants.API_KEY, TestingConstants.TESTING_BASE);
-
-        Keeper keypair = sdkApiClient.getKeeperForOfflineSigning();
-        System.out.println(keypair);
-        assertNotEquals(keypair.getPublic(), null);
-        assertNotEquals(keypair.getScheme(), null);
-        assertNotEquals(keypair.getSecret(), null);
-    }
 }

@@ -12,7 +12,6 @@ import com.minka.utils.Constants;
 import io.minka.api.handler.*;
 import io.minka.api.handler.auth.ApiKeyAuth;
 import io.minka.api.model.*;
-import io.swagger.annotations.Api;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -712,12 +711,12 @@ public class SdkApiClient {
         io.minka.api.handler.DefaultApi api = new io.minka.api.handler.DefaultApi(apiClient);
 
         try{
-            return api.updateActionLabels(actionid, req);
+            return api.updateActionLabels2(actionid, req);
 
         } catch (ApiException e){
             if (didTokenExpiredOrAbsent(e)){
                 refreshToken();
-                return api.updateActionLabels(actionid, req);
+                return api.updateActionLabels2(actionid, req);
             }else{
                 throw e;
             }
@@ -838,5 +837,20 @@ public class SdkApiClient {
         refreshToken();
         io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
         return api.getTransfers(query);
+    }
+
+    public GetVendorsResponse verifyPayment(String vendorId, String invoiceId, String customQuery) throws ApiException {
+        ShdApi api = new ShdApi(apiClient);
+        try{
+            return api.getVendors(vendorId, invoiceId, customQuery);
+
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.getVendors(vendorId, invoiceId, customQuery);
+            }else{
+                throw e;
+            }
+        }
     }
 }

@@ -41,19 +41,21 @@ public class ActionTesting {
     @Test
     public void shouldCreateAction() throws io.minka.api.handler.ApiException {
         io.minka.api.model.CreateActionRequest req = new io.minka.api.model.CreateActionRequest();
-
-        CreateActionRequestLabels labels = new CreateActionRequestLabels();
-        req.setLabels(labels);
-        req.setAmount("100");
-        req.setSource("$bancoffline");
-//        req.setSource("$tin");
+        req.setSource("$banco_rojo");
         req.setSymbol("$tin");
-        req.setTarget("$bancoheroku");
-        System.out.println(req);
-
-        io.minka.api.model.CreateActionResponse action = null;
-        action = sdkApiClient.createAction(req);
-        System.out.println(action.getActionId());
+        req.setTarget("$shd_bogota");
+        req.setAmount("100.23");
+        req.setSymbol("$tin");
+        CreateActionRequestLabels labels = new CreateActionRequestLabels();
+        labels.setType("PAYMENT");
+        labels.setStatus("PENDING");
+        labels.setDomain("shd");
+        labels.setDetail("23412342134");
+        labels.setNature("60");
+        labels.setInvoice("6676532982721");
+        labels.setSubscription("1234784901");
+        req.setLabels(labels);
+        CreateActionResponse action = sdkApiClient.createAction(req);
     }
 
     @Ignore

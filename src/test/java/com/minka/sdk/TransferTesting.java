@@ -95,7 +95,9 @@ public class TransferTesting {
         String amount = "1";
         String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk";
         String action;
-//        action = sdkApiClient.createTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
+
+
+        //        action = sdkApiClient.createTransferRequest(handleTarget, handleSourceAddress, amount, smsMessage);
 //        System.out.println("ACTION ID " + action);
 //        assertNotEquals(null, action);
     }
@@ -125,12 +127,14 @@ public class TransferTesting {
 
     @Ignore
     @Test
-    public void shouldInitiateTransfer(){
+    public void shouldInitiateTransfer() throws ApiException {
         String handleTarget = "$3104845181";//to numero de telefono
         String smsMessage = "ENVIO de TINS prueba envío";//solicit
         String amount = "1";
         String handleSourceAddress = "wgqMLaKxbXy7STmLNwoUpjWEDzrdKJUtyk   ";
         String action;
+        CreateTransferRequest transferRequest = null;
+        CreateTransferResponse tinTransfer = sdkApiClient.createTinTransfer(transferRequest);
 //        action = sdkApiClient.createTransfer(handleTarget, handleSourceAddress, amount, smsMessage);
 //        System.out.println("ACTION ID " + action);
 //        assertNotEquals(null, action);
