@@ -570,6 +570,22 @@ public class SdkApiClient {
     }
 
 
+    public CreateTransferResponse createPaymentTransfer(CreateTransferRequest tintransfer)
+            throws io.minka.api.handler.ApiException {
+
+        io.minka.api.handler.TransferApi api = new TransferApi(apiClient);
+        try{
+            return api.createTinTransfer(tintransfer);
+        } catch (ApiException e){
+            if (didTokenExpiredOrAbsent(e)){
+                refreshToken();
+                return api.createTinTransfer(tintransfer);
+            }else{
+                throw e;
+            }
+        }
+    }
+
     public CreateTransferResponse createTinTransfer(CreateTransferRequest tintransfer)
             throws io.minka.api.handler.ApiException {
 

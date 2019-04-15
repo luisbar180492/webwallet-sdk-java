@@ -2587,6 +2587,8 @@ components:
     createTransferRequest:
       type: object
       properties:
+        action_id:
+          type: string
         source:
           type: string
         target:
@@ -2598,6 +2600,18 @@ components:
         labels:
           type: object
           properties:
+            detail:
+              type: string
+            nature:
+              type: string
+            invoice:
+              type: string
+            subscription:
+              type: string
+            tx_id:
+              type: string
+            description:
+              type: string
             type:
               type: string
             tx_id:
