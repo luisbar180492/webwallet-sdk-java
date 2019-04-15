@@ -5,6 +5,7 @@ import com.minka.wallet.primitives.utils.SdkApiClient;
 import io.minka.api.handler.ApiException;
 import io.minka.api.model.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.logging.Logger;
@@ -21,8 +22,8 @@ public class ShdTesting {
     @Before
     public void prepare(){
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
-//                TestingConstants.API_KEY,"https://achtin-dev.minka.io/v1");
-        TestingConstants.API_KEY,"http://e0e09e39.ngrok.io/v1");
+                TestingConstants.API_KEY,"https://achtin-dev.minka.io/v1");
+//        TestingConstants.API_KEY,"http://e0e09e39.ngrok.io/v1");
 
 
 
@@ -86,6 +87,7 @@ public class ShdTesting {
         ActionSigned actionSigned = sdkApiClient.signAction(actionId, actionLabels);
         System.out.println(actionSigned);
     }
+    @Ignore
     @Test
     public void createPaymentTransfer() throws ApiException {
         CreateTransferRequest req = new CreateTransferRequest();
