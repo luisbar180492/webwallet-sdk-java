@@ -405,7 +405,7 @@ public class SdkApiClient {
     public ActionSigned signActionOffline(String actionId, OfflineSigningKeys keys) throws io.minka.api.handler.ApiException{
 
         io.minka.api.handler.ActionApi api = new io.minka.api.handler.ActionApi(apiClient);
-        GetActionResponse actionPending = api.getActionByActionId(actionId);
+        GetActionResponse actionPending = this.getAction(actionId);
         IouSigned iouSigned = null;
 
         try {

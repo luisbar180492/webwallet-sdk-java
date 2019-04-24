@@ -1698,6 +1698,8 @@ components:
         labels:
           type: object
           properties:
+            tx_id:
+              type: string
             type:
               type: string
             status:
@@ -1708,9 +1710,19 @@ components:
               type: string
             nature:
               type: string
+            processor:
+              type: string
+            branch:
+              type: string
+            environment:
+              type: string
             invoice:
               type: string
             subscription:
+              type: string
+            created:
+              type: string
+            updated:
               type: string
 
     Keeper:
@@ -2240,6 +2252,16 @@ components:
         labels:
           type: object
           properties:
+            serial:
+              type: string
+            authorization:
+              type: string
+            environment:
+              type: string
+            branch:
+              type: string
+            processor:
+              type: string
             subscription:
               type: string
             invoice:
@@ -2305,7 +2327,29 @@ components:
               type: string
             status:
               type: string
+            domain:
+              type: string
+            detail:
+              type: string
+            nature:
+              type: string
+            invoice:
+              type: string
+            subscription:
+              type: string
+            processor:
+              type: string
+            branch:
+              type: string
+            environment:
+              type: string
+            authorization:
+              type: string
+            serial:
+              type: string
             created:
+              type: string
+            updated:
               type: string
             hash:
               type: string
@@ -2600,6 +2644,16 @@ components:
         labels:
           type: object
           properties:
+            processor:
+              type: string
+            branch:
+              type: string
+            environment:
+              type: string
+            auhorization:
+              type: string
+            serial:
+              type: string
             detail:
               type: string
             nature:

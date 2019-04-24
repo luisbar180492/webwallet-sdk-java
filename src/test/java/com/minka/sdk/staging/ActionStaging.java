@@ -33,20 +33,59 @@ public class ActionStaging {
     }
 
     @Test
-    public void shouldCreateAction() throws io.minka.api.handler.ApiException {
-        io.minka.api.model.CreateActionRequest req = new io.minka.api.model.CreateActionRequest();
+    public void shouldCreateAction() {
+        SdkApiClient sdkApiClient;
+        sdkApiClient = new SdkApiClient("achtin.minka.io",
+                "a34Bd8ADBc9bd6aDaDB8CC49Bbd9f88EA3CEe3AaeC93AcDA516504Ce", TestingConstants.DEV_BASE);
 
+        sdkApiClient
+                .setSecret("DecE44EbaeEcAE402DD07e3BE3Ad48DD")
+                .setClientId("91265AF5907c4cFdB7D8Ba7A7EEe209851beBFaCCA3D434F");
+
+
+        String actionId = "e8c1267c-4164-4494-b8eb-077b20ebd0b8";
+
+        OfflineSigningKeys keys = new OfflineSigningKeys();
+
+        PublicKeys key = new PublicKeys();
+        key.setPublic("49a1d0752e9a11a4e013dd1c9064e526f6cd457050b71b043eb96e21f1f88400");
+        key.setSecret("23e4352c1cd05122923656de085e85ea70c38ecb613d29c1a705c20322697a42");
+        key.setScheme("eddsa-ed25519");
+        keys.addKeeperItem(key);
+
+        CreateActionRequest req = new CreateActionRequest();
         CreateActionRequestLabels labels = new CreateActionRequestLabels();
-        req.setLabels(labels);
-        req.setAmount("1");
-        req.setSource("$bancoheroku");
-        req.setSymbol("$tin");
-        req.setTarget("$573104845181");
-        System.out.println(req);
+        labels.setTxRef("sdfa");
+        labels.setType("SEND");
+        DeviceFingerPrint device = new DeviceFingerPrint();
+        labels.setDeviceFingerPrint(device);
+        labels.setNumberOftransactions("1");
 
-        io.minka.api.model.CreateActionResponse action = null;
-        action = sdkApiClient.createAction(req);
-        System.out.println(action.getActionId());
+        req.setLabels(labels);
+
+//        source: wdG1Ntyg3hehVnibsgkCVv772ccwyj7rCo
+//        symbol:
+//        target: wW8yxrKWppeQjhDEpS7TJTR8XmCufzZb8H
+        req.setSource("wdG1Ntyg3hehVnibsgkCVv772ccwyj7rCo");
+        req.setSymbol("$tin");
+        req.setAmount("12");
+        req.setTarget("wW8yxrKWppeQjhDEpS7TJTR8XmCufzZb8H");
+        try {
+            CreateActionResponse action = sdkApiClient.createAction(req);
+        } catch (ApiException e) {
+            System.out.println(e.getResponseBody());
+        }
+
+        /*
+        try {
+            //GetActionResponse action = sdkApiClient.getAction(actionId);
+            ActionSigned actionSigned = sdkApiClient.signActionOffline(actionId, keys);
+            System.out.println(actionSigned);
+        } catch (ApiException e) {
+
+            System.out.println(e.getResponseBody());
+        }
+       */
     }
 
     @Test
