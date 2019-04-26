@@ -27,7 +27,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      
       parameters:
         - in: query
           name: customQuery
@@ -69,7 +68,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-      
       parameters:
         - in: path
           name: actionid
@@ -116,7 +114,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       parameters:
         - in: path
           name: actionid
@@ -163,7 +160,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       parameters:
         - in: path
           name: actionid
@@ -256,7 +252,6 @@ paths:
           schema:
             type: string
           required: true
-
       responses:
         '200':
           description: get Pending transfers
@@ -288,7 +283,6 @@ paths:
       summary: Delete a link
       description: ''
       operationId: deleteLink
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -329,7 +323,6 @@ paths:
       summary: Create a link
       description: ''
       operationId: createLink
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -375,7 +368,6 @@ paths:
       summary: Get a link
       description: ''
       operationId: getLink
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -448,7 +440,6 @@ paths:
       summary: Get Actions received
       description: ''
       operationId: getActions
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -489,7 +480,6 @@ paths:
       summary: Create an action
       description: ''
       operationId: createAction
-
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -579,7 +569,6 @@ paths:
       summary: Get unsigned actions
       description: ''
       operationId: getPending
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -633,7 +622,6 @@ paths:
       summary: Get an action by action_id
       description: ''
       operationId: getActionByActionId
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -738,7 +726,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       parameters:
         - in: path
           name: actionid
@@ -785,7 +772,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       parameters:
         - in: path
           name: actionid
@@ -833,7 +819,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       parameters:
         - in: query
           name: customQuery
@@ -875,7 +860,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       responses:
         '200':
           description: Keypair generated
@@ -911,7 +895,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       parameters:
         - in: path
           name: signerAddress
@@ -945,7 +928,6 @@ paths:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
         - XNonce: []
-
       parameters:
         - in: path
           name: signerAddress
@@ -975,7 +957,6 @@ paths:
       summary: Actualiza un signer
       description: ''
       operationId: updateSigner
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1015,7 +996,6 @@ paths:
       summary: Obtiene un signer
       description: ''
       operationId: getSigners
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1053,7 +1033,6 @@ paths:
             - ApiKeyAuth: []
             - oAuth2ClientCredentials: []
             - XNonce: []
-
       responses:
         '200':
           description: OK
@@ -1178,7 +1157,6 @@ paths:
       summary: Call action in user's Bank
       description: ''
       operationId: callAction
-
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1218,7 +1196,6 @@ paths:
       summary: Call debit in user's bank
       description: ''
       operationId: callUpload
-
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1258,7 +1235,6 @@ paths:
       summary: Notify status
       description: ''
       operationId: callStatus
-
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1303,7 +1279,6 @@ paths:
       summary: Call credit in user's bank
       description: ''
       operationId: callDownload
-
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1348,7 +1323,6 @@ paths:
       summary: Obtiene un wallet por signer
       description: ''
       operationId: getWalletBySigner
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1384,7 +1358,6 @@ paths:
       summary: Create a wallet
       description: ''
       operationId: createWallet
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1431,7 +1404,6 @@ paths:
       summary: Send sms
       description: ''
       operationId: sendSms
-
       security:
               - ApiKeyAuth: []
               - oAuth2ClientCredentials: []
@@ -1477,7 +1449,6 @@ paths:
       summary: Get default account  balance of a wallet
       description: ''
       operationId: getBalance
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1517,7 +1488,6 @@ paths:
       summary: Edit a wallet
       description: ''
       operationId: updateWallet
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1557,7 +1527,6 @@ paths:
       summary: Get a wallet
       description: ''
       operationId: getWalletByAlias
-
       security:
         - ApiKeyAuth: []
         - oAuth2ClientCredentials: []
@@ -1678,7 +1647,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
 
@@ -1726,7 +1696,8 @@ components:
         routerAuthMethod:
           type: string
         routerAuthParams:
-          type: string
+          type: object
+          additionalProperties: true
         routerFormat:
           type: string
 
@@ -1764,7 +1735,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
 
@@ -1797,7 +1769,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
@@ -1836,7 +1809,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
@@ -1882,7 +1856,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
@@ -1923,7 +1898,8 @@ components:
             routerAuthMethod:
               type: string
             routerAuthParams:
-              type: string
+              type: object
+              additionalProperties: true
             routerFormat:
               type: string
         handle:
