@@ -1,0 +1,314 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.minkainc</groupId>
+  <artifactId>webwallet-sdk</artifactId>
+  <version>0.1.25.3-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>webwallet-sdk</name>
+  <url>http://maven.apache.org</url>
+<description>SDK in Java for the tinapi project</description>
+<properties>
+  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <maven.compiler.source>1.8</maven.compiler.source>
+  <maven.compiler.target>1.8</maven.compiler.target>
+</properties>
+
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>ivancho98</id>
+            <name>ivancho</name>
+            <email>ivan@minka.io</email>
+        </developer>
+    </developers>
+  
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+            </url>
+        </repository>
+    </distributionManagement>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+                <execution>
+                    <id>attach-sources</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.7</version>
+            <extensions>true</extensions>
+            <configuration>
+                <serverId>ossrh</serverId>
+                <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>2.5.3</version>
+            <configuration>
+                <localCheckout>true</localCheckout>
+                <pushChanges>false</pushChanges>
+                <mavenExecutorId>forked-path</mavenExecutorId>
+                <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+            </configuration>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.maven.scm</groupId>
+                    <artifactId>maven-scm-provider-gitexe</artifactId>
+                    <version>1.9.5</version>
+                </dependency>
+            </dependencies>
+        </plugin>
+        <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.8.2</version>
+            <executions>
+                <execution>
+                    <id>default-deploy</id>
+                    <phase>deploy</phase>
+                    <goals>
+                        <goal>deploy</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.22.0</version>
+            <configuration>
+                <includes>
+                    <include>com.minka.sdk.*Testing</include>
+                </includes>
+            </configuration>
+        </plugin>
+
+
+        <plugin>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator-maven-plugin</artifactId>
+            <version>3.2.2</version>
+            <executions>
+                <execution>
+                    <id>tin-api-rest-client</id>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                    <configuration>
+                        <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                        <generatorName>java</generatorName>
+                        <generateApiTests>false</generateApiTests>
+                        <configOptions>
+                            <sourceFolder>src/gen/java/main</sourceFolder>
+                        </configOptions>
+                        <apiPackage>io.minka.api.handler</apiPackage>
+                        <modelPackage>io.minka.api.model</modelPackage>
+                        <invokerPackage>io.minka.api.handler</invokerPackage>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>webwallet-core-rest-client</id>
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                    <configuration>
+                        <inputSpec>${project.basedir}/src/main/resources/webwallet.yaml</inputSpec>
+                        <generatorName>java</generatorName>
+                        <generateApiTests>false</generateApiTests>
+                        <configOptions>
+                            <sourceFolder>src/gen/java/main</sourceFolder>
+                        </configOptions>
+                        <apiPackage>org.webwallet.api.handler</apiPackage>
+                        <modelPackage>org.webwallet.api.model</modelPackage>
+                        <invokerPackage>org.webwallet.api.handler</invokerPackage>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+        <!-- any other plugins -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+
+    <!-- https://mvnrepository.com/artifact/net.i2p.crypto/eddsa -->
+    <!--  para el algoritmo ed25519-->
+   <dependency>
+    <groupId>net.i2p.crypto</groupId>
+    <artifactId>eddsa</artifactId>
+    <version>0.3.0</version>
+   </dependency>
+
+  <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>1.5.12</version>
+  </dependency>
+  <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+  <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>3.9.0</version>
+  </dependency>
+
+  <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>logging-interceptor</artifactId>
+      <version>2.7.5</version>
+  </dependency>
+  <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>2.9.7</version>
+  </dependency>
+
+
+
+      <!-- https://mvnrepository.com/artifact/org.gnu/gnu-crypto -->
+   <!--  para el algoritmo ripemd160-->
+	<dependency>
+    	<groupId>org.gnu</groupId>
+    	<artifactId>gnu-crypto</artifactId>
+    	<version>2.0.1</version>
+	</dependency>
+
+      <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
+      <dependency>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+          <version>2.6</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+      <dependency>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+          <version>1.9</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/com.metaco.api/metaco-java-client -->
+      <dependency>
+          <groupId>com.metaco.api</groupId>
+          <artifactId>metaco-java-client</artifactId>
+          <version>1.1.1</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.bitcoinj/bitcoinj-core -->
+    <!-- Base58 check method -->
+    <dependency>
+        <groupId>org.bitcoinj</groupId>
+        <artifactId>bitcoinj-core</artifactId>
+        <version>0.14.7</version>
+    </dependency>
+
+
+      <!-- equivalente al stringify GSON -->
+      <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.12</version>
+          <!--<scope>test</scope>-->
+      </dependency>
+
+
+      <!-- https://mvnrepository.com/artifact/org.threeten/threetenbp -->
+      <dependency>
+          <groupId>org.threeten</groupId>
+          <artifactId>threetenbp</artifactId>
+          <version>1.3.7</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/io.gsonfire/gson-fire -->
+      <dependency>
+          <groupId>io.gsonfire</groupId>
+          <artifactId>gson-fire</artifactId>
+          <version>1.0.1</version>
+      </dependency>
+
+  </dependencies>
+    <scm>
+        <connection>scm:git:git://github.com:minkainc/webwallet-sdk-java.git</connection>
+        <developerConnection>scm:git:git@github.com:minkainc/webwallet-sdk-java.git</developerConnection>
+        <url>https://github.com/minkainc/webwallet-sdk-java.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <profiles>
+        <!-- GPG Signature on release -->
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

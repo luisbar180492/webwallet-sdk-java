@@ -1,16 +1,20 @@
 package com.minka;
 
-import com.minka.utils.*;
-import com.minka.utils.Constants;
-import com.squareup.okhttp.Call;
+import com.squareup.okhttp.*;
 import io.minka.api.handler.*;
-import junit.framework.Test;
+import io.minka.api.model.TokenResponse;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
 public class CustomApiClient extends ApiClient {
+
+    private String oauthUrl;
+    private String clientId;
+    private String secret;
 
     @Override
     public String buildUrl(String path, List<Pair> queryParams, List<Pair> collectionQueryParams) {
@@ -27,30 +31,72 @@ public class CustomApiClient extends ApiClient {
         }
     }
 
-    /*
     @Override
-    public Call buildCall(String path, String method, List<Pair> queryParams, List<Pair> collectionQueryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String[] authNames, ProgressRequestBody.ProgressRequestListener progressRequestListener)  {
+    public Call buildCall(String path, String method, List<Pair> queryParams, List<Pair> collectionQueryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String[] authNames, ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Request request = buildRequest(path, method, queryParams, collectionQueryParams, body, headerParams, formParams, authNames, progressRequestListener);
 
+        Call call = this.getHttpClient().newCall(request);
+        RequestHolder requestHolder = new RequestHolder(path, method, queryParams, collectionQueryParams, body, headerParams, formParams, authNames, progressRequestListener);
+        return new RexecutableCall(this.getHttpClient(), call, request, requestHolder);
+    }
+
+    @Override
+    public <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
+        T data;
         try {
-            return super.buildCall(path, method, queryParams, collectionQueryParams, body, headerParams, formParams, authNames, progressRequestListener);
-        } catch (ApiException e) {
-            if (e.getCode() == Constants.BAD_REQUEST && e.getResponseBody().contains(Constants.MESSAGE_OAUTH)){
-                //fetchOauthToken();
-            };
+            Response response = call.execute();
+            if (isTheTokenInvalidOrAbsent(response.code())){
+                TokenResponse token = fetchToken();
+                this.setAccessToken(token.getAccessToken());
+
+                Request request = updateTokenAuthenticationInRequest((RexecutableCall) call, token);
+                Response resp = this.getHttpClient().newCall(request).execute();
+                data = handleResponse(resp, returnType);
+            } else {
+                data = handleResponse(response, returnType);
+            }
+            return new ApiResponse<T>(response.code(), response.headers().toMultimap(), data);
+        } catch (IOException e) {
+            throw new ApiException(e);
         }
     }
 
-    */
-/*
-    private void fetchOauthToken() {
-        ApiClient apiClientToken = new ApiClient();
+    private Request updateTokenAuthenticationInRequest(RexecutableCall call, TokenResponse token) throws ApiException {
+        RexecutableCall callAgain = call;
+        RequestHolder req= callAgain.getRequestHolder();
+        Map<String, String> headerParamsWithToken = req.getHeaderParams();
+        headerParamsWithToken.put("Authorization", "Bearer " + token.getAccessToken());
 
-        apiClientToken.setUsername(clientId);
-        apiClientToken.setPassword(secret);
-
-        apiClientToken.setBasePath(this.url.substring(0, this.url.length() - 3));
-        TokenApi api = new TokenApi(apiClientToken);
-        return api.getToken("client_credentials", clientId, secret);
+        return buildRequest(req.getPath(), req.getMethod(), req.getQueryParams(), req.getCollectionQueryParams(),
+                req.getBody(), headerParamsWithToken , req.getFormParams(), req.getAuthNames(), req.getProgressRequestListener());
     }
-*/
+
+    private TokenResponse fetchToken() throws ApiException {
+        OauthClient oauthClient = new OauthClient(clientId, secret, oauthUrl);
+        return oauthClient.getToken();
+    }
+
+    private boolean isTheTokenInvalidOrAbsent(int code) {
+        return code == 403;
+    }
+
+    public void setOauthUrl(String oauthUrl) {
+        this.oauthUrl = oauthUrl;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 }
