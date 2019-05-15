@@ -107,15 +107,6 @@ public class ActionTesting {
     }
 
     @Test
-    public void shouldGenerateUUID(){
-        String nonceGenerated = sdkApiClient.generateUUID();
-        System.out.println(nonceGenerated);
-        System.out.println(nonceGenerated.length());
-
-    }
-
-
-    @Test
     public void shouldSignActionOnline(){
         String actionId = "b32debab-9df0-49db-814f-92a06dbedc15";
         try {

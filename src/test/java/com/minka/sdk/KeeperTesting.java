@@ -23,15 +23,9 @@ public class KeeperTesting {
         sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
                 TestingConstants.API_KEY,TestingConstants.STAGING_BASE);
 
-//        sdkApiClient = new SdkApiClient(TestingConstants.DOMAIN_TESTING,
-//                TestingConstants.API_KEY,"https://b450c068.ngrok.io");
         sdkApiClient
                 .setSecret(TestingConstants.SECRET)
                 .setClientId(TestingConstants.CLIENT_ID);
-
-        if (TestingConstants.proxy){
-            sdkApiClient.setProxy(TestingConstants.PROXY_HOST, TestingConstants.PROXY_PORT);
-        }
 
     }
 
