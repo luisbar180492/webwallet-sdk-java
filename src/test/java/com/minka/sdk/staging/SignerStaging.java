@@ -26,10 +26,6 @@ public class SignerStaging {
                 .setClientId(TestingConstants.CLIENT_ID);
 
 
-        if (TestingConstants.proxy){
-            sdkApiClient.setProxy(TestingConstants.PROXY_HOST,
-                    TestingConstants.PROXY_PORT);
-        }
     }
 
 
@@ -49,7 +45,7 @@ public class SignerStaging {
 
     @Ignore
     @Test
-    public void createSignerForOfflineUse() {
+    public void createSignerForOfflineUse() throws ExceptionResponseTinApi {
 
         //Keeper offlineKeypair = sdkApiClient.getKeeperForOfflineSigning();
 
@@ -71,8 +67,6 @@ public class SignerStaging {
             System.out.println(e.getResponseBody());
             System.out.println(e.getCode());
 
-        } catch (ExceptionResponseTinApi e) {
-            e.printStackTrace();
         }
 
         // System.out.println(signerOfflineSigning);
