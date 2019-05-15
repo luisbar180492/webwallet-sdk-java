@@ -35,6 +35,7 @@ public class ActionStaging {
 
     @Test
     public void shouldCreateAction() throws io.minka.api.handler.ApiException {
+        sdkApiClient.setDebuggingMode(true);
         io.minka.api.model.CreateActionRequest req = new io.minka.api.model.CreateActionRequest();
 
         CreateActionRequestLabels labels = new CreateActionRequestLabels();
@@ -78,6 +79,8 @@ public class ActionStaging {
 //            System.out.println(e.getCode());
 
         }
+        sdkApiClient.setDebuggingMode(false);
+        sdkApiClient.getKeeper();
     }
 
     @Test

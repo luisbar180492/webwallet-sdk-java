@@ -33,16 +33,26 @@ public class CustomApiClient extends ApiClient {
     }
 
     @Override
-    public Call buildCall(String path, String method, List<Pair> queryParams, List<Pair> collectionQueryParams, Object body, Map<String, String> headerParams, Map<String, Object> formParams, String[] authNames, ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Request request = buildRequest(path, method, queryParams, collectionQueryParams, body, headerParams, formParams, authNames, progressRequestListener);
+    public Call buildCall(String path, String method, List<Pair> queryParams,
+                          List<Pair> collectionQueryParams, Object body,
+                          Map<String, String> headerParams, Map<String, Object> formParams,
+                          String[] authNames,
+                          ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+
+        updateHeaders();
+        Request request = buildRequest(path, method, queryParams,
+                collectionQueryParams, body, headerParams, formParams, authNames,
+                progressRequestListener);
 
         Call call = this.getHttpClient().newCall(request);
-        RequestHolder requestHolder = new RequestHolder(path, method, queryParams, collectionQueryParams, body, headerParams, formParams, authNames, progressRequestListener);
+        RequestHolder requestHolder = new RequestHolder(path, method, queryParams,
+                collectionQueryParams, body, headerParams, formParams, authNames,
+                progressRequestListener);
         return new RexecutableCall(this.getHttpClient(), call, request, requestHolder);
     }
 
     private void updateHeaders() throws ApiException {
-//        super.setDebugging(true);
+
         OAuth oauth2 = (OAuth) super.getAuthentication("oAuth2ClientCredentials");
         if (oauth2.getAccessToken() == null){
             TokenResponse token = fetchToken();
@@ -62,7 +72,7 @@ public class CustomApiClient extends ApiClient {
     @Override
     public <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
         T data;
-        updateHeaders();
+        //updateHeaders();
         try {
             Response response = call.execute();
             if (isTheTokenInvalid(response.code())){
@@ -81,6 +91,7 @@ public class CustomApiClient extends ApiClient {
         }
     }
 
+
     private Request updateTokenAuthenticationInRequest(RexecutableCall call, TokenResponse token) throws ApiException {
         RexecutableCall callAgain = call;
         RequestHolder req= callAgain.getRequestHolder();
@@ -92,7 +103,8 @@ public class CustomApiClient extends ApiClient {
     }
 
     private TokenResponse fetchToken() throws ApiException {
-        OauthClient oauthClient = new OauthClient(clientId, secret, oauthUrl);
+        OauthClient oauthClient = new OauthClient(clientId, secret, oauthUrl, this.isDebugging());
+
         return oauthClient.getToken();
     }
 

@@ -14,9 +14,10 @@ public class OauthClient {
     private String clientId;
     private String secret;
 
-    public OauthClient(String clientId, String secret, String oauthUrl) {
+    public OauthClient(String clientId, String secret, String oauthUrl, boolean debugging) {
 
         ApiClient apiClientToken = new ApiClient();
+        apiClientToken.setDebugging(debugging);
         apiClientToken.setBasePath(oauthUrl);
         api = new TokenApi(apiClientToken);
         this.secret = secret;

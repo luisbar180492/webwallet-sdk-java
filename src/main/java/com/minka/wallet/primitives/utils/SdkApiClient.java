@@ -34,6 +34,9 @@ public class SdkApiClient {
     private int timeout;
     private Proxy proxy;
 
+    public void setDebuggingMode(boolean debuggingMode){
+        apiClient.setDebugging(debuggingMode);
+    }
     public SdkApiClient(String domain, String apiKey, String urlBase) {
 
         this.domain = domain;
