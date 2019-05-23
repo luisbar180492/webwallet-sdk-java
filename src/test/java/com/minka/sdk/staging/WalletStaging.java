@@ -97,7 +97,9 @@ public class WalletStaging {
         io.minka.api.model.GetWalletResponse wallets;
         wallets =
                 sdkApiClient.getWalletByAlias("$qmblkkdzkwbgepdinyr");
-        System.out.println(wallets);
+        sdkApiClient.getWalletByAlias("$qmblkkdzkwbgepdinyr");
+        sdkApiClient.getWalletByAlias("$qmblkkdzkwbgepdinyr");
+        //System.out.println(wallets);
 
     }
 
