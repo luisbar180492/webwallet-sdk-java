@@ -1724,7 +1724,16 @@ components:
               type: string
             updated:
               type: string
-
+        expirationDate:
+          type: string
+        invoiceStatus:
+          type: string
+        value2:
+          type: string
+        responseDate:
+          type: string
+        responseType:
+          type: string
     Keeper:
       type: object
       properties:
@@ -1802,6 +1811,12 @@ components:
               additionalProperties: true
             routerFormat:
               type: string
+            personType:
+              type: string
+            name:
+              type: string
+            language:
+              type: string
 
     signerLabelsResponse:
       type: object
@@ -1856,6 +1871,12 @@ components:
           type: object
           additionalProperties: true
         routerFormat:
+          type: string
+        personType:
+          type: string
+        name:
+          type: string
+        language:
           type: string
 
 
@@ -2301,6 +2322,26 @@ components:
             deviceFingerPrint:
               type: object
               $ref: '#/components/schemas/deviceFingerPrint'
+            domain:
+              type: string
+            atm:
+              type: string
+            authorizationCode:
+              type: string
+            serialCode:
+              type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+              type: string
+            value:
+              type: string
+            date:
+              type: string
+            projectCode:
+               type: string
 
     createActionResponse:
       type: object
@@ -2377,6 +2418,26 @@ components:
             error:
               type: object
               $ref: '#/components/schemas/ErrorGenerico'
+            domain:
+              type: string
+            atm:
+              type: string
+            authorizationCode:
+              type: string
+            serialCode:
+              type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+              type: string
+            value:
+              type: string
+            date:
+              type: string
+            projectCode:
+               type: string
 
     ErrorForbidden:
       type: object
@@ -2529,6 +2590,26 @@ components:
             error:
               type: object
               $ref: '#/components/schemas/ErrorGenerico'
+            domain:
+              type: string
+            atm:
+              type: string
+            authorizationCode:
+              type: string
+            serialCode:
+              type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+              type: string
+            value:
+              type: string
+            date:
+              type: string
+            projectCode:
+               type: string
 
     actionSignedLabels:
       properties:
@@ -2564,6 +2645,26 @@ components:
             deviceFingerPrint:
               type: object
               $ref: '#/components/schemas/deviceFingerPrint'
+            domain:
+              type: string
+            atm:
+              type: string
+            authorizationCode:
+              type: string
+            serialCode:
+              type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+              type: string
+            value:
+              type: string
+            date:
+              type: string
+            projectCode:
+               type: string
 
     actionSigned:
       properties:
@@ -2601,6 +2702,26 @@ components:
               type: string
             sourceChannel:
               type: string
+            domain:
+              type: string
+            atm:
+              type: string
+            authorizationCode:
+              type: string
+            serialCode:
+              type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+              type: string
+            value:
+              type: string
+            date:
+              type: string
+            projectCode:
+               type: string
         error:
           type: object
           properties:
@@ -2682,6 +2803,26 @@ components:
               type: string
             deviceFingerPrint:
               $ref: '#/components/schemas/deviceFingerPrint'
+            domain:
+              type: string
+            atm:
+              type: string
+            authorizationCode:
+              type: string
+            serialCode:
+              type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+              type: string
+            value:
+              type: string
+            date:
+              type: string
+            projectCode:
+               type: string
 
     createTransferResponse:
       type: object
@@ -2736,6 +2877,26 @@ components:
             error:
               type: object
               $ref: '#/components/schemas/ErrorGenerico'
+            domain:
+              type: string
+            atm:
+              type: string
+            authorizationCode:
+              type: string
+            serialCode:
+              type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+              type: string
+            value:
+              type: string
+            date:
+              type: string
+            projectCode:
+               type: string
         error:
           type: object
           $ref: '#/components/schemas/ErrorGenerico'
