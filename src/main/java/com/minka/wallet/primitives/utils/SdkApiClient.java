@@ -1,5 +1,12 @@
 package com.minka.wallet.primitives.utils;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import javax.net.ssl.SSLContextSpi;
+import sun.security.jca.GetInstance;
+import sun.security.jca.ProviderList;
+import sun.security.jca.Providers;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minka.CustomApiClient;
@@ -51,7 +58,13 @@ public class SdkApiClient {
     }
 
     @Deprecated
-    public SdkApiClient(String domain, String apiKey) {
+    public SdkApiClient(String domain, String apiKey) throws ApiException {
+        try {
+            forceTLS1dot2version();
+        } catch (NoSuchAlgorithmException e) {
+            throw new ApiException("TLS version 1.2 no pudo ser inicializada");
+        }
+
         this.domain = domain;
         this.url = "https://" + domain + ".minka.io/v1";
         this.apiKey = apiKey;
@@ -70,6 +83,18 @@ public class SdkApiClient {
         this.apiClient.getHttpClient().setProxy(proxy);
         return this;
     }
+    private void forceTLS1dot2version() throws NoSuchAlgorithmException {
+        ProviderList providerList = Providers.getProviderList();
+        GetInstance.Instance instance = GetInstance.getInstance("SSLContext", SSLContextSpi.class, "TLS");
+        for (Provider provider : providerList.providers())
+        {
+            if (provider == instance.provider)
+            {
+                provider.put("Alg.Alias.SSLContext.TLS", "TLSv1.2");
+            }
+        }
+    }
+
 
     private void refreshToken() throws ApiException {
         TokenResponse token;
