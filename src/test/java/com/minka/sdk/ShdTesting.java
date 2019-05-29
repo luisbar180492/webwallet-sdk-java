@@ -39,7 +39,7 @@ public class ShdTesting {
 
     }
 
-
+    @Ignore
     @Test
     public void getActionsWithCustomQuery() throws ApiException {
         String vendorId = "$shd_bogota";
@@ -50,6 +50,7 @@ public class ShdTesting {
         System.out.println(getVendorsResponse);
     }
 
+    @Ignore
     @Test
     public void createPaymentAction() throws ApiException {
         CreateActionRequest req = new io.minka.api.model.CreateActionRequest();
@@ -71,6 +72,7 @@ public class ShdTesting {
         System.out.println(action);
     }
 
+    @Ignore
     @Test
     public void signActionOffline() throws ApiException {
         String actionId = "ca2d76e3-8887-48b7-a572-b4ca6bf0442d";
