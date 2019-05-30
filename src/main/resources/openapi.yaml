@@ -1698,7 +1698,7 @@ components:
         labels:
           type: object
           properties:
-            tx_id:
+            res_id:
               type: string
             type:
               type: string
@@ -1710,30 +1710,42 @@ components:
               type: string
             nature:
               type: string
+            invoice:
+              type: string
+            subscription:
+              type: string
             processor:
               type: string
             branch:
               type: string
             environment:
               type: string
-            invoice:
-              type: string
-            subscription:
+            tx_id:
               type: string
             created:
               type: string
             updated:
               type: string
-        expirationDate:
-          type: string
-        invoiceStatus:
-          type: string
-        value2:
-          type: string
-        responseDate:
-          type: string
-        responseType:
-          type: string
+            sourceDate:
+              type: string
+            language:
+              type: string
+            reference:
+               type: string
+            value:
+               type: string
+            expirationDate:
+              type: string
+            invoiceStatus:
+              type: string
+            value2:
+              type: string
+            responseDate:
+              type: string
+            responseType:
+              type: string
+            description:
+              type: string
     Keeper:
       type: object
       properties:
