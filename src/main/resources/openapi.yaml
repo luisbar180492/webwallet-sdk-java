@@ -3138,11 +3138,11 @@ components:
     getTransferResponse:
         type: object
         properties:
-          transfer_id:
+          transferId:
             type: string
-          tx_id:
+          txId:
             type: string
-          tx_ref:
+          txRef:
             type: string
           source:
             type: string
@@ -3186,5 +3186,35 @@ components:
             type: string
           owner:
             type: string
-          labels:
+          domain:
             type: string
+          error:
+            type: object
+            $ref: '#/components/schemas/ErrorGenerico'
+          labels:
+            type: object
+            properties:
+              hash:
+                type: string
+              type:
+                type: string
+              domain:
+                type: string
+              status:
+                type: string
+              tx_ref:
+                type: string
+              created:
+                type: string
+              updated:
+                type: string
+              description:
+                type: string
+              sourceChannel:
+                type: string
+              deviceFingerPrint:
+                type: object
+                $ref: '#/components/schemas/deviceFingerPrint'
+          snapshot:
+            type: object
+            $ref: '#/components/schemas/Snapshot'

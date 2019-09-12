@@ -10,18 +10,18 @@ import org.webwallet.api.model.ErrorResponse;
 import org.webwallet.api.model.IouWrapper;
 
 public class CoreTesting {
-
-    @Test
-    public void creationIou(){
-
-        DefaultApi client = new DefaultApi();
-        IouWrapper iouWrapper = new IouWrapper();
-        
-        try {
-            ErrorResponse iou =  client.createIou(iouWrapper);
-        } catch (ApiException e) {
-//            Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
-            System.out.println(e.getResponseBody());
-        }
-    }
+//
+//    @Test
+//    public void creationIou(){
+//
+//        DefaultApi client = new DefaultApi();
+//        IouWrapper iouWrapper = new IouWrapper();
+//        
+//        try {
+//            ErrorResponse iou =  client.createIou(iouWrapper);
+//        } catch (ApiException e) {
+////            Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
+//            System.out.println(e.getResponseBody());
+//        }
+//    }
 }

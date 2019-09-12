@@ -875,9 +875,17 @@ public class SdkApiClient {
     }
 
     public Transfers getTransfersWithCustomQuery(String query) throws ApiException {
-        refreshToken();
         io.minka.api.handler.TransferApi api = new io.minka.api.handler.TransferApi(apiClient);
-        return api.getTransfers(query);
+        try {
+            return api.getTransfers(query);
+        } catch (ApiException ex) {
+            if (didTokenExpiredOrAbsent(ex)) {
+                refreshToken();
+                return api.getTransfers(query);
+            } else {
+                throw ex;
+            }
+        }
     }
 
     public GetVendorsResponse verifyPayment(String vendorId, String invoiceId, String customQuery) throws ApiException {
